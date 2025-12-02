@@ -297,9 +297,40 @@ export const LogoLoop = memo<LogoLoopProps>(
           const fallback = Math.max(ANIMATION_CONFIG.MIN_COPIES, Math.ceil(containerWidth / 100));
           setSeqWidth(Math.ceil(containerWidth));
           setCopyCount(fallback + ANIMATION_CONFIG.COPY_HEADROOM);
+        } else if (containerWidth > 0) {
+          // use container width
+          const fallback = Math.max(ANIMATION_CONFIG.MIN_COPIES, Math.ceil(containerWidth / 100));
+          setSeqWidth(Math.ceil(containerWidth));
+          setCopyCount(fallback + ANIMATION_CONFIG.COPY_HEADROOM);
+        } else {
+          // Last-resort fallback using viewport width (helps some mobile browsers)
+          const vw = typeof window !== 'undefined' ? window.innerWidth : 0;
+          if (vw > 0) {
+            setSeqWidth(Math.ceil(vw));
+            const copiesNeeded = Math.ceil(vw / 100) + ANIMATION_CONFIG.COPY_HEADROOM;
+            setCopyCount(Math.max(ANIMATION_CONFIG.MIN_COPIES, copiesNeeded));
+          }
         }
       }
     }, [isVertical]);
+
+    // Retry measurements a few times after mount to handle mobile rendering timing
+    useEffect(() => {
+      if (typeof window === 'undefined') return;
+      const t1 = setTimeout(updateDimensions, 100);
+      const t2 = setTimeout(updateDimensions, 500);
+      const t3 = setTimeout(updateDimensions, 1500);
+      // periodic retries for a short window
+      const interval = setInterval(updateDimensions, 700);
+      const stop = setTimeout(() => clearInterval(interval), 4000);
+      return () => {
+        clearTimeout(t1);
+        clearTimeout(t2);
+        clearTimeout(t3);
+        clearInterval(interval);
+        clearTimeout(stop);
+      };
+    }, [updateDimensions]);
 
     useResizeObserver(updateDimensions, [containerRef, seqRef], [logos, gap, logoHeight, isVertical]);
 
@@ -350,6 +381,14 @@ export const LogoLoop = memo<LogoLoopProps>(
       if (effectiveHoverSpeed !== undefined) setIsHovered(true);
     }, [effectiveHoverSpeed]);
     const handleMouseLeave = useCallback(() => {
+      if (effectiveHoverSpeed !== undefined) setIsHovered(false);
+    }, [effectiveHoverSpeed]);
+
+    // Touch devices don't fire mouseenter/mouseleave; map touch events to hover state
+    const handleTouchStart = useCallback(() => {
+      if (effectiveHoverSpeed !== undefined) setIsHovered(true);
+    }, [effectiveHoverSpeed]);
+    const handleTouchEnd = useCallback(() => {
       if (effectiveHoverSpeed !== undefined) setIsHovered(false);
     }, [effectiveHoverSpeed]);
 
@@ -481,6 +520,9 @@ export const LogoLoop = memo<LogoLoopProps>(
         aria-label={ariaLabel}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+        onTouchCancel={handleTouchEnd}
       >
         {fadeOut && (
           <>
