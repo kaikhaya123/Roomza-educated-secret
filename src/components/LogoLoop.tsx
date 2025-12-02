@@ -89,7 +89,8 @@ const useAnimationLoop = (
     if (!track) return;
 
     // Apply a reduced animation intensity on mobile to save CPU and make motion subtler.
-    const mobileFactor = isMobile ? 0.45 : 1;
+    // Use a less aggressive reduction so motion remains visible on small screens.
+    const mobileFactor = isMobile ? 0.75 : 1;
 
     const prefersReduced =
       typeof window !== 'undefined' &&
@@ -127,16 +128,24 @@ const useAnimationLoop = (
       const easingFactor = 1 - Math.exp(-deltaTime / ANIMATION_CONFIG.SMOOTH_TAU);
       velocityRef.current += (effectiveTarget - velocityRef.current) * easingFactor;
 
-      if (seqSize > 0) {
-        let nextOffset = offsetRef.current + velocityRef.current * deltaTime;
-        nextOffset = ((nextOffset % seqSize) + seqSize) % seqSize;
-        offsetRef.current = nextOffset;
+      // If seqSize is zero (measurements not ready on some mobile browsers),
+      // fall back to a reasonable size taken from the track or sequence measurements
+      // so animation can still run visibly.
+      const fallbackSize = (() => {
+        if (isVertical) return seqHeight || track.clientHeight || 100;
+        return seqWidth || track.clientWidth || 100;
+      })();
 
-        const transformValue = isVertical
-          ? `translate3d(0, ${-offsetRef.current}px, 0)`
-          : `translate3d(${-offsetRef.current}px, 0, 0)`;
-        track.style.transform = transformValue;
-      }
+      const effectiveSeqSize = seqSize > 0 ? seqSize : fallbackSize;
+
+      let nextOffset = offsetRef.current + velocityRef.current * deltaTime;
+      nextOffset = ((nextOffset % effectiveSeqSize) + effectiveSeqSize) % effectiveSeqSize;
+      offsetRef.current = nextOffset;
+
+      const transformValue = isVertical
+        ? `translate3d(0, ${-offsetRef.current}px, 0)`
+        : `translate3d(${-offsetRef.current}px, 0, 0)`;
+      track.style.transform = transformValue;
 
       rafRef.current = requestAnimationFrame(animate);
     };
@@ -453,7 +462,9 @@ export const LogoLoop = memo<LogoLoopProps>(
     );
 
     // Development-only debug values for on-screen overlay
-    const debugEnabled = typeof process !== 'undefined' && process.env.NODE_ENV !== 'production' ? false : false;
+    // Show a small debug overlay when not in production so we can inspect measurements
+    // (seqWidth, seqHeight, copyCount, container width) on mobile devices.
+    const debugEnabled = typeof process !== 'undefined' && process.env.NODE_ENV !== 'production' ? true : false;
     const debugValues = {
       seqWidth,
       seqHeight,
