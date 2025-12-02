@@ -230,6 +230,16 @@ export const LogoLoop = memo<LogoLoopProps>(
       const sequenceRect = seqRef.current?.getBoundingClientRect?.();
       const sequenceWidth = sequenceRect?.width ?? 0;
       const sequenceHeight = sequenceRect?.height ?? 0;
+      // Debug: expose measured sizes in console to help diagnose mobile issues
+      try {
+        // only output in development to avoid noise in production
+        if (process?.env?.NODE_ENV !== 'production') {
+          // eslint-disable-next-line no-console
+          console.debug('LogoLoop:updateDimensions', { containerWidth, sequenceWidth, sequenceHeight });
+        }
+      } catch (e) {
+        // ignore
+      }
       if (isVertical) {
         const parentHeight = containerRef.current?.parentElement?.clientHeight ?? 0;
         if (containerRef.current && parentHeight > 0) {
@@ -247,6 +257,31 @@ export const LogoLoop = memo<LogoLoopProps>(
         setSeqWidth(Math.ceil(sequenceWidth));
         const copiesNeeded = Math.ceil(containerWidth / sequenceWidth) + ANIMATION_CONFIG.COPY_HEADROOM;
         setCopyCount(Math.max(ANIMATION_CONFIG.MIN_COPIES, copiesNeeded));
+      } else {
+        // Fallback: if sequenceWidth is 0 (mobile lazy-load or measurement timing issue),
+        // try to approximate by summing child image widths or using container width.
+        let approxWidth = 0;
+        try {
+          const imgs = seqRef.current?.querySelectorAll('img') ?? [];
+          imgs.forEach((img: Element) => {
+            const el = img as HTMLElement;
+            const w = el.clientWidth || el.getBoundingClientRect?.().width || 0;
+            approxWidth += w;
+          });
+        } catch (e) {
+          approxWidth = 0;
+        }
+
+        if (approxWidth > 0) {
+          setSeqWidth(Math.ceil(approxWidth));
+          const copiesNeeded = Math.ceil(containerWidth / approxWidth) + ANIMATION_CONFIG.COPY_HEADROOM;
+          setCopyCount(Math.max(ANIMATION_CONFIG.MIN_COPIES, copiesNeeded));
+        } else if (containerWidth > 0) {
+          // As last resort use container width to ensure animation starts
+          const fallback = Math.max(ANIMATION_CONFIG.MIN_COPIES, Math.ceil(containerWidth / 100));
+          setSeqWidth(Math.ceil(containerWidth));
+          setCopyCount(fallback + ANIMATION_CONFIG.COPY_HEADROOM);
+        }
       }
     }, [isVertical]);
 
