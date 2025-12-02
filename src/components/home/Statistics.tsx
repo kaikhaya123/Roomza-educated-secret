@@ -35,8 +35,8 @@ export default function Statistics() {
             direction="left"
             logoHeight={80}
             gap={60}
-            pauseOnHover
-            scaleOnHover
+            pauseOnHover={false}
+            scaleOnHover={false}
             fadeOut
             fadeOutColor="rgb(249, 250, 251)"
             ariaLabel="Participating South African Universities"
