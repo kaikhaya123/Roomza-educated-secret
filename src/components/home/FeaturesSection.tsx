@@ -1,123 +1,104 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import { Vote, Brain, Trophy, Radio, Award, Users } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
-import React from 'react';
 
 export default function FeaturesSection() {
   const features = [
-    {
-      icon: null,
-      title: 'Vote for Contestants',
-      description: 'Cast up to 100 votes per day for your favorite contestants. Free and premium voting options available.',
-      useAnimation: true,
-      animationType: 'voting'
-    },
-    {
-      icon: null,
-      title: 'Daily Quizzes',
-      description: 'Test your knowledge with exciting daily quizzes. Win points, climb leaderboards, and earn rewards.',
-      useAnimation: true,
-      animationType: 'brain'
-    },
-    {
-      icon: null,
-      title: 'Nominate Students',
-      description: 'Know someone amazing? Nominate talented students from your campus to join the competition.',
-      useAnimation: true,
-      animationType: 'referral'
-    },
-    {
-      icon: null,
-      title: 'Live Streaming',
-      description: 'Watch the show live 18 hours daily on TikTok, Facebook, and YouTube. Never miss a moment!',
-      useAnimation: true,
-      animationType: 'streaming'
-    },
-    {
-      icon: null,
-      title: 'Win Prizes',
-      description: 'Compete for amazing prizes including cash, devices, bursaries, and exclusive merchandise.',
-      useAnimation: true,
-      animationType: 'champion'
-    },
-    {
-      icon: null,
-      title: 'Earn Achievements',
-      description: 'Unlock badges and achievements as you participate. Build your profile and show off your status!',
-      useAnimation: true,
-      animationType: 'winner'
-    },
+    { title: 'Vote for Contestants', description: 'Cast up to 100 votes per day for your favorite contestants. Free and premium voting options available.', animation: 'Election concept Lottie JSON animation.lottie' },
+    { title: 'Daily Quizzes', description: 'Test your knowledge with exciting daily quizzes. Win points, climb leaderboards, and earn rewards.', animation: 'Funny brain.lottie' },
+    { title: 'Nominate Students', description: 'Know someone amazing? Nominate talented students from your campus to join the competition.', animation: 'referral.lottie' },
+    { title: 'Live Streaming', description: 'Watch the show live 18 hours daily on TikTok, Facebook, and YouTube. Never miss a moment!', animation: 'Live Streaming.lottie' },
+    { title: 'Win Prizes', description: 'Compete for amazing prizes including cash, devices, bursaries, and exclusive merchandise.', animation: 'Champion.lottie' },
+    { title: 'Earn Achievements', description: 'Unlock badges and achievements as you participate. Build your profile and show off your status!', animation: 'Winner.lottie' },
   ];
 
+  const [selected, setSelected] = useState(0);
+  const railRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const rail = railRef.current;
+    if (!rail) return;
+    const active = rail.querySelector<HTMLButtonElement>(`button[data-index="${selected}"]`);
+    if (!active) return;
+    const railRect = rail.getBoundingClientRect();
+    const activeRect = active.getBoundingClientRect();
+    const offset = activeRect.left - railRect.left - railRect.width / 2 + activeRect.width / 2;
+    rail.scrollBy({ left: offset, behavior: 'smooth' });
+  }, [selected]);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft') setSelected((s) => (s - 1 + features.length) % features.length);
+      if (e.key === 'ArrowRight') setSelected((s) => (s + 1) % features.length);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [features.length]);
+
   return (
-    <section className="py-20 bg-gray-50 font-futura">
-      <div className="container mx-auto px-4">
-        {/* Section Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
-        >
-          <h2 className="text-4xl md:text-5xl font-display font-bold text-gray-900 mb-4">
-            Why Join <span className="bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-transparent">R.E.S.?</span>
-          </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Experience the ultimate student competition platform with exciting features designed for maximum engagement and entertainment.
-          </p>
-        </motion.div>
+    <section className="py-16 bg-white">
+      <div className="max-w-6xl mx-auto px-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
 
-        {/* Features List - horizontal layout inspired by design */}
-        <div className="max-w-6xl mx-auto space-y-12">
-          {features.map((feature, index) => {
-            const isEven = index % 2 === 0;
-            return (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.08 }}
-                className="w-full"
+          {/* Left: stacked list */}
+          <div className="md:col-span-1 flex flex-col gap-4">
+            {features.map((f, i) => (
+              <button
+                key={i}
+                onClick={() => setSelected(i)}
+                className={`flex items-center gap-4 p-3 rounded-lg text-left transition-shadow ${i === selected ? 'shadow-xl ring-2 ring-purple-500' : 'shadow-sm hover:shadow-md'}`}
               >
-                <div className={`flex flex-col md:flex-row items-center gap-6 md:gap-10 ${isEven ? '' : 'md:flex-row-reverse'}`}>
-                  {/* Lottie / Image box */}
-                  <div className="flex-shrink-0 w-full md:w-1/2">
-                    <div className="w-full h-44 md:h-40 bg-gray-200 rounded-lg flex items-center justify-center">
-                      <div className="w-48 h-28 md:w-64 md:h-36">
-                        <DotLottieReact
-                          src={`/lottie files/${
-                            feature.animationType === 'brain' ? 'Funny brain.lottie' :
-                            feature.animationType === 'referral' ? 'referral.lottie' :
-                            feature.animationType === 'streaming' ? 'Live Streaming.lottie' :
-                            feature.animationType === 'champion' ? 'Champion.lottie' :
-                            feature.animationType === 'winner' ? 'Winner.lottie' :
-                            'Election concept Lottie JSON animation.lottie'
-                          }`}
-                          loop
-                          autoplay
-                          style={{ width: '100%', height: '100%' }}
-                        />
+                <div className="w-20 h-20 flex-shrink-0 rounded-md flex items-center justify-center">
+                  <DotLottieReact src={encodeURI(`/lottie-files/${f.animation}`)} loop autoplay style={{ width: 80, height: 80, background: 'transparent' }} />
+                </div>
+                <div className="flex-1">
+                  <div className={`font-semibold ${i === selected ? 'text-gray-900' : 'text-gray-700'}`}>{f.title}</div>
+                  <div className="text-sm text-gray-500 mt-1 hidden md:block">{f.description}</div>
+                </div>
+              </button>
+            ))}
+          </div>
+
+          {/* Right: carousel preview */}
+          <div className="md:col-span-2 flex items-center">
+            <div className="w-full">
+              <div className="flex flex-col items-center">
+
+                <div className="w-full md:w-3/4 lg:w-2/3 h-80 md:h-[420px] flex items-center justify-center">
+                  <AnimatePresence mode="wait">
+                    <motion.div key={selected} initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.98 }} transition={{ duration: 0.35 }} className="w-full h-full flex items-center justify-center">
+                      <div className="w-full h-full max-w-[820px] max-h-[420px]">
+                        <DotLottieReact src={encodeURI(`/lottie-files/${features[selected].animation}`)} loop autoplay style={{ width: '100%', height: '100%', background: 'transparent' }} />
                       </div>
-                    </div>
+                    </motion.div>
+                  </AnimatePresence>
+                </div>
+
+                <div className="mt-6 w-full flex items-center justify-center gap-4">
+                  <button aria-label="Previous" onClick={() => setSelected((s) => (s - 1 + features.length) % features.length)} className="p-2 rounded-full bg-gray-100 hover:bg-gray-200">‹</button>
+
+                  <div ref={railRef} className="flex overflow-x-auto gap-3 py-2 px-1 no-scrollbar" role="list" style={{ scrollbarWidth: 'none' }}>
+                    {features.map((f, i) => (
+                      <button key={i} data-index={i} role="listitem" onClick={() => setSelected(i)} className={`flex-shrink-0 w-24 h-24 rounded-lg p-1 ${i === selected ? 'ring-2 ring-purple-500' : 'hover:shadow-md'} bg-white`}>
+                        <DotLottieReact src={encodeURI(`/lottie-files/${f.animation}`)} loop autoplay style={{ width: '100%', height: '100%', background: 'transparent' }} />
+                      </button>
+                    ))}
                   </div>
 
-                  {/* Text content */}
-                  <div className="flex-1 text-center md:text-left md:w-1/2">
-                    <h3 className="text-2xl md:text-3xl font-display font-bold text-gray-900 mb-3">
-                      {feature.title}
-                    </h3>
-                    <p className="text-gray-600 text-base md:text-lg leading-relaxed">
-                      {feature.description}
-                    </p>
-                  </div>
+                  <button aria-label="Next" onClick={() => setSelected((s) => (s + 1) % features.length)} className="p-2 rounded-full bg-gray-100 hover:bg-gray-200">›</button>
                 </div>
-              </motion.div>
-            );
-          })}
+
+                <div className="mt-6 text-center">
+                  <h3 className="text-2xl font-semibold text-gray-900">{features[selected].title}</h3>
+                  <p className="mt-2 text-gray-600 max-w-2xl mx-auto">{features[selected].description}</p>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
     </section>

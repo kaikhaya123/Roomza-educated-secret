@@ -60,32 +60,14 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-black to-gray-900 p-4">
       <div className="w-full max-w-6xl flex flex-col lg:flex-row rounded-2xl overflow-hidden shadow-2xl min-h-[600px]">
-        {/* Left Side - Image */}
-        <motion.div
-          initial={{ opacity: 0, x: -50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6 }}
-          className="hidden lg:flex lg:w-1/2 relative"
-        >
-          <div className="relative w-full h-full min-h-[600px]">
-            <Image
-              src="/Images/high-angle-friends-posing-together.jpg"
-              alt="Students collaborating"
-              fill
-              className="object-cover"
-              priority
-            />
-          </div>
-        </motion.div>
-
-        {/* Right Side - Form */}
+        {/* Left Side - Form */}
         <motion.div
           initial={{ opacity: 0, x: 50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6 }}
-          className="w-full lg:w-1/2 bg-white/5 backdrop-blur-lg border-l border-white/10 flex flex-col"
+          className="w-full lg:w-5/12 bg-white/5 backdrop-blur-lg border-r border-white/10 flex flex-col"
         >
-          <div className="flex-1 flex flex-col justify-center p-8 lg:p-12">
+          <div className="flex-1 flex flex-col justify-center p-8 lg:p-12 items-center">
             {/* Header */}
             <div className="text-center mb-8">
               <h1 className="text-3xl font-bold text-white mb-2">Welcome Back</h1>
@@ -105,7 +87,7 @@ export default function LoginPage() {
           )}
 
           {/* Login Form */}
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-6 w-full max-w-md">
             {/* Email Field */}
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
@@ -258,6 +240,24 @@ export default function LoginPage() {
               Privacy Policy
             </Link>
           </p>
+          </div>
+        </motion.div>
+
+        {/* Right Side - Image */}
+        <motion.div
+          initial={{ opacity: 0, x: 50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6 }}
+          className="hidden lg:flex lg:w-7/12 relative"
+        >
+          <div className="relative w-full h-full min-h-[600px]">
+            <Image
+              src="/Images/high-angle-friends-posing-together.jpg"
+              alt="Students collaborating"
+              fill
+              className="object-cover"
+              priority
+            />
           </div>
         </motion.div>
       </div>
