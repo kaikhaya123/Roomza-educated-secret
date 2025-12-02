@@ -84,7 +84,7 @@ export default function Navbar() {
               {/* Header */}
               <div className="container mx-auto px-6 lg:px-12">
                 <div className="flex items-center justify-between h-24">
-                  <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center">
+                  <Link href="/" onClick={() => requestAnimationFrame(() => setIsMobileMenuOpen(false))} className="flex items-center">
                     <div className="relative w-20 h-20">
                       <Image
                         src="/Images/RES Logo with Futuristic Emblem.png"
@@ -96,7 +96,7 @@ export default function Navbar() {
                   </Link>
 
                   <button
-                    onClick={() => setIsMobileMenuOpen(false)}
+                    onClick={() => requestAnimationFrame(() => setIsMobileMenuOpen(false))}
                     className="p-2 text-white hover:text-white/80 transition"
                   >
                     <X size={28} strokeWidth={1.5} />
@@ -112,28 +112,28 @@ export default function Navbar() {
                     <Link 
                       href="/about" 
                       className="text-5xl lg:text-7xl text-white hover:text-white/70 font-light transition leading-tight"
-                      onClick={() => setIsMobileMenuOpen(false)}
+                      onClick={() => requestAnimationFrame(() => setIsMobileMenuOpen(false))}
                     >
                       About
                     </Link>
                     <Link 
                       href="/journey" 
                       className="text-5xl lg:text-7xl text-white hover:text-white/70 font-light transition leading-tight"
-                      onClick={() => setIsMobileMenuOpen(false)}
+                      onClick={() => requestAnimationFrame(() => setIsMobileMenuOpen(false))}
                     >
                       Journey
                     </Link>
                     <Link 
                       href="/contestants" 
                       className="text-5xl lg:text-7xl text-white hover:text-white/70 font-light transition leading-tight"
-                      onClick={() => setIsMobileMenuOpen(false)}
+                      onClick={() => requestAnimationFrame(() => setIsMobileMenuOpen(false))}
                     >
                       Contestants
                     </Link>
                     <Link 
                       href="/impact" 
                       className="text-5xl lg:text-7xl text-white hover:text-white/70 font-light transition leading-tight"
-                      onClick={() => setIsMobileMenuOpen(false)}
+                      onClick={() => requestAnimationFrame(() => setIsMobileMenuOpen(false))}
                     >
                       Impact
                     </Link>
@@ -144,14 +144,14 @@ export default function Navbar() {
                     <Link 
                       href="/vote" 
                       className="text-4xl lg:text-5xl text-white hover:text-white/70 font-light transition"
-                      onClick={() => setIsMobileMenuOpen(false)}
+                      onClick={() => requestAnimationFrame(() => setIsMobileMenuOpen(false))}
                     >
                       Vote
                     </Link>
                     <Link 
                       href="/stream" 
                       className="text-4xl lg:text-5xl text-white hover:text-white/70 font-light transition"
-                      onClick={() => setIsMobileMenuOpen(false)}
+                      onClick={() => requestAnimationFrame(() => setIsMobileMenuOpen(false))}
                     >
                       Watch Live
                     </Link>
@@ -168,7 +168,7 @@ export default function Navbar() {
                         <Link
                           href="/dashboard"
                           className="block text-2xl text-white hover:text-white/70 font-light transition"
-                          onClick={() => setIsMobileMenuOpen(false)}
+                          onClick={() => requestAnimationFrame(() => setIsMobileMenuOpen(false))}
                         >
                           Dashboard
                         </Link>
@@ -177,14 +177,14 @@ export default function Navbar() {
                           <Link
                             href="/auth/login"
                             className="block text-2xl text-white hover:text-white/70 font-light transition"
-                            onClick={() => setIsMobileMenuOpen(false)}
+                            onClick={() => requestAnimationFrame(() => setIsMobileMenuOpen(false))}
                           >
                             Login
                           </Link>
                           <Link
                             href="/auth/register"
                             className="block text-2xl text-white hover:text-white/70 font-light transition"
-                            onClick={() => setIsMobileMenuOpen(false)}
+                            onClick={() => requestAnimationFrame(() => setIsMobileMenuOpen(false))}
                           >
                             Sign Up
                           </Link>
