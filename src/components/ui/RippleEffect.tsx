@@ -35,7 +35,6 @@ export default function RippleEffect({
 
   // Add ripple function
   const addRipple = (x: number, y: number, offsetLeft: number = 0, offsetTop: number = 0) => {
-    console.log('Adding ripple at:', x, y, 'with offset:', offsetLeft, offsetTop);
     const newRipple: Ripple = {
       x: x + offsetLeft, // Convert to viewport coordinates
       y: y + offsetTop,
@@ -43,10 +42,9 @@ export default function RippleEffect({
       maxAge: 60,
       id: rippleIdRef.current++
     };
-
+    // Batch updates and keep number of ripples bounded
     setRipples(prev => {
       const updated = [...prev.slice(-rippleCount), newRipple];
-      console.log('Current ripples:', updated.length);
       return updated;
     });
   };
@@ -62,8 +60,8 @@ export default function RippleEffect({
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
 
-    console.log('Click at hero coordinates:', x, y);
-    addRipple(x, y, rect.left, rect.top);
+    // Schedule ripple creation on next animation frame to avoid blocking input
+    requestAnimationFrame(() => addRipple(x, y, rect.left, rect.top));
   };
 
   // Auto ripples
@@ -80,9 +78,8 @@ export default function RippleEffect({
         
         const x = Math.random() * rect.width;
         const y = Math.random() * rect.height;
-        
-        console.log('Auto ripple at:', x, y, 'hero size:', rect.width, rect.height);
-        addRipple(x, y, rect.left, rect.top);
+        // Schedule ripple creation on rAF to avoid blocking
+        requestAnimationFrame(() => addRipple(x, y, rect.left, rect.top));
       }, rippleInterval);
 
       return () => clearInterval(interval);
@@ -91,20 +88,28 @@ export default function RippleEffect({
     return () => clearTimeout(startDelay);
   }, [rippleInterval, rippleCount]);
 
-  // Animate ripples
+  // Single animation loop for ripples to batch updates and reduce reflows
   useEffect(() => {
-    if (ripples.length === 0) return;
-
-    const animationFrame = requestAnimationFrame(() => {
+    let raf = 0;
+    const tick = () => {
       setRipples(prev => 
         prev
           .map(ripple => ({ ...ripple, age: ripple.age + 1 }))
           .filter(ripple => ripple.age < ripple.maxAge)
       );
-    });
+      raf = requestAnimationFrame(() => {
+        // Only continue loop if there are ripples remaining
+        raf = requestAnimationFrame(tick);
+      });
+    };
 
-    return () => cancelAnimationFrame(animationFrame);
-  }, [ripples]);
+    // Start the loop only if there are ripples to animate
+    if (ripples.length > 0) {
+      raf = requestAnimationFrame(tick);
+    }
+
+    return () => cancelAnimationFrame(raf);
+  }, [ripples.length]);
 
   return (
     <>
