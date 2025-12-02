@@ -251,7 +251,13 @@ export default function RegisterPage() {
     </div>
   );
 }
+'use client';
 
+import { useState, useRef } from 'react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import Image from 'next/image';
+import { motion } from 'framer-motion';
 import { Mail, Lock, AlertCircle, Eye, EyeOff, User, Phone } from 'lucide-react';
 import ReCAPTCHA from 'react-google-recaptcha';
 
