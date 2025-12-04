@@ -30,9 +30,9 @@ function LiveCounter({ target, suffix = '' }: { target: number; suffix?: string 
 
 export default function LiveStream() {
   const platforms = [
-    { name: 'TikTok', image: '/Images/tik-tok.png', color: 'white', viewers: 3200000 },
-    { name: 'Facebook', image: '/Images/social-media.png', color: 'white', viewers: 1200000 },
-    { name: 'YouTube', image: '/Images/youtube.png', color: 'white', viewers: 2800000 }
+    { name: 'TikTok', image: '/Images/tiktok.png', viewers: 3200000 },
+    { name: 'Facebook', image: '/Images/facebook.png',  viewers: 1200000 },
+    { name: 'YouTube', image: '/Images/youtube.png', viewers: 2800000 }
   ];
 
   const stats = [
@@ -42,7 +42,7 @@ export default function LiveStream() {
   ];
 
   return (
-    <section className="relative py-32 lg:py-40 bg-black text-white overflow-hidden">
+    <section className="relative py-32 lg:py-40 bg-white text-black overflow-hidden">
       {/* Grid Background */}
       <div
         className="absolute inset-0 opacity-[0.03]"
@@ -82,19 +82,19 @@ export default function LiveStream() {
               whileInView={{ scaleX: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="h-[2px] w-32 bg-white origin-right"
+              className="h-[2px] w-32 bg-black origin-right"
             />
             <motion.div
               animate={{ rotate: 360 }}
               transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-              className="w-2 h-2 bg-white rotate-45"
+              className="w-2 h-2 bg-black rotate-45"
             />
             <motion.div
               initial={{ scaleX: 0 }}
               whileInView={{ scaleX: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="h-[2px] w-32 bg-white origin-left"
+              className="h-[2px] w-32 bg-black origin-left"
             />
           </div>
 
@@ -180,7 +180,7 @@ export default function LiveStream() {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="py-4 bg-white text-black font-black text-sm uppercase tracking-wider border-2 border-white hover:bg-black hover:text-white transition-colors"
+                className="py-4 bg-white text-black font-black text-sm uppercase tracking-wider border-2 border-black hover:bg-black hover:text-white transition-colors"
               >
                 <div className="flex items-center justify-center gap-2">
                   <Play className="w-4 h-4" />
@@ -190,7 +190,7 @@ export default function LiveStream() {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="py-4 bg-black text-white font-black text-sm uppercase tracking-wider border-2 border-white hover:bg-white hover:text-black transition-colors"
+                className="py-4 bg-black text-white font-black text-sm uppercase tracking-wider border-2 border-black hover:bg-white hover:text-black transition-colors"
               >
                 <div className="flex items-center justify-center gap-2">
                   <Zap className="w-4 h-4" />
@@ -326,7 +326,7 @@ export default function LiveStream() {
           transition={{ duration: 0.8 }}
           className="text-center"
         >
-          <div className="inline-block border-2 border-white p-12 max-w-3xl">
+          <div className="inline-block border-2 border-black p-12 max-w-3xl">
             <h3 className="text-3xl lg:text-4xl font-black tracking-tighter mb-4">
               Stream, Vote, Win — All at Once
             </h3>
@@ -338,7 +338,7 @@ export default function LiveStream() {
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Link
                   href="/stream"
-                  className="inline-flex items-center gap-3 px-8 py-4 bg-white text-black font-black text-sm uppercase tracking-wider hover:bg-black hover:text-white border-2 border-white transition-colors"
+                  className="inline-flex items-center gap-3 px-8 py-4 bg-white text-black font-black text-sm uppercase tracking-wider hover:bg-black hover:text-white border-2 border-black transition-colors"
                 >
                   <Play className="w-5 h-5" />
                   <span>Watch Live Now</span>
@@ -347,7 +347,7 @@ export default function LiveStream() {
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Link
                   href="/auth/register"
-                  className="inline-flex items-center gap-3 px-8 py-4 bg-black text-white font-black text-sm uppercase tracking-wider border-2 border-white hover:bg-white hover:text-black transition-colors"
+                  className="inline-flex items-center gap-3 px-8 py-4 bg-black text-white font-black text-sm uppercase tracking-wider border-2 border-black hover:bg-white hover:text-black transition-colors"
                 >
                   <span>Join & Compete</span>
                   <ArrowRight className="w-5 h-5" />
