@@ -1,102 +1,415 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import Image from 'next/image';
+import Link from 'next/link';
+import { ArrowRight, Award, Handshake, Sparkles, TrendingUp, Zap } from 'lucide-react';
+import { useRef, useEffect, useState } from 'react';
 
 export default function Sponsors() {
-  // Mock sponsor data - simplified for cleaner design
-  const sponsors = [
-    { name: 'VODACOM', type: 'TELECOMMUNICATIONS' },
-    { name: 'CAPITEC', type: 'FINANCIAL SERVICES' },
-    { name: 'SAMSUNG', type: 'TECHNOLOGY' },
-    { name: 'SHOPRITE', type: 'RETAIL' },
-    { name: 'NEDBANK', type: 'BANKING' },
-    { name: 'COCA-COLA', type: 'BEVERAGES' },
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"]
+  });
+
+  // Parallax transforms
+  const yTitle = useTransform(scrollYProgress, [0, 1], [100, -100]);
+  const ySponsors = useTransform(scrollYProgress, [0, 1], [80, -80]);
+  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
+
+  // Auto-scroll carousel state
+  const [currentIndex, setCurrentIndex] = useState(0);
+  
+  // Sponsor tiers
+  const titleSponsor = {
+    name: 'Title Sponsor',
+    tier: 'PLATINUM PARTNER',
+    description: 'Leading the charge in empowering South African students through education, innovation, and opportunity.',
+    investment: 'R5M+ Investment',
+    benefits: ['Prime Branding', 'Exclusive Access', 'Media Coverage']
+  };
+
+  const premiumSponsors = [
+    { name: 'Premium Partner', tier: 'GOLD', industry: 'Technology' },
+    { name: 'Premium Partner', tier: 'GOLD', industry: 'Finance' },
+    { name: 'Premium Partner', tier: 'GOLD', industry: 'Telecommunications' },
+    { name: 'Premium Partner', tier: 'GOLD', industry: 'Retail' }
   ];
 
+  const supportingSponsors = [
+    'Supporting Partner',
+    'Supporting Partner',
+    'Supporting Partner',
+    'Supporting Partner',
+    'Supporting Partner',
+    'Supporting Partner',
+    'Supporting Partner',
+    'Supporting Partner'
+  ];
+
+  // Auto-scroll effect for supporting sponsors
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % supportingSponsors.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [supportingSponsors.length]);
+
   return (
-    <section className="py-24 bg-gray-50">
-      <div className="container mx-auto px-6">
-        {/* Section Header */}
+    <section ref={sectionRef} className="py-32 lg:py-40 bg-white relative overflow-hidden">
+      {/* Background pattern */}
+      <div className="absolute inset-0 opacity-[0.02]">
+        <div className="absolute inset-0" style={{ 
+          backgroundImage: 'linear-gradient(black 1px, transparent 1px), linear-gradient(90deg, black 1px, transparent 1px)',
+          backgroundSize: '80px 80px'
+        }} />
+      </div>
+
+      {/* Abstract shapes with parallax */}
+      <motion.div
+        style={{ y: yTitle }}
+        className="absolute top-40 right-10 w-32 h-32 border-4 border-black/5 rotate-45"
+      />
+      <motion.div
+        style={{ y: ySponsors }}
+        className="absolute bottom-40 left-10 w-24 h-24 border-4 border-black/5 rotate-12"
+      />
+
+      <div className="container mx-auto px-6 lg:px-12 max-w-7xl relative">
+        {/* Section Header with Parallax */}
+        <motion.div 
+          style={{ y: yTitle, opacity }}
+          className="text-center mb-32"
+        >
+          {/* Decorative Lines */}
+          <div className="flex items-center justify-center gap-6 mb-10">
+            <motion.div
+              initial={{ scaleX: 0 }}
+              whileInView={{ scaleX: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 1.2, delay: 0.2 }}
+              className="h-[1px] w-20 lg:w-32 bg-black origin-right"
+            />
+            <motion.div
+              initial={{ scale: 0, rotate: -180 }}
+              whileInView={{ scale: 1, rotate: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.4, type: "spring", stiffness: 150 }}
+              className="w-2 h-2 bg-black rotate-45"
+            />
+            <motion.div
+              initial={{ scaleX: 0 }}
+              whileInView={{ scaleX: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 1.2, delay: 0.2 }}
+              className="h-[1px] w-20 lg:w-32 bg-black origin-left"
+            />
+          </div>
+
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.6 }}
+            className="inline-flex items-center gap-2 px-6 py-2 border-2 border-black mb-8"
+          >
+            <Handshake className="w-3 h-3" />
+            <span className="text-xs uppercase tracking-[0.3em] font-black">Powered By</span>
+          </motion.div>
+
+          <motion.h2
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="text-5xl lg:text-8xl font-black mb-6 tracking-tighter"
+          >
+            Our <span className="italic font-light">Partners</span>
+          </motion.h2>
+
+          <motion.p
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed"
+          >
+            Building South Africa's future with visionary brands committed to student excellence.
+          </motion.p>
+        </motion.div>
+
+        {/* Title Sponsor - Large Featured */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 60 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="text-center mb-20"
+          className="mb-32"
         >
-          <div className="mb-4">
-            <span className="text-sm font-medium text-gray-500 tracking-[0.2em] uppercase">
-              WORK WITH
-            </span>
-          </div>
-          <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 mb-8 tracking-tight">
-            Our partners
-          </h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
-            Building the future of South African student competition with industry-leading brands.
-          </p>
-        </motion.div>
-
-        {/* Partners Grid */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto"
-        >
-          {sponsors.map((sponsor, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              className="group"
-            >
-              <div className="bg-white rounded-2xl p-12 text-center hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2 border border-gray-100">
-                {/* Logo Placeholder */}
-                <div className="w-24 h-24 mx-auto mb-8 bg-gray-100 rounded-xl flex items-center justify-center group-hover:bg-gray-200 transition-colors duration-300">
-                  <div className="w-12 h-12 bg-gray-300 rounded-lg"></div>
-                </div>
-                
-                {/* Company Name */}
-                <h3 className="text-2xl font-bold text-gray-900 mb-2 tracking-tight">
-                  {sponsor.name}
-                </h3>
-                
-                {/* Divider */}
-                <div className="w-12 h-px bg-gray-300 mx-auto mb-3"></div>
-                
-                {/* Industry Type */}
-                <p className="text-sm font-medium text-gray-500 tracking-wider uppercase">
-                  {sponsor.type}
-                </p>
+          <div className="relative group">
+            <div className="bg-black p-12 lg:p-16 relative overflow-hidden">
+              {/* Background Pattern */}
+              <div className="absolute inset-0 opacity-[0.03]">
+                <div className="absolute inset-0" style={{ 
+                  backgroundImage: 'linear-gradient(white 1px, transparent 1px), linear-gradient(90deg, white 1px, transparent 1px)',
+                  backgroundSize: '40px 40px'
+                }} />
               </div>
-            </motion.div>
-          ))}
+
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center relative">
+                {/* Left: Logo */}
+                <motion.div
+                  whileHover={{ scale: 1.02 }}
+                  transition={{ duration: 0.4 }}
+                  className="relative"
+                >
+                  <div className="aspect-[3/2] bg-white flex items-center justify-center relative overflow-hidden group-hover:shadow-2xl transition-shadow duration-500">
+                    {/* Placeholder logo */}
+                    <div className="w-48 h-48 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+                      <Award className="w-24 h-24 text-gray-400" strokeWidth={1} />
+                    </div>
+                    
+                    {/* Corner accents */}
+                    <div className="absolute top-0 left-0 w-6 h-6 border-t-4 border-l-4 border-black" />
+                    <div className="absolute bottom-0 right-0 w-6 h-6 border-b-4 border-r-4 border-black" />
+                  </div>
+
+                  {/* Tier badge */}
+                  <div className="absolute -top-4 -right-4 px-4 py-2 bg-white border-2 border-black">
+                    <div className="flex items-center gap-2">
+                      <Sparkles className="w-4 h-4" />
+                      <span className="text-xs font-black uppercase tracking-wider">{titleSponsor.tier}</span>
+                    </div>
+                  </div>
+                </motion.div>
+
+                {/* Right: Description */}
+                <div className="text-white">
+                  <motion.div
+                    initial={{ opacity: 0, x: 20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.8, delay: 0.2 }}
+                  >
+                    <div className="inline-block px-4 py-1 border border-white/30 mb-6">
+                      <span className="text-xs uppercase tracking-[0.25em] font-bold">{titleSponsor.name}</span>
+                    </div>
+
+                    <h3 className="text-3xl lg:text-4xl font-black mb-6 tracking-tight">
+                      Empowering <span className="italic font-light">Tomorrow's</span> Leaders
+                    </h3>
+
+                    <p className="text-white/70 mb-8 leading-relaxed">
+                      {titleSponsor.description}
+                    </p>
+
+                    {/* Benefits */}
+                    <div className="space-y-3 mb-8">
+                      {titleSponsor.benefits.map((benefit, index) => (
+                        <motion.div
+                          key={index}
+                          initial={{ opacity: 0, x: 20 }}
+                          whileInView={{ opacity: 1, x: 0 }}
+                          viewport={{ once: true }}
+                          transition={{ duration: 0.6, delay: 0.3 + index * 0.1 }}
+                          className="flex items-center gap-3"
+                        >
+                          <div className="w-1 h-1 bg-white rotate-45" />
+                          <span className="text-sm font-bold">{benefit}</span>
+                        </motion.div>
+                      ))}
+                    </div>
+
+                    {/* Investment */}
+                    <div className="inline-flex items-center gap-2 px-4 py-2 bg-white text-black">
+                      <TrendingUp className="w-4 h-4" />
+                      <span className="text-sm font-black">{titleSponsor.investment}</span>
+                    </div>
+                  </motion.div>
+                </div>
+              </div>
+
+              {/* Decorative corner */}
+              <div className="absolute top-0 right-0 w-20 h-20 border-t-2 border-r-2 border-white/10" />
+            </div>
+          </div>
         </motion.div>
 
-        {/* Bottom CTA */}
+        {/* Premium Sponsors Grid */}
+        <motion.div style={{ y: ySponsors }} className="mb-32">
+          <div className="flex items-center gap-3 mb-12">
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+              className="w-2 h-2 bg-black rotate-45"
+            />
+            <h3 className="text-2xl font-black tracking-tight">Premium Partners</h3>
+            <div className="flex-1 h-[1px] bg-gradient-to-r from-black/20 to-transparent" />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {premiumSponsors.map((sponsor, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+                whileHover={{ y: -8, scale: 1.02 }}
+                className="group"
+              >
+                <div className="border-2 border-black p-8 relative bg-white hover:shadow-xl transition-all duration-500">
+                  {/* Logo placeholder */}
+                  <div className="aspect-square bg-gradient-to-br from-gray-50 to-gray-100 mb-6 flex items-center justify-center relative overflow-hidden">
+                    <motion.div
+                      whileHover={{ rotate: 360 }}
+                      transition={{ duration: 0.8 }}
+                    >
+                      <Award className="w-16 h-16 text-gray-300" strokeWidth={1} />
+                    </motion.div>
+
+                    {/* Tier badge */}
+                    <div className="absolute top-2 right-2 px-2 py-1 bg-black text-white text-xs font-black">
+                      {sponsor.tier}
+                    </div>
+                  </div>
+
+                  {/* Info */}
+                  <h4 className="text-lg font-black mb-2 tracking-tight">{sponsor.name}</h4>
+                  <p className="text-xs text-gray-500 font-bold uppercase tracking-wider mb-4">
+                    {sponsor.industry}
+                  </p>
+
+                  {/* Hover indicator */}
+                  <div className="flex items-center gap-2 text-xs font-bold opacity-0 group-hover:opacity-100 transition-opacity">
+                    <span>View Details</span>
+                    <ArrowRight className="w-3 h-3" />
+                  </div>
+
+                  {/* Corner accent */}
+                  <div className="absolute bottom-0 right-0 w-6 h-6 border-b-4 border-r-4 border-black" />
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Supporting Sponsors - Auto-scroll Carousel */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          className="text-center mt-20"
+          transition={{ duration: 0.8 }}
+          className="mb-32"
         >
-          <p className="text-lg text-gray-600 mb-8">
-            Ready to make an impact with South Africa's brightest minds?
+          <div className="flex items-center gap-3 mb-12">
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+              className="w-2 h-2 bg-black rotate-45"
+            />
+            <h3 className="text-2xl font-black tracking-tight">Supporting Partners</h3>
+            <div className="flex-1 h-[1px] bg-gradient-to-r from-black/20 to-transparent" />
+          </div>
+
+          {/* Carousel container */}
+          <div className="relative overflow-hidden">
+            <motion.div
+              animate={{ x: `-${currentIndex * 25}%` }}
+              transition={{ duration: 0.8, ease: "easeInOut" }}
+              className="flex gap-6"
+            >
+              {supportingSponsors.map((sponsor, index) => (
+                <motion.div
+                  key={index}
+                  className="min-w-[calc(25%-1.5rem)] md:min-w-[calc(20%-1.5rem)] lg:min-w-[calc(12.5%-1.5rem)]"
+                  whileHover={{ scale: 1.05 }}
+                >
+                  <div className="aspect-square border border-black/20 bg-gradient-to-br from-gray-50 to-white p-6 flex items-center justify-center hover:border-black hover:shadow-lg transition-all duration-300 group">
+                    <div className="text-center">
+                      <div className="w-12 h-12 mx-auto mb-2 bg-gray-200 flex items-center justify-center group-hover:bg-gray-300 transition-colors">
+                        <Zap className="w-6 h-6 text-gray-400" strokeWidth={1.5} />
+                      </div>
+                      <p className="text-xs font-bold text-gray-400 group-hover:text-black transition-colors">
+                        {sponsor}
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </motion.div>
+
+            {/* Gradient overlays */}
+            <div className="absolute inset-y-0 left-0 w-20 bg-gradient-to-r from-white to-transparent pointer-events-none" />
+            <div className="absolute inset-y-0 right-0 w-20 bg-gradient-to-l from-white to-transparent pointer-events-none" />
+          </div>
+        </motion.div>
+
+        {/* Divider */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1 }}
+          className="flex items-center justify-center gap-6 mb-20"
+        >
+          <div className="h-[1px] w-full bg-gradient-to-r from-transparent via-black to-transparent" />
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+            className="w-2 h-2 bg-black rotate-45 flex-shrink-0"
+          />
+          <div className="h-[1px] w-full bg-gradient-to-r from-transparent via-black to-transparent" />
+        </motion.div>
+
+        {/* CTA Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="text-center"
+        >
+          <h3 className="text-4xl lg:text-5xl font-black mb-6 tracking-tight">
+            Become a <span className="italic font-light">Partner</span>
+          </h3>
+          
+          <p className="text-gray-600 mb-12 max-w-2xl mx-auto leading-relaxed">
+            Join South Africa's most innovative brands in shaping the future of student excellence.
           </p>
-          <a
-            href="/sponsors/partner"
-            className="inline-flex items-center gap-3 px-8 py-4 bg-gray-900 text-white font-semibold rounded-xl hover:bg-gray-800 transition-all duration-300 transform hover:scale-105 hover:shadow-xl"
+
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Link
+              href="/sponsors/partner"
+              className="group inline-flex items-center gap-3 px-10 py-5 bg-black text-white font-black text-sm uppercase tracking-[0.15em] hover:bg-gray-800 transition-all duration-300"
+            >
+              <span>Partner With Us</span>
+              <motion.div
+                animate={{ x: [0, 5, 0] }}
+                transition={{ duration: 1.5, repeat: Infinity }}
+              >
+                <ArrowRight className="w-4 h-4" />
+              </motion.div>
+            </Link>
+            
+            <Link
+              href="/sponsors/info"
+              className="group inline-flex items-center gap-3 px-10 py-5 border-2 border-black text-black font-black text-sm uppercase tracking-[0.15em] hover:bg-black hover:text-white transition-all duration-300"
+            >
+              <span>View Packages</span>
+            </Link>
+          </div>
+
+          <motion.p
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            className="text-gray-400 text-sm mt-10"
           >
-            Partner with us
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-            </svg>
-          </a>
+            Partnership opportunities from R500K • Multiple investment tiers available
+          </motion.p>
         </motion.div>
       </div>
     </section>
