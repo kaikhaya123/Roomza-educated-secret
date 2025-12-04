@@ -127,7 +127,6 @@ export function Iphone({
             autoPlay
             loop
             muted
-            defaultMuted
             playsInline
             preload="metadata"
             style={{
