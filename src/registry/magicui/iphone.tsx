@@ -1,7 +1,7 @@
 "use client"
 
 import type { HTMLAttributes } from "react"
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 
 const PHONE_WIDTH = 433
 const PHONE_HEIGHT = 882
@@ -48,6 +48,8 @@ export function Iphone({
     typeof islandSafe === 'number' ? islandSafe : (islandSafe?.base ?? 42)
   )
 
+  const videoRef = useRef<HTMLVideoElement | null>(null)
+
   useEffect(() => {
     const compute = () => {
       if (typeof islandSafe === 'number') {
@@ -68,6 +70,26 @@ export function Iphone({
     window.addEventListener('resize', compute)
     return () => window.removeEventListener('resize', compute)
   }, [islandSafe])
+
+  // Try to programmatically play the video on mount/when source changes
+  useEffect(() => {
+    const el = videoRef.current
+    if (!el) return
+    // Ensure muted flags for autoplay policies
+    el.muted = true
+    el.defaultMuted = true
+    el.playsInline = true
+
+    const tryPlay = async () => {
+      try {
+        await el.play()
+      } catch (e) {
+        // ignore — user interaction may be required on some devices/browsers
+      }
+    }
+
+    tryPlay()
+  }, [videoSrc])
 
   return (
     <div
