@@ -4,6 +4,7 @@ import FeaturesSection from "@/components/home/FeaturesSection";
 import HowItWorks from "@/components/home/HowItWorks";
 import Contestants from "@/components/home/Contestants";
 import LiveStream from "@/components/home/LiveStream";
+import VotingSection from "@/components/home/VotingSection";
 import Statistics from "@/components/home/Statistics";
 import Sponsors from "@/components/home/Sponsors";
 import CallToAction from "@/components/home/CallToAction";
@@ -21,6 +22,7 @@ export default function Home() {
       <HowItWorks />
       <Contestants />
       <LiveStream />
+      <VotingSection />
       <Sponsors />
       <CallToAction />
       <Footer />
