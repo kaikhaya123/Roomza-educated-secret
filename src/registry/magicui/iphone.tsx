@@ -76,10 +76,13 @@ export function Iphone({
   useEffect(() => {
     const el = videoRef.current
     if (!el) return
+    
     // Ensure muted flags for autoplay policies
     el.muted = true
     el.defaultMuted = true
     el.playsInline = true
+    el.setAttribute('playsinline', '')
+    el.setAttribute('webkit-playsinline', '')
 
     const tryPlay = async () => {
       try {
@@ -96,7 +99,26 @@ export function Iphone({
       }, 250)
     }
 
+    // Use Intersection Observer for better mobile support
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            tryPlay()
+          }
+        })
+      },
+      { threshold: 0.5 }
+    )
+
+    observer.observe(el)
+
+    // Also try playing immediately
     tryPlay()
+
+    return () => {
+      observer.disconnect()
+    }
   }, [videoSrc])
 
   return (
@@ -128,7 +150,9 @@ export function Iphone({
             loop
             muted
             playsInline
-            preload="metadata"
+            preload="auto"
+            webkit-playsinline="true"
+            x-webkit-airplay="allow"
             style={{
               width: '100%',
               height: '100%',

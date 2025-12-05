@@ -112,7 +112,10 @@ export default function LiveStream() {
             className="relative flex items-center justify-center"
           >
             <div className="w-[320px] sm:w-[360px] lg:w-[480px]">
-              <Iphone videoSrc="/Videos/PinDown.io_@zarooza_1764838825.mp4" islandSafe={{ base: 36, sm: 44, lg: 56 }} />
+              <Iphone 
+                videoSrc="/Videos/PinDown.io_@zarooza_1764838825.mp4" 
+                islandSafe={{ base: 36, sm: 44, lg: 56 }}
+              />
             </div>
           </motion.div>
 
