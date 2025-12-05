@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState, memo } from 'react';
+import './LogoLoop.css';
 
 const ANIMATION_CONFIG = {
   SMOOTH_TAU: 0.25,
@@ -90,7 +91,7 @@ const useAnimationLoop = (
 
     // Apply a reduced animation intensity on mobile to save CPU and make motion subtler.
     // Use a less aggressive reduction so motion remains visible on small screens.
-    const mobileFactor = isMobile ? 0.75 : 1;
+    const mobileFactor = isMobile ? 1 : 1; // Keep full speed on mobile for visibility
 
     const prefersReduced =
       typeof window !== 'undefined' &&
@@ -98,22 +99,40 @@ const useAnimationLoop = (
       window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     const seqSize = isVertical ? seqHeight : seqWidth;
+    
+    // Force hardware acceleration and initial transform setup
+    if (track) {
+      track.style.willChange = 'transform';
+      track.style.backfaceVisibility = 'hidden';
+      (track.style as any).webkitBackfaceVisibility = 'hidden';
+      track.style.transform = 'translate3d(0, 0, 0)';
+      (track.style as any).webkitTransform = 'translate3d(0, 0, 0)';
+    }
+    
     if (seqSize > 0) {
       offsetRef.current = ((offsetRef.current % seqSize) + seqSize) % seqSize;
       const transformValue = isVertical
         ? `translate3d(0, ${-offsetRef.current}px, 0)`
         : `translate3d(${-offsetRef.current}px, 0, 0)`;
-      track.style.transform = transformValue;
+      if (track) {
+        track.style.transform = transformValue;
+        (track.style as any).webkitTransform = transformValue;
+      }
     }
 
     if (prefersReduced) {
-      track.style.transform = isVertical ? 'translate3d(0, 0, 0)' : 'translate3d(0, 0, 0)';
+      if (track) {
+        track.style.transform = isVertical ? 'translate3d(0, 0, 0)' : 'translate3d(0, 0, 0)';
+        (track.style as any).webkitTransform = isVertical ? 'translate3d(0, 0, 0)' : 'translate3d(0, 0, 0)';
+      }
       return () => {
         lastTimestampRef.current = null;
       };
     }
 
     const animate = (timestamp: number) => {
+      if (!track) return;
+      
       if (lastTimestampRef.current === null) {
         lastTimestampRef.current = timestamp;
       }
@@ -146,6 +165,7 @@ const useAnimationLoop = (
         ? `translate3d(0, ${-offsetRef.current}px, 0)`
         : `translate3d(${-offsetRef.current}px, 0, 0)`;
       track.style.transform = transformValue;
+      (track.style as any).webkitTransform = transformValue;
 
       rafRef.current = requestAnimationFrame(animate);
     };

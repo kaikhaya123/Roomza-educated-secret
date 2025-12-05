@@ -181,3 +181,53 @@
     transition: none !important;
   }
 }
+
+/* Mobile-specific optimizations for all browsers */
+@media (max-width: 767px) {
+  .logoloop__track {
+    /* Force hardware acceleration on mobile */
+    transform: translate3d(0, 0, 0);
+    -webkit-transform: translate3d(0, 0, 0);
+    -moz-transform: translate3d(0, 0, 0);
+    -ms-transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    -moz-backface-visibility: hidden;
+    perspective: 1000px;
+    -webkit-perspective: 1000px;
+    -moz-perspective: 1000px;
+  }
+
+  .logoloop__item img {
+    /* Hardware acceleration for images on mobile */
+    transform: translate3d(0, 0, 0);
+    -webkit-transform: translate3d(0, 0, 0);
+    -moz-transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    -moz-backface-visibility: hidden;
+  }
+}
+
+/* iOS-specific fixes */
+@supports (-webkit-touch-callout: none) {
+  .logoloop__track {
+    -webkit-overflow-scrolling: touch;
+    transform: translate3d(0, 0, 0);
+    -webkit-transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+  
+  .logoloop {
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* Android Chrome-specific fixes */
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  .logoloop__track {
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+  }
+}
