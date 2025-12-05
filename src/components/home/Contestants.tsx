@@ -122,10 +122,6 @@ export default function Contestants() {
               <div className="absolute bottom-4 left-4 md:bottom-6 md:left-6 px-3 py-1.5 md:px-4 md:py-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-lg">
                 <span className="text-[10px] md:text-xs font-bold uppercase tracking-wider">40 Contestants</span>
               </div>
-
-              <div className="absolute top-1/2 left-4 md:left-6 px-3 py-1.5 md:px-4 md:py-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-lg">
-                <span className="text-[10px] md:text-xs font-bold uppercase tracking-wider">National Showcase</span>
-              </div>
             </div>
           </motion.div>
 
