@@ -1,181 +1,252 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import Link from 'next/link';
-import { Trophy, Users, ArrowRight, Calendar } from 'lucide-react';
+import { Trophy, Users, ArrowRight, Calendar, Sparkles, Award } from 'lucide-react';
+import Image from 'next/image';
+import { useRef } from 'react';
 
 export default function Contestants() {
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"]
+  });
+
+  const yHero = useTransform(scrollYProgress, [0, 1], [50, -50]);
+  const yParticles = useTransform(scrollYProgress, [0, 1], [0, -100]);
+
   const stats = [
-    { value: '0', label: 'Active Contestants', sublabel: 'Spots Opening Soon' },
-    { value: 'TBA', label: 'Competition Start', sublabel: 'Registration Coming Soon' },
-    { value: 'R50K+', label: 'Prize Pool', sublabel: 'Scholarships & Rewards' }
+    { icon: Users, value: '40', label: 'Contestants', sublabel: 'National Showcase' },
+    { icon: Calendar, value: 'TBA', label: 'Competition Start', sublabel: 'Registration Coming Soon' },
+    { icon: Trophy, value: 'R50K+', label: 'Prize Pool', sublabel: 'Scholarships & Rewards' }
+  ];
+
+  const galleryImages = [
+    { src: '/Images/sergey-zolkin-_UeY8aTI6d0-unsplash.jpg', caption: 'Student Energy', span: 'row-span-2' },
+    { src: '/Images/download (9) (1).jpg', caption: 'Campus Life', span: 'row-span-1' },
+    { src: '/Images/pexels-cottonbro-5081915.jpg', caption: 'Competition Spirit', span: 'row-span-1' }
   ];
 
   return (
-    <section className="py-32 lg:py-40 bg-black text-white relative overflow-hidden">
-      {/* Background grid */}
-      <div className="absolute inset-0 opacity-[0.03]">
+    <section ref={sectionRef} className="py-24 lg:py-32 bg-gradient-to-b from-black via-zinc-900 to-black text-white relative overflow-hidden">
+      {/* Background Elements */}
+      <div className="absolute inset-0 opacity-[0.02]">
         <div className="absolute inset-0" style={{ 
           backgroundImage: 'linear-gradient(white 1px, transparent 1px), linear-gradient(90deg, white 1px, transparent 1px)',
-          backgroundSize: '80px 80px'
+          backgroundSize: '60px 60px'
         }} />
       </div>
 
-      <div className="container mx-auto px-6 lg:px-12 max-w-5xl relative">
-        {/* Header with decorative lines */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-24"
-        >
-          <div className="flex items-center justify-center gap-6 mb-10">
-            <motion.div
-              initial={{ scaleX: 0 }}
-              whileInView={{ scaleX: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 1.2, delay: 0.2 }}
-              className="h-[1px] w-20 lg:w-32 bg-white origin-right"
-            />
-            <motion.div
-              initial={{ scale: 0, rotate: -180 }}
-              whileInView={{ scale: 1, rotate: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.4, type: "spring", stiffness: 150 }}
-              className="w-2 h-2 bg-white rotate-45"
-            />
-            <motion.div
-              initial={{ scaleX: 0 }}
-              whileInView={{ scaleX: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 1.2, delay: 0.2 }}
-              className="h-[1px] w-20 lg:w-32 bg-white origin-left"
-            />
-          </div>
+      {/* Radial Glow */}
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-purple-600/10 rounded-full blur-[120px] pointer-events-none" />
 
+      {/* Floating Particles */}
+      <motion.div style={{ y: yParticles }} className="absolute inset-0 pointer-events-none">
+        {[...Array(8)].map((_, i) => (
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
+            key={i}
+            animate={{ 
+              y: [0, -30, 0],
+              opacity: [0.2, 0.5, 0.2]
+            }}
+            transition={{ 
+              duration: 3 + i * 0.5, 
+              repeat: Infinity,
+              delay: i * 0.3 
+            }}
+            className="absolute w-1 h-1 bg-white/40 rounded-full"
+            style={{
+              left: `${10 + i * 12}%`,
+              top: `${20 + (i % 3) * 25}%`
+            }}
+          />
+        ))}
+      </motion.div>
+
+      <div className="container mx-auto px-6 lg:px-12 max-w-7xl relative">
+        {/* Two-Column Hero */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center mb-20">
+          
+          {/* Left: Hero Image */}
+          <motion.div
+            style={{ y: yHero }}
+            initial={{ opacity: 0, x: -60 }}
+            whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.6 }}
-            className="inline-block px-6 py-2 border border-white/20 mb-8"
+            transition={{ duration: 1 }}
+            className="relative group"
           >
-            <span className="text-xs uppercase tracking-[0.3em] text-white/60 font-bold">Coming Soon</span>
+            <div className="relative aspect-[3/4] rounded-2xl overflow-hidden">
+              {/* Image Container */}
+              <div className="absolute inset-0 bg-gradient-to-br from-zinc-800 to-zinc-900">
+                <Image 
+                  src="/Images/Silhouettes_2.jpg"
+                  alt="Featured Students"
+                  fill
+                  className="object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500"
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                />
+                {/* Dark Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+              </div>
+
+              {/* Pixel Grid Reveal Overlay */}
+              <motion.div
+                initial={{ opacity: 1 }}
+                whileInView={{ opacity: 0 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 1.2, delay: 0.3 }}
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  backgroundImage: `
+                    repeating-linear-gradient(
+                      0deg,
+                      #000 0px,
+                      #000 20px,
+                      transparent 20px,
+                      transparent 40px
+                    ),
+                    repeating-linear-gradient(
+                      90deg,
+                      #000 0px,
+                      #000 20px,
+                      transparent 20px,
+                      transparent 40px
+                    )
+                  `,
+                  backgroundSize: '40px 40px'
+                }}
+              >
+                {/* Animated Pixel Blocks */}
+                <div className="absolute inset-0 grid grid-cols-8 grid-rows-12">
+                  {[...Array(96)].map((_, i) => (
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 1, scale: 1 }}
+                      whileInView={{ opacity: 0, scale: 0 }}
+                      viewport={{ once: true, amount: 0.3 }}
+                      transition={{
+                        duration: 0.4,
+                        delay: 0.3 + (i * 0.01),
+                        ease: "easeOut"
+                      }}
+                      className="bg-black"
+                    />
+                  ))}
+                </div>
+              </motion.div>
+
+              {/* White Glow on Hover */}
+              <div className="absolute inset-0 border-2 border-white/0 group-hover:border-white/30 rounded-2xl transition-all duration-500" />
+
+              {/* Static Labels */}
+              <div className="absolute top-6 right-6 px-4 py-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-lg">
+                <span className="text-xs font-bold uppercase tracking-wider">Coming Soon</span>
+              </div>
+
+              <div className="absolute bottom-6 left-6 px-4 py-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-lg">
+                <span className="text-xs font-bold uppercase tracking-wider">40 Contestants</span>
+              </div>
+
+              <div className="absolute top-1/2 left-6 px-4 py-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-lg">
+                <span className="text-xs font-bold uppercase tracking-wider">National Showcase</span>
+              </div>
+            </div>
           </motion.div>
 
-          <motion.h2 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.7 }}
-            className="text-5xl lg:text-7xl font-black mb-6 tracking-tighter section-title"
-          >
-            Meet The <span className="">Contestants</span>
-          </motion.h2>
-          
-          <motion.p 
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.9 }}
-            className="text-lg text-white/70 max-w-2xl mx-auto leading-relaxed"
-          >
-            Our platform is launching soon with South Africa's brightest students competing for scholarships and recognition.
-          </motion.p>
-        </motion.div>
-
-        {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-24">
-          {stats.map((stat, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.7, delay: 1.1 + index * 0.15 }}
-              className="border border-white/10 p-8 lg:p-10 text-center relative group hover:border-white/30 transition-colors duration-300"
-            >
-              {/* Corner decoration */}
-              <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-white/40" />
-              <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-white/40" />
-              
-              <motion.div
-                initial={{ scale: 0.8, opacity: 0 }}
-                whileInView={{ scale: 1, opacity: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 1.3 + index * 0.15 }}
-              >
-                <div className="text-6xl font-black mb-3 tracking-tight">{stat.value}</div>
-                <div className="text-sm uppercase tracking-[0.2em] text-white/90 mb-2 font-bold">
-                  {stat.label}
-                </div>
-                <div className="text-xs text-white/50">{stat.sublabel}</div>
-              </motion.div>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* Divider */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1, delay: 1.8 }}
-          className="flex items-center justify-center gap-6 mb-16"
-        >
-          <div className="h-[1px] w-full bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+          {/* Right: Content */}
           <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-            className="w-2 h-2 bg-white rotate-45 flex-shrink-0"
-          />
-          <div className="h-[1px] w-full bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-        </motion.div>
+            initial={{ opacity: 0, x: 60 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1, delay: 0.2 }}
+            className="space-y-8"
+          >
+            {/* Headline */}
+            <h2 
+              className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-black tracking-tighter leading-[0.95]"
+              style={{
+                backgroundImage: 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%), url(/Images/Glass_hands.jpg)',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundBlendMode: 'overlay',
+                backgroundClip: 'text',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                color: 'transparent'
+              }}
+            >
+              Meet the Contestants
+            </h2>
+
+            {/* Subtext */}
+            <p className="text-lg text-white/70 leading-relaxed">
+              South Africa's brightest students will appear here soon — competing for scholarships, recognition, and opportunities that change lives.
+            </p>
+
+            {/* Stats Blocks (Stacked) */}
+            <div className="space-y-4">
+              {stats.map((stat, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: 0.4 + i * 0.1 }}
+                  className="flex items-center gap-4 p-4 bg-white/5 backdrop-blur-md border border-white/10 rounded-xl hover:bg-white/10 transition-all duration-300"
+                >
+                  <div className="w-12 h-12 flex items-center justify-center bg-white/10 rounded-lg">
+                    <stat.icon className="w-6 h-6" strokeWidth={2} />
+                  </div>
+                  <div className="flex-1">
+                    <div className="text-2xl font-black">{stat.value}</div>
+                    <div className="text-sm text-white/60">{stat.label}</div>
+                  </div>
+                  <div className="text-xs text-white/40 hidden sm:block">{stat.sublabel}</div>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
 
         {/* CTA Section */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 2 }}
-          className="text-center"
+          transition={{ duration: 0.8 }}
+          className="text-center max-w-2xl mx-auto"
         >
-          <div className="flex items-center justify-center gap-4 mb-8">
-            <Users className="w-8 h-8" strokeWidth={1.5} />
-            <Trophy className="w-8 h-8" strokeWidth={1.5} />
-            <Calendar className="w-8 h-8" strokeWidth={1.5} />
-          </div>
-
           <h3 className="text-3xl font-black mb-4 tracking-tight">
             Be Part of the Journey
           </h3>
           
-          <p className="text-white/70 mb-10 max-w-xl mx-auto">
-            Register now to be notified when contestants are announced and voting opens.
+          <p className="text-white/60 mb-10">
+            Register now to get early access when contestants are announced and voting opens.
           </p>
           
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link
-              href="/auth/register"
-              className="group/btn relative px-8 py-4 bg-white text-black font-black text-sm uppercase tracking-[0.15em] hover:bg-white/90 transition-all duration-300 overflow-hidden"
+          {/* Primary CTA */}
+          <Link
+            href="/auth/register"
+            className="group inline-flex items-center gap-3 px-10 py-5 bg-white text-black font-black text-sm uppercase tracking-[0.15em] rounded-full hover:shadow-[0_0_30px_rgba(255,255,255,0.3)] transition-all duration-500 mb-6"
+          >
+            <span>Register to Get Early Access</span>
+            <motion.div
+              animate={{ x: [0, 5, 0] }}
+              transition={{ duration: 1.5, repeat: Infinity }}
             >
-              <span className="relative z-10">Register Interest</span>
-              <motion.div
-                className="absolute inset-0 bg-black"
-                initial={{ x: '-100%' }}
-                whileHover={{ x: 0 }}
-                transition={{ duration: 0.3 }}
-              />
-              <span className="relative z-10 opacity-0 group-hover/btn:opacity-100 transition-opacity">Register Interest</span>
-            </Link>
-            
+              <ArrowRight className="w-5 h-5" />
+            </motion.div>
+          </Link>
+
+          {/* Secondary Link */}
+          <div>
             <Link
               href="/about"
-              className="group/link inline-flex items-center gap-3 px-8 py-4 border border-white/30 text-white font-black text-sm uppercase tracking-[0.15em] hover:border-white hover:bg-white/5 transition-all duration-300"
+              className="text-sm text-white/50 hover:text-white transition-colors underline"
             >
-              <span>Learn More</span>
-              <ArrowRight className="w-4 h-4 group-hover/link:translate-x-1 transition-transform" />
+              Learn about the competition
             </Link>
           </div>
 
@@ -183,8 +254,8 @@ export default function Contestants() {
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 2.3 }}
-            className="text-white/40 text-sm mt-12"
+            transition={{ duration: 0.8, delay: 0.3 }}
+            className="text-white/30 text-xs mt-12"
           >
             Competition details and contestant announcements coming soon
           </motion.p>
