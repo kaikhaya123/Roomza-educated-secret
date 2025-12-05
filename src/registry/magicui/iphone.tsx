@@ -86,38 +86,53 @@ export function Iphone({
 
     const tryPlay = async () => {
       try {
+        // Wait for video to be ready
+        if (el.readyState < 3) {
+          await new Promise((resolve) => {
+            el.addEventListener('canplay', resolve, { once: true })
+          })
+        }
         await el.play()
-        // if playback started, ensure play button hidden
-        if (!el.paused) setShowPlayButton(false)
+        setShowPlayButton(false)
       } catch (e) {
-        // autoplay blocked — show tap to play
         setShowPlayButton(true)
       }
-      // double-check: if still paused after attempt, show play button
-      setTimeout(() => {
-        if (el.paused) setShowPlayButton(true)
-      }, 250)
     }
 
-    // Use Intersection Observer for better mobile support
+    // Use Intersection Observer with lower threshold for earlier triggering
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
+            // Multiple play attempts for stubborn mobile browsers
             tryPlay()
+            setTimeout(() => tryPlay(), 100)
+            setTimeout(() => tryPlay(), 500)
           }
         })
       },
-      { threshold: 0.5 }
+      { threshold: 0.1 } // Lower threshold for earlier detection
     )
 
-    observer.observe(el)
+    // Wait a bit for element to be in DOM, then observe and try playing
+    const initTimeout = setTimeout(() => {
+      observer.observe(el)
+      tryPlay()
+    }, 100)
 
-    // Also try playing immediately
-    tryPlay()
+    // Also listen for user interactions to retry play
+    const handleInteraction = () => {
+      if (el.paused) tryPlay()
+    }
+    
+    document.addEventListener('touchstart', handleInteraction, { once: true })
+    document.addEventListener('click', handleInteraction, { once: true })
 
     return () => {
+      clearTimeout(initTimeout)
       observer.disconnect()
+      document.removeEventListener('touchstart', handleInteraction)
+      document.removeEventListener('click', handleInteraction)
     }
   }, [videoSrc])
 
@@ -153,18 +168,57 @@ export function Iphone({
             preload="auto"
             webkit-playsinline="true"
             x-webkit-airplay="allow"
+            disablePictureInPicture
+            controlsList="nodownload nofullscreen noremoteplayback"
             style={{
               width: '100%',
               height: '100%',
               objectFit: 'cover',
             }}
+            onLoadedData={(e) => {
+              // Try to play as soon as data is loaded
+              const video = e.currentTarget
+              if (video.paused) {
+                video.play().catch(() => setShowPlayButton(true))
+              }
+            }}
             onClick={() => {
               const el = videoRef.current
               if (!el) return
-              if (el.paused) el.play().catch(() => {})
-              else el.pause()
+              if (el.paused) {
+                el.play().catch(() => {})
+                setShowPlayButton(false)
+              } else {
+                el.pause()
+              }
             }}
           />
+          
+          {/* Play button overlay if autoplay fails */}
+          {showPlayButton && (
+            <button
+              onClick={() => {
+                const el = videoRef.current
+                if (el) {
+                  el.play().then(() => setShowPlayButton(false)).catch(() => {})
+                }
+              }}
+              className="absolute inset-0 z-10 flex items-center justify-center bg-black/30 transition-opacity hover:bg-black/40"
+              style={{
+                cursor: 'pointer',
+              }}
+            >
+              <div className="flex items-center justify-center w-16 h-16 rounded-full bg-white/90 shadow-lg">
+                <svg
+                  className="w-8 h-8 text-black ml-1"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+              </div>
+            </button>
+          )}
         </div>
       )}
 

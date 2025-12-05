@@ -7,7 +7,6 @@ import Image from 'next/image';
 // Update the import path to the correct relative location, for example:
 import { Iphone } from '../../registry/magicui/iphone';
 // Or, if the file does not exist, create 'src/registry/magicui/iphone.tsx' and export the Iphone component from there.
-
 // LiveCounter removed while backend is not connected; numeric placeholders used instead.
 
 export default function LiveStream() {
@@ -211,9 +210,9 @@ export default function LiveStream() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
-              { title: 'Daily Show', time: '6:00 AM - 12:00 AM', desc: '18 hours of non-stop content' },
-              { title: 'Elimination Round', time: 'Every Sunday 8:00 PM', desc: 'High-stakes live eliminations' },
-              { title: 'Grand Finale', time: 'December 15, 2025', desc: 'Crown the ultimate champion' }
+              { title: 'Daily Show', time: '', desc: '' },
+              { title: 'Elimination Round', time: '', desc: '' },
+              { title: 'Grand Finale', time: '', desc: '' }
             ].map((event, index) => (
               <motion.div
                 key={event.title}
