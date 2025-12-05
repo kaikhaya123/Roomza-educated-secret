@@ -3,8 +3,8 @@ import './LogoLoop.css';
 
 const ANIMATION_CONFIG = {
   SMOOTH_TAU: 0.25,
-  MIN_COPIES: 2,
-  COPY_HEADROOM: 2
+  MIN_COPIES: 4,  // Increased from 2 to ensure visibility on mobile
+  COPY_HEADROOM: 3  // Increased from 2 for better coverage
 };
 
 const toCssLength = (value: string | number | undefined) => (typeof value === 'number' ? `${value}px` : (value ?? undefined));
@@ -246,7 +246,7 @@ export const LogoLoop = memo<LogoLoopProps>(
 
     const [seqWidth, setSeqWidth] = useState(0);
     const [seqHeight, setSeqHeight] = useState(0);
-    const [copyCount, setCopyCount] = useState(ANIMATION_CONFIG.MIN_COPIES);
+    const [copyCount, setCopyCount] = useState(6); // Start with more copies for mobile
     const [isHovered, setIsHovered] = useState(false);
     const [isMobile, setIsMobile] = useState<boolean>(false);
 
@@ -343,12 +343,15 @@ export const LogoLoop = memo<LogoLoopProps>(
           setSeqWidth(Math.ceil(containerWidth));
           setCopyCount(fallback + ANIMATION_CONFIG.COPY_HEADROOM);
         } else {
-          // Last-resort fallback using viewport width (helps some mobile browsers)
+          // Last-resort fallback: always create enough copies for mobile
           const vw = typeof window !== 'undefined' ? window.innerWidth : 0;
           if (vw > 0) {
             setSeqWidth(Math.ceil(vw));
             const copiesNeeded = Math.ceil(vw / 100) + ANIMATION_CONFIG.COPY_HEADROOM;
-            setCopyCount(Math.max(ANIMATION_CONFIG.MIN_COPIES, copiesNeeded));
+            setCopyCount(Math.max(6, copiesNeeded)); // Ensure at least 6 copies
+          } else {
+            // Final fallback - just use a reasonable number
+            setCopyCount(8);
           }
         }
       }
@@ -357,16 +360,20 @@ export const LogoLoop = memo<LogoLoopProps>(
     // Retry measurements a few times after mount to handle mobile rendering timing
     useEffect(() => {
       if (typeof window === 'undefined') return;
-      const t1 = setTimeout(updateDimensions, 100);
-      const t2 = setTimeout(updateDimensions, 500);
-      const t3 = setTimeout(updateDimensions, 1500);
+      // Immediate first call
+      updateDimensions();
+      const t1 = setTimeout(updateDimensions, 50);
+      const t2 = setTimeout(updateDimensions, 150);
+      const t3 = setTimeout(updateDimensions, 500);
+      const t4 = setTimeout(updateDimensions, 1000);
       // periodic retries for a short window
-      const interval = setInterval(updateDimensions, 700);
-      const stop = setTimeout(() => clearInterval(interval), 4000);
+      const interval = setInterval(updateDimensions, 500);
+      const stop = setTimeout(() => clearInterval(interval), 3000);
       return () => {
         clearTimeout(t1);
         clearTimeout(t2);
         clearTimeout(t3);
+        clearTimeout(t4);
         clearInterval(interval);
         clearTimeout(stop);
       };
