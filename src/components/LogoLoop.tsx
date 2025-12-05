@@ -385,8 +385,9 @@ export const LogoLoop = memo<LogoLoopProps>(
     const rootClasses = useMemo(
       () =>
         cx(
+          'logoloop',
           'relative group',
-          isVertical ? 'overflow-hidden h-full inline-block' : 'overflow-x-hidden',
+          isVertical ? 'logoloop--vertical overflow-hidden h-full inline-block' : 'overflow-x-hidden',
           '[--logoloop-gap:32px]',
           '[--logoloop-logoHeight:28px]',
           '[--logoloop-fadeColorAuto:#ffffff]',
@@ -598,6 +599,7 @@ export const LogoLoop = memo<LogoLoopProps>(
 
         <div
           className={cx(
+            'logoloop__track',
             'flex will-change-transform select-none relative z-0',
             'motion-reduce:transform-none',
             isVertical ? 'flex-col h-max w-full' : 'flex-row w-max'
