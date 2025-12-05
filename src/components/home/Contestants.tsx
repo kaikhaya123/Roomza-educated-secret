@@ -29,7 +29,7 @@ export default function Contestants() {
   ];
 
   return (
-    <section ref={sectionRef} className="py-24 lg:py-32 bg-gradient-to-b from-black via-zinc-900 to-black text-white relative overflow-hidden">
+    <section ref={sectionRef} className="py-24 lg:py-32 bg-black text-white relative overflow-hidden">
       {/* Background Elements */}
       <div className="absolute inset-0 opacity-[0.02]">
         <div className="absolute inset-0" style={{ 
@@ -37,32 +37,6 @@ export default function Contestants() {
           backgroundSize: '60px 60px'
         }} />
       </div>
-
-      {/* Radial Glow */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-purple-600/10 rounded-full blur-[120px] pointer-events-none" />
-
-      {/* Floating Particles */}
-      <motion.div style={{ y: yParticles }} className="absolute inset-0 pointer-events-none">
-        {[...Array(8)].map((_, i) => (
-          <motion.div
-            key={i}
-            animate={{ 
-              y: [0, -30, 0],
-              opacity: [0.2, 0.5, 0.2]
-            }}
-            transition={{ 
-              duration: 3 + i * 0.5, 
-              repeat: Infinity,
-              delay: i * 0.3 
-            }}
-            className="absolute w-1 h-1 bg-white/40 rounded-full"
-            style={{
-              left: `${10 + i * 12}%`,
-              top: `${20 + (i % 3) * 25}%`
-            }}
-          />
-        ))}
-      </motion.div>
 
       <div className="container mx-auto px-6 lg:px-12 max-w-7xl relative">
         {/* Two-Column Hero */}
