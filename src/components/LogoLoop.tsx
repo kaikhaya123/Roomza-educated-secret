@@ -89,8 +89,16 @@ const useAnimationLoop = (
     const track = trackRef.current;
     if (!track) return;
 
-    // Apply animation on all devices including mobile
-    const mobileFactor = 1; // Keep full speed on all devices
+    // On mobile, skip JS animation entirely - let CSS animation handle it
+    if (isMobile) {
+      // Set initial transform and exit - CSS will animate
+      track.style.transform = 'translate3d(0, 0, 0)';
+      (track.style as any).webkitTransform = 'translate3d(0, 0, 0)';
+      return;
+    }
+
+    // Apply animation on desktop only
+    const mobileFactor = 1;
 
     const prefersReduced =
       typeof window !== 'undefined' &&
@@ -178,7 +186,7 @@ const useAnimationLoop = (
       }
       lastTimestampRef.current = null;
     };
-  }, [targetVelocity, seqWidth, seqHeight, isHovered, hoverSpeed, isVertical, trackRef]);
+  }, [targetVelocity, seqWidth, seqHeight, isHovered, hoverSpeed, isVertical, isMobile, trackRef]);
 };
 
 type LogoItem = {
@@ -253,10 +261,15 @@ export const LogoLoop = memo<LogoLoopProps>(
     // Duration = distance / speed
     const cssAnimationDuration = useMemo(() => {
       const size = isVertical ? seqHeight : seqWidth;
-      if (size === 0 || speed === 0) return 20; // fallback duration
+      if (size === 0 || speed === 0) {
+        // Fallback: estimate based on logo count and typical spacing
+        // Assume ~200px per logo (logo + gap) × logo count / speed
+        const estimatedSize = logos.length * 200;
+        return Math.abs(estimatedSize / speed) || 60; // default 60s if speed is 0
+      }
       // Calculate time to scroll one full sequence width
       return Math.abs(size / speed);
-    }, [seqWidth, seqHeight, speed, isVertical]);
+    }, [seqWidth, seqHeight, speed, isVertical, logos.length]);
 
     const targetVelocity = useMemo(() => {
       const magnitude = Math.abs(speed);
