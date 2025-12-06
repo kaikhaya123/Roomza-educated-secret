@@ -15,13 +15,6 @@ export default function LiveStream() {
     { name: 'Facebook', image: '/Images/facebook.png',  viewers: 1200000 },
     { name: 'YouTube', image: '/Images/youtube.png', viewers: 2800000 }
   ];
-
-  const stats = [
-    { label: 'Live Viewers Now', value: 7200000, suffix: '+' },
-    { label: 'Total Votes Cast', value: 196000000, suffix: '' },
-    { label: 'Peak Viewers', value: 8500000, suffix: '+' }
-  ];
-
   return (
     <section className="relative py-32 lg:py-40 bg-white text-black overflow-hidden">
       {/* Grid Background */}
@@ -137,27 +130,6 @@ export default function LiveStream() {
                 non-stop entertainment, voting opportunities, and interactive quizzes with real prizes.
               </p>
             </div>
-
-            {/* Live Stats Grid */}
-            <div className="space-y-4">
-              {stats.map((stat, index) => (
-                <motion.div
-                  key={stat.label}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  className="relative border-2 border-white p-6 group hover:bg-white hover:text-black transition-colors"
-                >
-                  
-                  <div className="text-sm font-black uppercase tracking-[0.3em] mb-2 opacity-60">
-                    {stat.label}
-                  </div>
-                  <div className="text-4xl font-black tracking-tighter">—</div>
-                </motion.div>
-              ))}
-            </div>
-
             {/* Platform Badges */}
             <div>
               <div className="text-sm font-black uppercase tracking-[0.3em] mb-4 text-gray-400">
