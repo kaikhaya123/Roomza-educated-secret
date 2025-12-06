@@ -133,21 +133,23 @@ function ProgressCard({
 
   return (
     <motion.div
-      layout
+      layout="position"
       onClick={onClick}
-      initial={{ opacity: 0 }}
       animate={{
-        opacity: 1,
         flex: isActive ? "1 1 55%" : "1 1 9%",
       }}
       whileHover={{ 
         backgroundColor: isActive ? "#ffffff" : "#f9fafb",
       }}
-      transition={{ duration: 0.6, ease: [0.32, 0.72, 0, 1] }}
+      transition={{ 
+        duration: 0.5, 
+        ease: [0.32, 0.72, 0, 1],
+        layout: { duration: 0.5 }
+      }}
       className={`relative cursor-pointer overflow-hidden transition-all border-r last:border-r-0 group ${
         isActive ? "bg-white" : "bg-gray-50 hover:bg-gray-100"
       }`}
-      style={{ minHeight: "550px", borderRightColor: "#e5e7eb" }}
+      style={{ minHeight: "550px", borderRightColor: "#e5e7eb", willChange: "flex" }}
     >
       {/* Vertical accent bar */}
       <motion.div 
@@ -155,7 +157,8 @@ function ProgressCard({
         animate={{
           backgroundColor: isActive ? "#000000" : "#d1d5db",
         }}
-        transition={{ duration: 0.4 }}
+        transition={{ duration: 0.3 }}
+        style={{ willChange: "background-color" }}
       />
 
       <div className="p-8 h-full flex flex-col relative">
@@ -165,9 +168,10 @@ function ProgressCard({
           animate={{
             scale: isActive ? 1 : 0.9,
           }}
-          transition={{ duration: 0.4 }}
+          transition={{ duration: 0.3 }}
+          style={{ willChange: "transform" }}
         >
-          <span className={`text-7xl font-black transition-all duration-500 ${
+          <span className={`text-7xl font-black transition-all duration-300 ${
             isActive 
               ? "bg-gradient-to-br from-purple-600 to-blue-600 bg-clip-text text-transparent" 
               : "text-gray-300 group-hover:text-gray-400"
@@ -178,11 +182,13 @@ function ProgressCard({
 
         {/* Title - Always visible */}
         <motion.h3 
-          className="font-bold transition-all duration-500"
+          className="font-bold transition-all duration-300"
           animate={{
             fontSize: isActive ? "1.5rem" : "1.125rem",
             color: isActive ? "#111827" : "#6b7280",
           }}
+          transition={{ duration: 0.3 }}
+          style={{ willChange: "font-size, color" }}
         >
           {feature.title}
         </motion.h3>
@@ -191,38 +197,48 @@ function ProgressCard({
         <AnimatePresence mode="wait">
           {isActive && (
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.4, delay: 0.1 }}
               className="flex-1 flex flex-col mt-6"
+              style={{ willChange: "opacity" }}
             >
               {/* Description */}
-              <p className="text-gray-600 leading-relaxed mb-8 text-base">
+              <motion.p 
+                className="text-gray-600 leading-relaxed mb-8 text-base"
+                initial={{ y: 10, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.3, delay: 0.15 }}
+              >
                 {feature.description}
-              </p>
+              </motion.p>
 
               {/* Animation Container */}
               <div className="flex-1 flex items-center justify-center my-8">
                 <motion.div 
                   className="w-72 h-72 relative"
-                  initial={{ scale: 0.8, opacity: 0 }}
+                  initial={{ scale: 0.9, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
-                  transition={{ duration: 0.6, delay: 0.3 }}
+                  exit={{ scale: 0.9, opacity: 0 }}
+                  transition={{ duration: 0.4, delay: 0.2 }}
+                  style={{ willChange: "transform, opacity" }}
                 >
                   <DotLottieReact
                     src={`/lottie-files/${feature.animation}`}
                     loop
                     autoplay
+                    speed={1}
+                    style={{ width: "100%", height: "100%" }}
                   />
                 </motion.div>
               </div>
 
               {/* Tag at bottom */}
               <motion.div 
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.4, delay: 0.4 }}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: 0.25 }}
                 className="flex items-center justify-between"
               >
                 <span className="px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white text-xs font-bold rounded-full uppercase tracking-wider shadow-lg">
@@ -241,6 +257,8 @@ function ProgressCard({
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
             className="absolute bottom-8 left-8 right-8"
           >
             <p className="text-xs text-gray-400 group-hover:text-gray-500 transition-colors">
