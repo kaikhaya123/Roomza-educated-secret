@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { Mail, Lock, User, AlertCircle, Eye, EyeOff } from "lucide-react";
 
@@ -55,9 +56,27 @@ export default function RegisterPage() {
           initial={{ opacity: 0, x: -50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6 }}
-          className="w-full lg:w-5/12 bg-white/5 backdrop-blur-lg border-r border-white/10 flex flex-col"
+          className="w-full lg:w-2/5 bg-white/5 backdrop-blur-lg border-r border-white/10 flex flex-col"
         >
           <div className="flex-1 flex flex-col justify-center p-8 lg:p-12 items-center">
+            {/* Logo */}
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="mb-8"
+            >
+              <div className="relative w-40 h-40 lg:w-48 lg:h-48 mx-auto">
+                <Image
+                  src="/Images/RES Logo with Futuristic Emblem.png"
+                  alt="R.E.S."
+                  fill
+                  className="object-contain"
+                  priority
+                />
+              </div>
+            </motion.div>
+
             {/* Header */}
             <div className="text-center mb-8">
               <h1 className="text-3xl font-bold text-white mb-2">Join R.E.S.</h1>
@@ -220,7 +239,7 @@ export default function RegisterPage() {
           initial={{ opacity: 0, x: 50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6 }}
-          className="hidden lg:flex lg:w-7/12 relative"
+          className="hidden lg:flex lg:w-3/5 relative"
         >
           <div className="relative w-full h-full min-h-[600px] flex items-end justify-center">
             {/* Full Background Video */}
