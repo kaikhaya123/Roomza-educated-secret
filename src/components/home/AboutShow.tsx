@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight, Users, Trophy, Play } from 'lucide-react';
 import { useEffect, useRef } from 'react';
+import AnimatedTextReveal from '@/components/ui/animated-text-reveal';
 
 function NumberTicker({ value, duration = 2 }: { value: number; duration?: number }) {
   const nodeRef = useRef<HTMLSpanElement>(null);
@@ -78,56 +79,82 @@ export default function AboutShow() {
               </span>
             </motion.div>
 
-            {/* Title */}
-            <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-              className="text-5xl lg:text-6xl font-black mb-6 tracking-tighter leading-[1.1] section-title"
-            >
-              The Movement That's <span className="">Changing</span> Student Life
-            </motion.h2>
+            {/* Title with Animated Reveal */}
+            <AnimatedTextReveal 
+              text="The Movement That's Changing Student Life"
+              tag="h2"
+              className="text-5xl lg:text-6xl font-black mb-6 tracking-tighter leading-[1.1]"
+              fontSize={60}
+              lineHeight={1.1}
+              color="#000000"
+              initialBlur={15}
+              initialOpacity={0.2}
+              fadeDelay={0.05}
+              fadeDuration={0.6}
+              fullRevealDistance={0.6}
+            />
 
-            {/* Subtitle */}
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.4 }}
+            {/* Subtitle with Animated Reveal */}
+            <AnimatedTextReveal 
+              text="South Africa's first digital student reality show celebrating talent, education, resilience, and youth empowerment."
+              tag="p"
               className="text-xl text-gray-600 mb-8 leading-relaxed font-light"
-            >
-              South Africa's first digital student reality show celebrating talent, education, resilience, and youth empowerment.
-            </motion.p>
+              fontSize={20}
+              lineHeight={1.6}
+              color="#4B5563"
+              initialBlur={10}
+              initialOpacity={0.3}
+              fadeDelay={0.04}
+              fadeDuration={0.5}
+              fullRevealDistance={0.5}
+            />
 
-            {/* Mission Statement */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.5 }}
-              className="space-y-4 mb-8"
-            >
-              <p className="text-gray-700 leading-relaxed">
-                <span className="font-black">Roomza's Educated Secret (R.E.S.)</span> is a national student-focused reality competition designed to uplift, empower, and celebrate young people through entertainment, education, and digital participation.
-              </p>
-              <p className="text-gray-700 leading-relaxed">
-                Students across the country compete in challenges, the public votes, and millions join the journey through quizzes, livestreams, and social media.
-              </p>
-            </motion.div>
+            {/* Mission Statement with Animated Reveal */}
+            <div className="space-y-6 mb-8">
+              <AnimatedTextReveal 
+                text="Roomza's Educated Secret (R.E.S.) is a national student-focused reality competition designed to uplift, empower, and celebrate young people through entertainment, education, and digital participation."
+                tag="p"
+                className="text-gray-700 text-lg leading-relaxed"
+                fontSize={18}
+                lineHeight={1.6}
+                color="#374151"
+                initialBlur={8}
+                initialOpacity={0.3}
+                fadeDelay={0.03}
+                fadeDuration={0.5}
+                fullRevealDistance={0.5}
+              />
+              <AnimatedTextReveal 
+                text="Students across the country compete in challenges, the public votes, and millions join the journey through quizzes, livestreams, and social media."
+                tag="p"
+                className="text-gray-700 text-lg leading-relaxed"
+                fontSize={18}
+                lineHeight={1.6}
+                color="#374151"
+                initialBlur={8}
+                initialOpacity={0.3}
+                fadeDelay={0.03}
+                fadeDuration={0.5}
+                fullRevealDistance={0.5}
+              />
+            </div>
 
-            {/* Inspiration */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.6 }}
-              className="border-l-4 border-black pl-6 mb-8"
-            >
-              <p className="text-gray-700 leading-relaxed">
-                Inspired by the legacy of Robben Island and the values of Nelson Mandela's Long Walk to Freedom, R.E.S. stands as a modern movement that promotes unity, leadership, and transformation through digital storytelling.
-              </p>
-            </motion.div>
+            {/* Inspiration with Animated Reveal */}
+            <div className="border-l-4 border-black pl-6 mb-8">
+              <AnimatedTextReveal 
+                text="Inspired by the legacy of Robben Island and the values of Nelson Mandela's Long Walk to Freedom, R.E.S. stands as a modern movement that promotes unity, leadership, and transformation through digital storytelling."
+                tag="p"
+                className="text-gray-700 text-lg leading-relaxed"
+                fontSize={18}
+                lineHeight={1.6}
+                color="#374151"
+                initialBlur={8}
+                initialOpacity={0.3}
+                fadeDelay={0.03}
+                fadeDuration={0.5}
+                fullRevealDistance={0.5}
+              />
+            </div>
 
             {/* CTA */}
             <motion.div

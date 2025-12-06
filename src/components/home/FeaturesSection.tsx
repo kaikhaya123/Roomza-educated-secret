@@ -39,7 +39,7 @@ export default function FeaturesSection() {
   ];
 
   return (
-    <section className="py-24 bg-gradient-to-b from-gray-50 to-white">
+    <section className="py-24 bg-gradient-to-b from-gray-50 to-white overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 lg:px-12">
 
         {/* Header */}
@@ -58,51 +58,61 @@ export default function FeaturesSection() {
           </h2>
         </motion.div>
 
-        {/* 3-column modern layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-
-          {/* LEFT COLUMN */}
-          <div className="flex flex-col gap-8">
-            {features.slice(0, 2).map((item, idx) => (
-              <FeatureCard key={idx} item={item} delay={idx * 0.2} />
-            ))}
+        {/* Organic flowing layout */}
+        <div className="relative">
+          {/* Row 1 - Staggered */}
+          <div className="flex flex-wrap justify-center gap-6 mb-6">
+            <div className="w-full sm:w-80">
+              <FeatureCard item={features[0]} delay={0} />
+            </div>
+            <div className="w-full sm:w-96 lg:mt-12">
+              <FeatureCard item={features[1]} delay={0.1} />
+            </div>
           </div>
 
-          {/* CENTER COLUMN */}
-          <div className="flex flex-col gap-8">
-            <FeatureCard item={features[2]} delay={0.4} />
+          {/* Row 2 - Center feature with side cards */}
+          <div className="flex flex-wrap justify-center items-start gap-6 mb-6">
+            <div className="w-full sm:w-80 lg:mt-8">
+              <FeatureCard item={features[2]} delay={0.2} />
+            </div>
             
-            {/* LARGE CARD */}
-            <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.7 }}
-              className="rounded-3xl p-10 bg-white/50 backdrop-blur-md shadow-xl border border-gray-100 flex flex-col justify-center"
-            >
-              <div className="mx-auto w-48 h-48 mb-8">
-                <DotLottieReact
-                  src={`/lottie-files/${features[3].animation}`}
-                  loop
-                  autoplay
-                />
-              </div>
+            {/* LARGE CENTER CARD */}
+            <div className="w-full sm:w-96">
+              <motion.div
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.7, delay: 0.3 }}
+                className="rounded-3xl p-10 bg-white/50 backdrop-blur-md shadow-xl border border-gray-100 flex flex-col justify-center min-h-[420px]"
+              >
+                <div className="mx-auto w-48 h-48 mb-8">
+                  <DotLottieReact
+                    src={`/lottie-files/${features[3].animation}`}
+                    loop
+                    autoplay
+                  />
+                </div>
 
-              <h3 className="text-2xl font-bold text-center mb-4">
-                {features[3].title}
-              </h3>
+                <h3 className="text-2xl font-bold text-center mb-4">
+                  {features[3].title}
+                </h3>
 
-              <p className="text-gray-600 text-center leading-relaxed">
-                {features[3].description}
-              </p>
-            </motion.div>
+                <p className="text-gray-600 text-center leading-relaxed">
+                  {features[3].description}
+                </p>
+              </motion.div>
+            </div>
+
+            <div className="w-full sm:w-80 lg:mt-16">
+              <FeatureCard item={features[4]} delay={0.4} />
+            </div>
           </div>
 
-          {/* RIGHT COLUMN */}
-          <div className="flex flex-col gap-8">
-            {features.slice(4, 6).map((item, idx) => (
-              <FeatureCard key={idx} item={item} delay={idx * 0.2} />
-            ))}
+          {/* Row 3 - Single centered card */}
+          <div className="flex justify-center">
+            <div className="w-full sm:w-80 lg:-mt-4">
+              <FeatureCard item={features[5]} delay={0.5} />
+            </div>
           </div>
         </div>
 
