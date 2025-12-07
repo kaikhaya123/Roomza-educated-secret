@@ -35,6 +35,9 @@ export default function AnimatedLogos({
   ];
 
   const [currentBatch, setCurrentBatch] = useState(0);
+  // Responsive batch size: fewer logos on mobile for larger display
+  const [isMobile, setIsMobile] = useState(false);
+  const effectiveBatchSize = isMobile ? 3 : batchSize;
   const [shuffledLogos, setShuffledLogos] = useState(logos);
 
   useEffect(() => {
@@ -43,19 +46,29 @@ export default function AnimatedLogos({
     }
   }, []);
 
+  // Set isMobile on mount and on resize (client only)
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 640);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   useEffect(() => {
     if (displayMode !== "batch-cycle") return;
 
     const interval = setInterval(() => {
-      setCurrentBatch((prev) => (prev + 1) % Math.ceil(shuffledLogos.length / batchSize));
+      setCurrentBatch((prev) => (prev + 1) % Math.ceil(shuffledLogos.length / effectiveBatchSize));
     }, cycleDuration);
 
     return () => clearInterval(interval);
-  }, [displayMode, shuffledLogos.length, batchSize, cycleDuration]);
+  }, [displayMode, shuffledLogos.length, effectiveBatchSize, cycleDuration]);
 
   const getCurrentBatch = () => {
-    const start = currentBatch * batchSize;
-    return shuffledLogos.slice(start, start + batchSize);
+    const start = currentBatch * effectiveBatchSize;
+    return shuffledLogos.slice(start, start + effectiveBatchSize);
   };
 
   // Duplicate logos for infinite scroll
@@ -117,16 +130,16 @@ export default function AnimatedLogos({
         {/* Overlay for better text readability */}
         <div className="absolute inset-0 bg-black/50 pointer-events-none z-0" />
         {/* Content Container */}
-        <div className="relative max-w-7xl mx-auto px-6 lg:px-12 z-10">
+        <div className="relative max-w-7xl mx-auto px-2 sm:px-4 md:px-6 lg:px-12 z-10 flex flex-col items-center justify-center">
           {/* Compact Header with Stats - Horizontal Layout */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="flex flex-col md:flex-row items-center justify-between gap-6 mb-12"
+            className="flex flex-col md:flex-row items-center justify-between gap-8 md:gap-16 mb-16 w-full max-w-3xl text-center"
           >
             {/* Left: Title & Badge */}
-            <div className="flex items-center gap-6">
+            <div className="flex items-center gap-6 justify-center w-full">
               <div>
                 <h3 className="text-white lg:text-4xl font-black mb-2 drop-shadow-lg">
                   Our Partners
@@ -156,7 +169,7 @@ export default function AnimatedLogos({
             </div>
           </motion.div>
           {/* Compact Logo Strip */}
-          <div className="relative">
+          <div className="relative w-full flex flex-col items-center justify-center mt-4 md:mt-8">
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentBatch}
@@ -164,7 +177,7 @@ export default function AnimatedLogos({
                 initial="hidden"
                 animate="visible"
                 exit="exit"
-                className="flex items-center justify-center gap-8 md:gap-12 py-8"
+                className="flex flex-wrap items-center justify-center gap-8 md:gap-12 py-10 md:py-14"
                 style={{ willChange: "opacity" }}
               >
                 {batchLogos.map((logo, index) => (
@@ -175,7 +188,7 @@ export default function AnimatedLogos({
                       scale: 1.05,
                       transition: { duration: 0.2 }
                     }}
-                    className="relative w-24 h-16 md:w-32 md:h-20 flex items-center justify-center grayscale hover:grayscale-0 opacity-90 hover:opacity-100 transition-all group bg-white/80 rounded-lg shadow-lg backdrop-blur-sm"
+                    className="relative w-24 h-16 sm:w-40 sm:h-24 md:w-48 md:h-32 flex items-center justify-center grayscale hover:grayscale-0 opacity-90 hover:opacity-100 transition-all group bg-white/80 rounded-lg shadow-lg backdrop-blur-sm"
                     style={{ willChange: "transform, opacity" }}
                   >
                     <Image
@@ -197,8 +210,8 @@ export default function AnimatedLogos({
               </motion.div>
             </AnimatePresence>
             {/* Minimal Dot Indicators */}
-            <div className="flex justify-center gap-1.5 mt-6">
-              {Array.from({ length: Math.ceil(shuffledLogos.length / batchSize) }).map((_, i) => (
+            <div className="flex justify-center gap-2 mt-8">
+              {Array.from({ length: Math.ceil(shuffledLogos.length / effectiveBatchSize) }).map((_, i) => (
                 <button
                   key={i}
                   onClick={() => setCurrentBatch(i)}
@@ -227,9 +240,9 @@ export default function AnimatedLogos({
       }}
     >
       {/* Content - Horizontal Compact Layout */}
-      <div className="relative z-10 max-w-7xl mx-auto px-6">
+      <div className="relative z-10 max-w-7xl mx-auto px-2 sm:px-4 md:px-6 flex flex-col items-center justify-center">
         {/* Header & Logos - Single Row */}
-        <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-8 md:gap-16 mb-10 w-full max-w-3xl text-center">
           {/* Left: Header Section */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
@@ -248,13 +261,13 @@ export default function AnimatedLogos({
             </h3>
           </motion.div>
           {/* Right: Infinite Scrolling Logos */}
-          <div className="flex-1 relative overflow-hidden">
+          <div className="flex-1 relative overflow-hidden mt-4 md:mt-8">
             {/* Gradient Fades */}
             <div className="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-white/95 to-transparent z-10 pointer-events-none" />
             <div className="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-white/95 to-transparent z-10 pointer-events-none" />
             {/* Logo Strip */}
             <motion.div
-              className="flex gap-12 items-center py-4"
+              className="flex gap-12 items-center py-8 md:py-12"
               animate={{
                 x: [0, -1440],
               }}
@@ -271,7 +284,7 @@ export default function AnimatedLogos({
               {duplicatedLogos.map((logo, index) => (
                 <div
                   key={`${logo.name}-${index}`}
-                  className="flex-shrink-0 relative w-32 h-16 grayscale hover:grayscale-0 opacity-90 hover:opacity-100 transition-all duration-300 bg-white/80 rounded-lg shadow-lg backdrop-blur-sm"
+                  className="flex-shrink-0 relative w-24 h-16 sm:w-40 sm:h-24 md:w-48 md:h-32 grayscale hover:grayscale-0 opacity-90 hover:opacity-100 transition-all duration-300 bg-white/80 rounded-lg shadow-lg backdrop-blur-sm"
                 >
                   <Image
                     src={logo.img}
