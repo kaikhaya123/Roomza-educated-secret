@@ -20,20 +20,20 @@ export default function LiveStream() {
       {/* Grid Background */}
       <div
         className="absolute inset-0 opacity-[0.03]"
-        style={{
+          style={{
           backgroundImage: `
             linear-gradient(to right, white 1px, transparent 1px),
             linear-gradient(to bottom, white 1px, transparent 1px)
           `,
           backgroundSize: '80px 80px'
-        }}
-      />
-
+          }}
+        />
+      
       <div className="container mx-auto px-6 lg:px-12 max-w-7xl relative z-10">
         {/* Header with Decorative Elements */}
         <div className="text-center mb-20">
           {/* Live Badge */}
-          <motion.div
+                <motion.div
             initial={{ scale: 0 }}
             whileInView={{ scale: 1 }}
             viewport={{ once: true }}
@@ -47,7 +47,7 @@ export default function LiveStream() {
             />
             <Radio className="w-4 h-4" />
             <span className="text-sm font-black uppercase tracking-[0.3em]">Live 18 Hours Daily</span>
-          </motion.div>
+            </motion.div>
 
           {/* Decorative Top Line with Diamond */}
           <div className="flex items-center justify-center gap-8 mb-8">
@@ -63,7 +63,7 @@ export default function LiveStream() {
               transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
               className="w-2 h-2 bg-black rotate-45"
             />
-            <motion.div
+              <motion.div
               initial={{ scaleX: 0 }}
               whileInView={{ scaleX: 1 }}
               viewport={{ once: true }}
@@ -83,8 +83,8 @@ export default function LiveStream() {
           </motion.h2>
 
           <motion.p
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.2 }}
             className="text-xl text-gray-400 max-w-3xl mx-auto leading-relaxed"
@@ -138,7 +138,7 @@ export default function LiveStream() {
               <div className="grid grid-cols-3 gap-3">
                 {platforms.map((platform, index) => (
                   <motion.div
-                    key={platform.name}
+key={platform.name}
                     initial={{ opacity: 0, scale: 0.8 }}
                     whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true }}
@@ -151,13 +151,13 @@ export default function LiveStream() {
                     
                     {/* Platform Icon/Image */}
                     <div className="relative w-12 h-12 mx-auto mb-2">
-                      <Image
-                        src={platform.image}
-                        alt={`${platform.name} icon`}
-                        fill
-                        className="object-contain"
-                      />
-                    </div>
+                    <Image
+                      src={platform.image}
+                      alt={`${platform.name} icon`}
+                      fill
+                      className="object-contain"
+                    />
+</div>
                     
                     <div className="text-xs font-black uppercase tracking-wider">{platform.name}</div>
                   </motion.div>
@@ -169,12 +169,12 @@ export default function LiveStream() {
 
         {/* Schedule Section */}
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+initial={{ opacity: 0, y: 40 }}
+whileInView={{ opacity: 1, y: 0 }}
+viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="border-2 border-white p-12 mb-20"
-        >
+className="border-2 border-white p-12 mb-20"
+>
           <div className="flex items-center justify-center gap-3 mb-8">
             <Calendar className="w-6 h-6" />
             <h3 className="text-2xl font-black uppercase tracking-[0.3em]">Live Schedule</h3>
@@ -193,7 +193,7 @@ export default function LiveStream() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 className="text-center"
-              >
+>
                 <div className="text-xl font-black mb-2">{event.title}</div>
                 <div className="text-gray-400 mb-2">{event.time}</div>
                 <div className="text-sm text-gray-500">{event.desc}</div>
@@ -204,39 +204,39 @@ export default function LiveStream() {
 
         {/* Bottom CTA */}
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
+initial={{ opacity: 0, y: 40 }}
+whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="text-center"
-        >
+transition={{ duration: 0.8 }}
+className="text-center"
+>
           <div className="inline-block border-2 border-black p-12 max-w-3xl">
             <h3 className="text-3xl lg:text-4xl font-black tracking-tighter mb-4">
-              Stream, Vote, Win — All at Once
-            </h3>
+Stream, Vote, Win — All at Once
+</h3>
             <p className="text-gray-400 mb-8 leading-relaxed">
               Every show is a shared national event connecting students and fans across South Africa. 
               Don't just watch — participate, influence outcomes, and win prizes while supporting your favorites.
             </p>
             <div className="flex flex-wrap items-center justify-center gap-4">
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Link
-                  href="/stream"
-                  className="inline-flex items-center gap-3 px-8 py-4 bg-white text-black font-black text-sm uppercase tracking-wider hover:bg-black hover:text-white border-2 border-black transition-colors"
-                >
-                  <Play className="w-5 h-5" />
+<motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Link
+href="/stream"
+className="inline-flex items-center gap-3 px-8 py-4 bg-white text-black font-black text-sm uppercase tracking-wider hover:bg-black hover:text-white border-2 border-black transition-colors"
+>
+                <Play className="w-5 h-5" />
                   <span>Watch Live Now</span>
-                </Link>
-              </motion.div>
+              </Link>
+</motion.div>
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Link
-                  href="/auth/register"
-                  className="inline-flex items-center gap-3 px-8 py-4 bg-black text-white font-black text-sm uppercase tracking-wider border-2 border-black hover:bg-white hover:text-black transition-colors"
+              <Link
+href="/auth/register"
+className="inline-flex items-center gap-3 px-8 py-4 bg-black text-white font-black text-sm uppercase tracking-wider border-2 border-black hover:bg-white hover:text-black transition-colors"
                 >
                   <span>Join & Compete</span>
-                  <ArrowRight className="w-5 h-5" />
-                </Link>
-              </motion.div>
+<ArrowRight className="w-5 h-5" />
+              </Link>
+</motion.div>
             </div>
           </div>
         </motion.div>
