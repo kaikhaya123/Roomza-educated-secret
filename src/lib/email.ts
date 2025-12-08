@@ -3,28 +3,23 @@ import { prisma } from './prisma';
 
 // Create transporter
 const transporter = nodemailer.createTransport({
-  host: process.env.EMAIL_HOST || 'smtp.gmail.com',
-  port: parseInt(process.env.EMAIL_PORT || '587'),
+  host: process.env.EMAIL_SERVER_HOST || 'smtp.gmail.com',
+  port: parseInt(process.env.EMAIL_SERVER_PORT || '587'),
   secure: false, // true for 465, false for other ports
   auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASSWORD,
+    user: process.env.EMAIL_SERVER_USER,
+    pass: process.env.EMAIL_SERVER_PASSWORD,
   },
 });
 
 // Generate verification token
 export async function generateVerificationToken(email: string): Promise<string> {
+  // Generate a simple token for email verification
   const token = Math.random().toString(36).substring(2) + Date.now().toString(36);
-  const expires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
-
-  await prisma.verificationToken.create({
-    data: {
-      identifier: email,
-      token,
-      expires,
-    },
-  });
-
+  
+  // In production, store this token in a database or cache (Redis)
+  // For now, just return the token - email link will contain this token
+  
   return token;
 }
 
@@ -59,7 +54,7 @@ export async function sendVerificationEmail(email: string, name: string): Promis
   const verificationUrl = `${process.env.NEXTAUTH_URL}/api/auth/verify-email?token=${token}`;
 
   const mailOptions = {
-    from: `"R.E.S. Platform" <${process.env.EMAIL_USER}>`,
+    from: `"R.E.S. Platform" <${process.env.EMAIL_SERVER_USER}>`,
     to: email,
     subject: 'Verify Your Email - R.E.S. Platform',
     html: `

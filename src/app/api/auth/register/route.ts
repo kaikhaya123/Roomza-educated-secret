@@ -7,17 +7,40 @@ import { generateRandomString } from '@/lib/utils';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { userType, ...data } = body;
+    const { role, ...data } = body;
 
-    // Validate based on user type
-    const schema = userType === 'STUDENT' ? studentRegistrationSchema : publicRegistrationSchema;
-    const validatedData = schema.parse(data);
+    console.log('[Registration] Received payload:', { role, userType: data.userType, email: data.email });
 
-    // Check if user already exists
-    const existingUser = await prisma.user.findUnique({
-      where: { email: validatedData.email },
-    });
+    // Validate based on role
+    let validatedData;
+    if (role === 'admin') {
+      // Accept any email, password, first name, and last name for admin registration
+      const today = new Date().toISOString().split('T')[0]; // Format as YYYY-MM-DD
+      validatedData = {
+        email: data.email ?? '',
+        password: data.password ?? '',
+        firstName: data.firstName ?? '',
+        lastName: data.lastName ?? '',
+        userType: 'ADMIN',
+        dateOfBirth: data.dateOfBirth ?? today,
+        province: data.province ?? 'GAUTENG',
+        homeAddress: data.homeAddress ?? '',
+        phone: data.phone ?? '',
+      };
+    } else {
+      // Ensure userType is present for schema validation
+      if (!data.userType) {
+        return NextResponse.json(
+          { error: 'userType is required (STUDENT or PUBLIC)' },
+          { status: 400 }
+        );
+      }
+      const schema = data.userType === 'STUDENT' ? studentRegistrationSchema : publicRegistrationSchema;
+      validatedData = schema.parse(data);
+    }
 
+    // Check if user or admin already exists
+    const existingUser = await prisma.user.findUnique({ where: { email: validatedData.email } });
     if (existingUser) {
       return NextResponse.json(
         { error: 'User with this email already exists' },
@@ -28,44 +51,58 @@ export async function POST(request: NextRequest) {
     // Hash password
     const hashedPassword = await bcrypt.hash(validatedData.password, 12);
 
-    // Create user
-    const user = await prisma.user.create({
-      data: {
+    // Create user or admin
+    let user;
+    try {
+      const createData: any = {
         email: validatedData.email,
         password: hashedPassword,
-        userType: userType || 'PUBLIC',
+        userType: (validatedData as any).userType ?? 'PUBLIC',
         firstName: validatedData.firstName,
         lastName: validatedData.lastName,
         phone: validatedData.phone,
-        dateOfBirth: new Date(validatedData.dateOfBirth),
+        dateOfBirth: new Date(validatedData.dateOfBirth), // Convert string to DateTime
         province: validatedData.province,
         homeAddress: validatedData.homeAddress,
-        municipality: 'municipality' in validatedData ? validatedData.municipality : undefined,
-        town: 'town' in validatedData ? validatedData.town : undefined,
-        institution: 'institution' in validatedData ? validatedData.institution : undefined,
-        campus: 'campus' in validatedData ? validatedData.campus : undefined,
-        residence: 'residence' in validatedData ? validatedData.residence : undefined,
-      },
-    });
+      };
 
-    // Send verification email
-    try {
-      const { sendVerificationEmail } = await import('@/lib/email');
-      await sendVerificationEmail(user.email, user.firstName);
-    } catch (emailError) {
-      console.error('Failed to send verification email:', emailError);
-      // Don't fail registration if email fails
+      // Add optional fields only if they exist in validatedData
+      const optionalFields = ['municipality', 'town', 'institution', 'campus', 'residence'];
+      for (const field of optionalFields) {
+        if (field in validatedData && (validatedData as any)[field]) {
+          createData[field] = (validatedData as any)[field];
+        }
+      }
+
+      user = await prisma.user.create({ data: createData });
+      console.log('[Registration] User created successfully:', { userId: user.id, email: user.email });
+    } catch (err: any) {
+      console.error('[Registration] Database error:', { message: err.message, code: err.code, stack: err.stack });
+      return NextResponse.json(
+        { error: 'Failed to create account', details: err.message },
+        { status: 400 }
+      );
     }
 
-    return NextResponse.json(
-      {
-        message: 'Registration successful! Please check your email to verify your account.',
-        userId: user.id,
-      },
-      { status: 201 }
-    );
+    // Send verification email (skip for admin)
+    if (role !== 'admin') {
+      try {
+        const { sendVerificationEmail } = await import('@/lib/email');
+        await sendVerificationEmail(user.email, user.firstName);
+      } catch (emailError) {
+        console.error('Failed to send verification email:', emailError);
+        // Don't fail registration if email fails
+      }
+    }
+
+    const response = {
+      message: 'Registration successful! Please check your email to verify your account.',
+      userId: user.id,
+    };
+    console.log('[Registration] Response:', response);
+    return NextResponse.json(response, { status: 201 });
   } catch (error: any) {
-    console.error('Registration error:', error);
+    console.error('[Registration] Unhandled error:', { message: error.message, name: error.name, stack: error.stack });
     
     if (error.name === 'ZodError') {
       return NextResponse.json(

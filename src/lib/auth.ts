@@ -1,3 +1,17 @@
+import jwt from "jsonwebtoken";
+const JWT_SECRET = process.env.JWT_SECRET || "change-this";
+
+export function signAdmin(payload: { id: number; email: string }) {
+  return jwt.sign(payload, JWT_SECRET, { expiresIn: "8h" });
+}
+
+export function verifyToken(token: string) {
+  try {
+    return jwt.verify(token, JWT_SECRET);
+  } catch (e) {
+    return null;
+  }
+}
 import { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
@@ -21,27 +35,27 @@ export const authOptions: NextAuthOptions = {
     CredentialsProvider({
       name: 'credentials',
       credentials: {
-        email: { label: 'Email', type: 'email' },
+        identifier: { label: 'Email or Phone', type: 'text' },
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) {
+        if (!credentials?.identifier || !credentials?.password) {
           throw new Error('Invalid credentials');
         }
 
         try {
-          const user = await prisma.user.findUnique({
+          // Find user by email or phone
+          const user = await prisma.user.findFirst({
             where: {
-              email: credentials.email,
+              OR: [
+                { email: credentials.identifier },
+                { phone: credentials.identifier },
+              ],
             },
           });
 
           if (!user || !user.password) {
             throw new Error('Invalid credentials');
-          }
-
-          if (user.isBanned) {
-            throw new Error('Account is banned');
           }
 
           const isPasswordValid = await bcrypt.compare(
@@ -52,12 +66,6 @@ export const authOptions: NextAuthOptions = {
           if (!isPasswordValid) {
             throw new Error('Invalid credentials');
           }
-
-          // Update last login
-          await prisma.user.update({
-            where: { id: user.id },
-            data: { lastLogin: new Date() },
-          });
 
           return {
             id: user.id,

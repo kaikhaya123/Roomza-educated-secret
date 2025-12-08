@@ -12,8 +12,9 @@ import ReCAPTCHA from 'react-google-recaptcha';
 export default function LoginPage() {
   const router = useRouter();
   const recaptchaRef = useRef<ReCAPTCHA>(null);
-  const [email, setEmail] = useState('');
+  const [identifier, setIdentifier] = useState(''); // email or phone
   const [password, setPassword] = useState('');
+  const [role, setRole] = useState<'user' | 'admin'>('user');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -33,8 +34,9 @@ export default function LoginPage() {
 
     try {
       const result = await signIn('credentials', {
-        email,
+        identifier,
         password,
+        role,
         redirect: false,
       });
 
@@ -106,23 +108,36 @@ export default function LoginPage() {
 
           {/* Login Form */}
           <form onSubmit={handleSubmit} className="space-y-4 w-full max-w-md">
+            {/* Role Selector */}
+            <div>
+              <label htmlFor="role" className="block text-xs font-medium text-gray-300 mb-1.5">Login as</label>
+              <select
+                id="role"
+                value={role}
+                onChange={e => setRole(e.target.value as 'user' | 'admin')}
+                className="w-full p-2 bg-white/5 border border-white/10 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition"
+              >
+                <option value="user">User</option>
+                <option value="admin">Admin</option>
+              </select>
+            </div>
             {/* Email Field */}
             <div>
-              <label htmlFor="email" className="block text-xs font-medium text-gray-300 mb-1.5">
-                Email Address
+              <label htmlFor="identifier" className="block text-xs font-medium text-gray-300 mb-1.5">
+                Email or Phone
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <Mail className="text-gray-500" size={18} />
                 </div>
                 <input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  id="identifier"
+                  type="text"
+                  value={identifier}
+                  onChange={(e) => setIdentifier(e.target.value)}
                   required
                   className="w-full pl-10 pr-4 py-2.5 bg-white/5 border border-white/10 rounded-lg text-white text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition"
-                  placeholder="you@example.com"
+                  placeholder="you@example.com or 0812345678"
                 />
               </div>
             </div>

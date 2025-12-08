@@ -3,24 +3,14 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useSession } from 'next-auth/react';
-import { Menu, X } from 'lucide-react';
+import { useSession, signOut } from 'next-auth/react';
+import { Menu, X, User, LayoutDashboard, LogOut } from 'lucide-react';
+import { UserAvatar } from './UserAvatar';
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  
-  // Safely handle session - don't crash if auth fails
-  let session = null;
-  let status = 'unauthenticated';
-  
-  try {
-    const sessionData = useSession();
-    session = sessionData.data;
-    status = sessionData.status;
-  } catch (error) {
-    console.warn('Session unavailable:', error);
-  }
+  const { data: session, status } = useSession();
 
   useEffect(() => {
     let ticking = false;
@@ -73,8 +63,12 @@ export default function Navbar() {
             </Link>
           </div>
 
-          {/* Right Section - Menu */}
-          <div className="flex items-center">
+          {/* Right Section - User Avatar & Menu */}
+          <div className="flex items-center gap-4 lg:gap-6">
+            {/* User Avatar with Dropdown */}
+            <UserAvatar session={session} isScrolled={isScrolled} />
+
+            {/* Mobile Menu Button */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className={`p-2 transition ${isScrolled ? 'text-gray-700 hover:text-gray-900' : 'text-white hover:text-white/80 drop-shadow-md'}`}
@@ -174,29 +168,44 @@ export default function Navbar() {
                       Contact
                     </Link>
 
-                    <div className="pt-6 lg:pt-8 space-y-3 lg:space-y-4">
+                    <div className="pt-6 lg:pt-8 space-y-3 lg:space-y-4 border-t border-white/20">
                       {session ? (
-                        <Link
-                          href="/dashboard"
-                          className="block text-xl lg:text-2xl text-white hover:text-white/70 font-light transition"
-                          onClick={() => requestAnimationFrame(() => setIsMobileMenuOpen(false))}
-                        >
-                          Dashboard
-                        </Link>
+                        <>
+                          <Link
+                            href="/dashboard"
+                            className="flex items-center gap-3 text-xl lg:text-2xl text-white hover:text-white/70 font-light transition"
+                            onClick={() => requestAnimationFrame(() => setIsMobileMenuOpen(false))}
+                          >
+                            <LayoutDashboard size={24} />
+                            Dashboard
+                          </Link>
+                          <button
+                            onClick={async () => {
+                              setIsMobileMenuOpen(false);
+                              await signOut({ callbackUrl: '/' });
+                            }}
+                            className="flex items-center gap-3 text-xl lg:text-2xl text-white hover:text-white/70 font-light transition w-full text-left"
+                          >
+                            <LogOut size={24} />
+                            Logout
+                          </button>
+                        </>
                       ) : (
                         <>
                           <Link
                             href="/auth/login"
-                            className="block text-xl lg:text-2xl text-white hover:text-white/70 font-light transition"
+                            className="flex items-center gap-3 text-xl lg:text-2xl text-white hover:text-white/70 font-light transition"
                             onClick={() => requestAnimationFrame(() => setIsMobileMenuOpen(false))}
                           >
+                            <User size={24} />
                             Login
                           </Link>
                           <Link
                             href="/auth/register"
-                            className="block text-xl lg:text-2xl text-white hover:text-white/70 font-light transition"
+                            className="flex items-center gap-3 text-xl lg:text-2xl text-white hover:text-white/70 font-light transition"
                             onClick={() => requestAnimationFrame(() => setIsMobileMenuOpen(false))}
                           >
+                            <User size={24} />
                             Sign Up
                           </Link>
                         </>
