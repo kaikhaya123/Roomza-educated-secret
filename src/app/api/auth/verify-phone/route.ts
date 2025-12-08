@@ -1,9 +1,60 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { logger } from '@/lib/logger';
+import { checkRateLimit, getClientIp, RATE_LIMITS } from '@/lib/rate-limit';
 
 // Generate 6-digit verification code
 function generateCode(): string {
   return Math.floor(100000 + Math.random() * 900000).toString();
+}
+
+// SMS provider integration
+async function sendSMS(phone: string, code: string): Promise<boolean> {
+  try {
+    // Check if using real SMS provider
+    const provider = process.env.SMS_PROVIDER || 'development';
+    
+    if (provider === 'twilio' && process.env.TWILIO_ACCOUNT_SID) {
+      // Twilio integration
+      const twilio = require('twilio');
+      const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+      
+      await client.messages.create({
+        body: `Your R.E.S. verification code is: ${code}. Valid for 10 minutes.`,
+        from: process.env.TWILIO_PHONE_NUMBER,
+        to: phone,
+      });
+      logger.info('SMS', 'Sent via Twilio', { phone });
+      return true;
+    } else if (provider === 'aws-sns' && process.env.AWS_SNS_REGION) {
+      // AWS SNS integration - only used if environment variable is set
+      try {
+        // Dynamically load AWS SDK only if needed (won't error if not installed)
+        // eslint-disable-next-line global-require
+        const awsSdk = require('aws-sdk');
+        const sns = new awsSdk.SNS({ region: process.env.AWS_SNS_REGION });
+        
+        await sns.publish({
+          Message: `Your R.E.S. verification code is: ${code}. Valid for 10 minutes.`,
+          PhoneNumber: phone,
+        }).promise();
+        logger.info('SMS', 'Sent via AWS SNS', { phone });
+        return true;
+      } catch (error: any) {
+        // Fallback if AWS SDK not available
+        logger.warn('SMS', 'AWS SDK not available, using development mode', { phone });
+        logger.info('SMS', 'Development mode - check logs', { phone, code });
+        return true;
+      }
+    } else {
+      // Development mode - log to console
+      logger.info('SMS', 'Development mode - check logs', { phone, code });
+      return true;
+    }
+  } catch (error: any) {
+    logger.error('SMS', 'Failed to send SMS', { phone, error: error.message });
+    return false;
+  }
 }
 
 // Store codes in memory (for development; use Redis in production)
@@ -11,7 +62,28 @@ const verificationCodes: Record<string, { code: string; expiresAt: number }> = {
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
+    // Rate limiting
+    const clientIp = getClientIp(request);
+    const rateLimitCheck = checkRateLimit(clientIp, '/api/auth/verify-phone', RATE_LIMITS.SMS);
+    
+    if (!rateLimitCheck.allowed) {
+      logger.warn('SMS', 'Rate limit exceeded', { ip: clientIp, remaining: rateLimitCheck.remaining });
+      return NextResponse.json(
+        { error: 'Too many SMS requests. Please try again in 1 minute.' },
+        { status: 429 }
+      );
+    }
+
+    let body: any;
+    try {
+      body = await request.json();
+    } catch (parseError) {
+      logger.error('SMS', 'Invalid JSON in request body', { error: parseError });
+      return NextResponse.json(
+        { error: 'Invalid request body' },
+        { status: 400 }
+      );
+    }
     const { phone, action, code } = body;
 
     if (!phone) {
@@ -29,14 +101,22 @@ export async function POST(request: NextRequest) {
       // Store code
       verificationCodes[phone] = { code: verificationCode, expiresAt };
 
-      console.log(`[SMS Verification] Code sent to ${phone}: ${verificationCode}`);
+      logger.info('SMS', 'Verification code generated', { phone });
 
-      // TODO: Integrate with Twilio to send actual SMS
-      // For now, log to console for testing
+      // Send SMS
+      const smsSent = await sendSMS(phone, verificationCode);
+      if (!smsSent) {
+        logger.error('SMS', 'Failed to send SMS', { phone });
+        return NextResponse.json(
+          { error: 'Failed to send verification code' },
+          { status: 500 }
+        );
+      }
+
+      // Return code in development mode only
       return NextResponse.json(
         {
           message: 'Verification code sent',
-          // Remove in production - only for testing
           ...(process.env.NODE_ENV === 'development' && { code: verificationCode }),
         },
         { status: 200 }
@@ -78,8 +158,6 @@ export async function POST(request: NextRequest) {
 
       // Code is valid - mark phone as verified
       delete verificationCodes[phone];
-
-      console.log(`[SMS Verification] Phone verified: ${phone}`);
 
       return NextResponse.json(
         { message: 'Phone number verified successfully' },

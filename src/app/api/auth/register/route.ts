@@ -3,13 +3,27 @@ import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
 import { studentRegistrationSchema, publicRegistrationSchema } from '@/lib/validations';
 import { generateRandomString } from '@/lib/utils';
+import { logger } from '@/lib/logger';
+import { checkRateLimit, getClientIp, RATE_LIMITS } from '@/lib/rate-limit';
 
 export async function POST(request: NextRequest) {
   try {
+    // Rate limiting
+    const clientIp = getClientIp(request);
+    const rateLimitCheck = checkRateLimit(clientIp, '/api/auth/register', RATE_LIMITS.AUTH);
+    
+    if (!rateLimitCheck.allowed) {
+      logger.warn('Registration', 'Rate limit exceeded', { ip: clientIp, remaining: rateLimitCheck.remaining });
+      return NextResponse.json(
+        { error: 'Too many registration attempts. Please try again later.' },
+        { status: 429 }
+      );
+    }
+
     const body = await request.json();
     const { role, ...data } = body;
 
-    console.log('[Registration] Received payload:', { role, userType: data.userType, email: data.email });
+    logger.debug('Registration', 'Received payload', { role, userType: data.userType, email: data.email });
 
     // Validate based on role
     let validatedData;
@@ -75,9 +89,9 @@ export async function POST(request: NextRequest) {
       }
 
       user = await prisma.user.create({ data: createData });
-      console.log('[Registration] User created successfully:', { userId: user.id, email: user.email });
+      logger.info('Registration', 'User created successfully', { userId: user.id, email: user.email });
     } catch (err: any) {
-      console.error('[Registration] Database error:', { message: err.message, code: err.code, stack: err.stack });
+      logger.error('Registration', 'Database error', { message: err.message, code: err.code });
       return NextResponse.json(
         { error: 'Failed to create account', details: err.message },
         { status: 400 }
@@ -90,7 +104,7 @@ export async function POST(request: NextRequest) {
         const { sendVerificationEmail } = await import('@/lib/email');
         await sendVerificationEmail(user.email, user.firstName);
       } catch (emailError) {
-        console.error('Failed to send verification email:', emailError);
+        logger.warn('Registration', 'Failed to send verification email', { email: user.email });
         // Don't fail registration if email fails
       }
     }
@@ -99,10 +113,10 @@ export async function POST(request: NextRequest) {
       message: 'Registration successful! Please check your email to verify your account.',
       userId: user.id,
     };
-    console.log('[Registration] Response:', response);
+    logger.info('Registration', 'Response sent', { userId: user.id });
     return NextResponse.json(response, { status: 201 });
   } catch (error: any) {
-    console.error('[Registration] Unhandled error:', { message: error.message, name: error.name, stack: error.stack });
+    logger.error('Registration', 'Unhandled error', { message: error.message, name: error.name });
     
     if (error.name === 'ZodError') {
       return NextResponse.json(
