@@ -6,6 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { Mail, Lock, User, AlertCircle, Eye, EyeOff, Home, Calendar, MapPin, School, Building2, Landmark } from "lucide-react";
+import ToastMobile from "@/components/ToastMobile";
 
 export default function RegisterPage() {
 	const router = useRouter();
@@ -37,6 +38,10 @@ export default function RegisterPage() {
 	const [showPassword, setShowPassword] = useState(false);
 	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 	const [codeSent, setCodeSent] = useState(false);
+	const [toast, setToast] = useState({
+		show: false,
+		message: ''
+	});
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
 		const { name, value, type } = e.target;
@@ -52,12 +57,20 @@ export default function RegisterPage() {
 
 	const handleSendCode = async () => {
 		if (!formData.phone) {
-			setError("Please enter your phone number first");
+			setToast({
+				show: true,
+				message: "Please enter your phone number first"
+			});
 			return;
 		}
 		
 		try {
 			setIsLoading(true);
+			setToast({
+				show: true,
+				message: "Waiting for your verification code..."
+			});
+
 			const res = await fetch("/api/auth/verify-phone", {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
@@ -71,19 +84,28 @@ export default function RegisterPage() {
 			console.log('[SendCode Response]', data);
 			
 			if (!res.ok) {
-				setError(data.error || "Failed to send verification code");
+				setToast({
+					show: true,
+					message: data.error || "Failed to send verification code"
+				});
 				setIsLoading(false);
 				return;
 			}
 			
 			setCodeSent(true);
 			setError(null);
-			setSuccess("Verification code sent to your phone!");
+			setToast({
+				show: true,
+				message: "Code sent! Check your phone."
+			});
 			setTimeout(() => setCodeSent(false), 300000); // 5 minutes
 			setIsLoading(false);
 		} catch (err: any) {
 			console.error('[SendCode Error]', err);
-			setError("Failed to send verification code: " + err.message);
+			setToast({
+				show: true,
+				message: "Something went wrong. Please try again."
+			});
 			setIsLoading(false);
 		}
 	};
@@ -142,6 +164,11 @@ export default function RegisterPage() {
 
 	return (
 		<div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-black to-gray-900 p-4">
+			<ToastMobile
+				show={toast.show}
+				message={toast.message}
+				onClose={() => setToast({ ...toast, show: false })}
+			/>
 			<div className="w-full max-w-2xl flex flex-col rounded-2xl overflow-hidden shadow-2xl min-h-[600px] bg-white/5">
 				<motion.div
 					initial={{ opacity: 0, x: -50 }}
