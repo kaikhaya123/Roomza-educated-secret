@@ -26,7 +26,8 @@ export default function LoginPage() {
     e.preventDefault();
     setError("");
 
-    if (process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY && !captchaToken) {
+    const recaptchaEnabled = !!process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
+    if (recaptchaEnabled && !captchaToken) {
       setError("Please verify reCAPTCHA");
       return;
     }
@@ -44,7 +45,11 @@ export default function LoginPage() {
       setError(result.error);
       recaptchaRef.current?.reset();
       setCaptchaToken(null);
-    } else if (result?.ok) {
+      setIsLoading(false);
+      return;
+    }
+
+    if (result?.ok) {
       router.push("/");
       router.refresh();
     }
@@ -54,33 +59,28 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen w-full relative bg-black overflow-hidden flex items-center justify-center p-4">
-      {/* BACKGROUND MEDIA PANEL */}
+      
+      {/* Background Video */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         className="absolute inset-0"
       >
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="w-full h-full object-cover"
-        >
+        <video autoPlay loop muted playsInline className="w-full h-full object-cover">
           <source src="/Videos/olShi6AW2pQj75e9EX.mp4" type="video/mp4" />
         </video>
 
-        {/* Cinematic gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-br from-black/80 via-black/60 to-black/40" />
       </motion.div>
 
-      {/* LOGIN CARD */}
+      {/* Login Container */}
       <motion.div
         initial={{ opacity: 0, y: 40, scale: 0.95 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.6 }}
         className="relative w-full max-w-md bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 shadow-2xl"
       >
+        
         {/* Logo */}
         <motion.div
           initial={{ opacity: 0, y: -10 }}
@@ -104,7 +104,7 @@ export default function LoginPage() {
           Log in to your R.E.S. account
         </p>
 
-        {/* Error notification */}
+        {/* Error Notice */}
         <AnimatePresence>
           {error && (
             <motion.div
@@ -119,15 +119,15 @@ export default function LoginPage() {
           )}
         </AnimatePresence>
 
+        {/* Form */}
         <form className="space-y-4" onSubmit={handleSubmit}>
+
           {/* Role */}
           <div>
             <label className="block mb-1 text-xs text-gray-300">Login as</label>
             <select
               value={role}
-              onChange={(e) =>
-                setRole(e.target.value as "user" | "admin")
-              }
+              onChange={(e) => setRole(e.target.value as "user" | "admin")}
               className="w-full bg-white/10 border border-white/20 rounded-lg p-2 text-white text-sm focus:outline-none"
             >
               <option value="user">User</option>
@@ -137,38 +137,34 @@ export default function LoginPage() {
 
           {/* Identifier */}
           <div>
-            <label className="block mb-1 text-xs text-gray-300">
-              Email or Phone
-            </label>
+            <label className="block mb-1 text-xs text-gray-300">Email or Phone</label>
             <div className="relative">
               <Mail className="absolute left-3 top-3 text-gray-500" size={18} />
               <motion.input
                 whileFocus={{ scale: 1.01 }}
                 type="text"
+                required
                 value={identifier}
                 onChange={(e) => setIdentifier(e.target.value)}
-                required
-                className="w-full pl-10 pr-3 py-2.5 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-500 text-sm focus:outline-none"
                 placeholder="you@example.com"
+                className="w-full pl-10 pr-3 py-2.5 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-500 text-sm focus:outline-none"
               />
             </div>
           </div>
 
           {/* Password */}
           <div>
-            <label className="block mb-1 text-xs text-gray-300">
-              Password
-            </label>
+            <label className="block mb-1 text-xs text-gray-300">Password</label>
             <div className="relative">
               <Lock className="absolute left-3 top-3 text-gray-500" size={18} />
               <motion.input
                 whileFocus={{ scale: 1.01 }}
                 type={showPassword ? "text" : "password"}
+                required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                required
-                className="w-full pl-10 pr-10 py-2.5 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-500 text-sm focus:outline-none"
                 placeholder="••••••••"
+                className="w-full pl-10 pr-10 py-2.5 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-500 text-sm focus:outline-none"
               />
               <button
                 type="button"
@@ -188,7 +184,7 @@ export default function LoginPage() {
           </div>
 
           {/* reCAPTCHA */}
-          {process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY && (
+          {!!process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY && (
             <div className="flex justify-center">
               <ReCAPTCHA
                 ref={recaptchaRef}
@@ -202,16 +198,17 @@ export default function LoginPage() {
 
           {/* Login button */}
           <motion.button
-            whileTap={{ scale: 0.97 }}
-            whileHover={{ scale: 1.01 }}
             type="submit"
             disabled={isLoading}
+            whileTap={{ scale: 0.97 }}
+            whileHover={{ scale: 1.01 }}
             className="w-full py-2.5 bg-white/10 border border-white/20 rounded-lg text-white font-semibold text-sm"
           >
             {isLoading ? "Logging in..." : "Log In"}
           </motion.button>
         </form>
 
+        {/* Sign up */}
         <p className="text-center text-gray-400 text-xs mt-6">
           Don't have an account?{" "}
           <Link href="/auth/register" className="text-primary-300">
