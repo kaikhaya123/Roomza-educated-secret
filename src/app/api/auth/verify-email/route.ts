@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
     // Update user verification status
     const user = await prisma.user.update({
       where: { email },
-      data: { isVerified: true },
+      data: { emailVerified: new Date() },
     });
 
     // Send welcome email
@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (user.isVerified) {
+    if (user.emailVerified) {
       return NextResponse.json(
         { error: 'Email already verified' },
         { status: 400 }

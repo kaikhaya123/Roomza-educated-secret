@@ -1,6 +1,10 @@
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 
-export default function VoteChart({ data }) {
+interface VoteChartProps {
+  data: Array<{ label: string; votes: number }>;
+}
+
+export default function VoteChart({ data }: VoteChartProps) {
   return (
     <ResponsiveContainer width="100%" height={300}>
       <LineChart data={data}>

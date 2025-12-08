@@ -1,13 +1,12 @@
-import prisma from "@/lib/db";
+import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
 
-export async function DELETE(req: Request, { params }: any) {
-  const id = Number(params.id);
-  // Find vote and decrement contestant votes
-  const vote = await prisma.vote.findUnique({ where: { id } });
-  if (!vote) return new Response(JSON.stringify({ error: "Vote not found" }), { status: 404 });
-  await prisma.$transaction([
-    prisma.vote.delete({ where: { id } }),
-    prisma.contestant.update({ where: { id: vote.contestantId }, data: { votes: { decrement: 1 } } })
-  ]);
-  return new Response(null, { status: 204 });
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  const vote = await prisma.vote.findUnique({ where: { id: params.id } });
+  if (!vote) return NextResponse.json({ error: "Vote not found" }, { status: 404 });
+  await prisma.vote.delete({ where: { id: params.id } });
+  return NextResponse.json(null, { status: 204 });
 }

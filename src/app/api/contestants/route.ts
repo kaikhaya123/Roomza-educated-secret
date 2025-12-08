@@ -28,26 +28,31 @@ export async function GET(request: NextRequest) {
     const [contestants, total] = await Promise.all([
       prisma.contestant.findMany({
         where,
-        orderBy: { totalVotes: 'desc' },
         skip: (page - 1) * limit,
         take: limit,
         select: {
           id: true,
-          name: true,
+          firstName: true,
+          lastName: true,
           bio: true,
           institution: true,
           campus: true,
           province: true,
-          imageUrl: true,
-          totalVotes: true,
-          weeklyVotes: true,
+          photoUrl: true,
+          votes: true,
         },
       }),
       prisma.contestant.count({ where }),
     ]);
 
+    // Calculate vote counts
+    const contestantsWithVotes = contestants.map((contestant) => ({
+      ...contestant,
+      totalVotes: contestant.votes.length,
+    }));
+
     const response = {
-      contestants,
+      contestants: contestantsWithVotes,
       pagination: {
         page,
         limit,

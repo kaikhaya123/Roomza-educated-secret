@@ -23,7 +23,7 @@ export default function AdminLogin() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 0.35 }}
         transition={{ duration: 1.2 }}
-        className="absolute inset-0 bg-[url('/images/admin-bg.jpg')] bg-cover bg-center blur-sm"
+        className="absolute inset-0 bg-gradient-to-br from-slate-900 to-black"
       />
 
       <div className="relative bg-white p-10 rounded-2xl shadow-2xl max-w-md w-full text-center">

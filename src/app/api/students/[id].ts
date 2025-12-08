@@ -1,20 +1,32 @@
-import prisma from "@/lib/db";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(req) {
-  const id = Number(req.params.id);
-  const item = await prisma.student.findUnique({ where: { id }});
-  return new Response(JSON.stringify(item), { status: 200 });
+// Student endpoint - currently disabled as student model not in schema
+export async function GET(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  return NextResponse.json(
+    { error: "Students API not implemented" },
+    { status: 501 }
+  );
 }
 
-export async function PUT(req) {
-  const id = Number(req.params.id);
-  const body = await req.json();
-  const updated = await prisma.student.update({ where: { id }, data: body });
-  return new Response(JSON.stringify(updated), { status: 200 });
+export async function PUT(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  return NextResponse.json(
+    { error: "Students API not implemented" },
+    { status: 501 }
+  );
 }
 
-export async function DELETE(req) {
-  const id = Number(req.params.id);
-  await prisma.student.delete({ where: { id }});
-  return new Response(null, { status: 204 });
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  return NextResponse.json(
+    { error: "Students API not implemented" },
+    { status: 501 }
+  );
 }

@@ -1,333 +1,363 @@
 'use client';
 
-import { useSession, signOut } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
-import { Bell, Vote, BookOpen, Tv, Trophy, Settings, LogOut, User, Zap, Award, Target, ArrowRight } from 'lucide-react';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
-import toast from 'react-hot-toast';
+import {
+  Bell,
+  Vote,
+  BookOpen,
+  Tv,
+  Trophy,
+  Settings,
+  LogOut,
+  User,
+  ArrowRight
+} from 'lucide-react';
 
-// Animated counter component
-function AnimatedCounter({ value, duration = 1 }: { value: number; duration?: number }) {
-  const [displayValue, setDisplayValue] = useState(0);
-
+/**
+ * Simple animated counter using requestAnimationFrame.
+ * Works reliably across environments.
+ */
+function AnimatedNumber({ value, duration = 800 }: { value: number; duration?: number }) {
+  const [display, setDisplay] = useState(0);
+  const startRef = useRef<number | null>(null);
+  const fromRef = useRef(display);
   useEffect(() => {
-    let start = 0;
-    const increment = value / (duration * 60);
-    const interval = setInterval(() => {
-      start += increment;
-      if (start >= value) {
-        setDisplayValue(value);
-        clearInterval(interval);
-      } else {
-        setDisplayValue(Math.floor(start));
-      }
-    }, 16);
-    return () => clearInterval(interval);
+    fromRef.current = display;
+    startRef.current = null;
+    const start = performance.now();
+    const diff = value - fromRef.current;
+    let raf = 0;
+
+    function step(now: number) {
+      if (!startRef.current) startRef.current = now;
+      const elapsed = now - startRef.current;
+      const t = Math.min(1, elapsed / duration);
+      const eased = t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t; // simple ease in/out
+      const current = Math.round(fromRef.current + diff * eased);
+      setDisplay(current);
+      if (t < 1) raf = requestAnimationFrame(step);
+    }
+
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value, duration]);
 
-  return <span>{displayValue.toLocaleString()}</span>;
+  return <span>{display.toLocaleString()}</span>;
 }
 
+/**
+ * Mock data, replace with real API data.
+ */
+const initialStats = {
+  votesCast: 124_560,
+  quizzesCompleted: 3_214,
+  leaderboardPosition: 12,
+  remainingVotes: 42,
+  liveViewers: 2784
+};
+
+const mockLeaderboard = [
+  { name: 'K. Zuma', votes: 2840 },
+  { name: 'A. Smith', votes: 2650 },
+  { name: 'J. Mokoena', votes: 2420 },
+  { name: 'L. Nkosi', votes: 2175 },
+  { name: 'T. Patel', votes: 1982 }
+];
+
 export default function DashboardPage() {
-  const { data: session, status } = useSession();
-  const router = useRouter();
-  const [stats, setStats] = useState({
-    votesCast: 0,
-    quizzesCompleted: 0,
-    leaderboardPosition: 0,
-    remainingVotes: 5,
-    liveViewers: 2500,
-  });
-  const [leaderboard, setLeaderboard] = useState([
-    { name: 'Khayalami Z.', votes: 2840 },
-    { name: 'Amelia S.', votes: 2650 },
-    { name: 'Jordan M.', votes: 2420 },
-  ]);
+  const [stats, setStats] = useState(initialStats);
+  const [leaderboard, setLeaderboard] = useState(mockLeaderboard);
 
-  // Redirect if not authenticated
+  // simulate small live updates
   useEffect(() => {
-    if (status === 'unauthenticated') {
-      router.push('/auth/login');
-    }
-  }, [status, router]);
-
-  // Simulate real-time updates
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setStats((prev) => ({
-        ...prev,
-        votesCast: prev.votesCast + Math.floor(Math.random() * 5),
-        liveViewers: Math.floor(2500 + Math.random() * 500),
+    const id = setInterval(() => {
+      setStats((s) => ({
+        ...s,
+        votesCast: s.votesCast + Math.floor(Math.random() * 10),
+        liveViewers: Math.max(1200, Math.round(s.liveViewers + (Math.random() - 0.5) * 200))
       }));
     }, 3000);
-
-    return () => clearInterval(interval);
+    return () => clearInterval(id);
   }, []);
-
-  if (status === 'loading') {
-    return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <motion.div
-          animate={{ rotate: 360 }}
-          transition={{ duration: 2, repeat: Infinity }}
-          className="w-12 h-12 border-4 border-primary-600 border-t-white rounded-full"
-        />
-      </div>
-    );
-  }
-
-  if (!session?.user) {
-    return null;
-  }
-
-  const handleLogout = async () => {
-    await signOut({ callbackUrl: '/auth/login' });
-  };
 
   return (
     <div className="min-h-screen bg-black text-white">
-      {/* Header Section */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="relative border-b border-white/10 px-6 lg:px-12 py-16"
-      >
-        <div className="max-w-7xl mx-auto">
-          {/* Welcome */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-          >
-            <h1 className="text-5xl lg:text-7xl font-black tracking-tight mb-4">
-              Welcome back, {session.user?.name?.split(' ')[0]}
-            </h1>
-            <p className="text-xl text-white/60">Continue your journey to the top</p>
-          </motion.div>
-
-          {/* Stats Grid */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-12"
-          >
-            <div className="border border-white/20 rounded-xl p-6 hover:border-white/40 transition group">
-              <p className="text-white/60 text-sm font-semibold mb-2">VOTES CAST</p>
-              <p className="text-4xl lg:text-5xl font-black group-hover:text-primary-500 transition">
-                <AnimatedCounter value={stats.votesCast} />
-              </p>
-            </div>
-
-            <div className="border border-white/20 rounded-xl p-6 hover:border-white/40 transition group">
-              <p className="text-white/60 text-sm font-semibold mb-2">QUIZZES DONE</p>
-              <p className="text-4xl lg:text-5xl font-black group-hover:text-secondary-500 transition">
-                {stats.quizzesCompleted}
-              </p>
-            </div>
-
-            <div className="border border-white/20 rounded-xl p-6 hover:border-white/40 transition group">
-              <p className="text-white/60 text-sm font-semibold mb-2">YOUR RANK</p>
-              <p className="text-4xl lg:text-5xl font-black text-accent-500 group-hover:scale-110 transition-transform">
-                #{stats.leaderboardPosition || '—'}
-              </p>
-            </div>
-
-            <div className="border border-white/20 rounded-xl p-6 hover:border-white/40 transition group">
-              <p className="text-white/60 text-sm font-semibold mb-2">VOTES LEFT</p>
-              <p className="text-4xl lg:text-5xl font-black text-primary-500 group-hover:scale-110 transition-transform">
-                {stats.remainingVotes}
-              </p>
-            </div>
-          </motion.div>
+      {/* HERO */}
+      <header className="relative overflow-hidden border-b border-white/10">
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 bg-gradient-to-br from-black via-slate-900 to-black" />
         </div>
-      </motion.div>
 
-      {/* Main Content */}
-      <div className="px-6 lg:px-12 py-20">
-        <div className="max-w-7xl mx-auto">
-          {/* Alert */}
+        <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-12 py-20">
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
+            initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
-            className="border border-accent-500/50 bg-accent-500/10 rounded-xl p-6 mb-16 flex items-start gap-4"
+            transition={{ duration: 0.6 }}
+            className="bg-white/6 backdrop-blur-sm border border-white/10 rounded-2xl p-8 md:p-12"
           >
-            <motion.div animate={{ rotate: [0, 10, -10, 0] }} transition={{ duration: 2, repeat: Infinity }}>
-              <Bell size={24} className="text-accent-500 flex-shrink-0 mt-1" />
-            </motion.div>
-            <div>
-              <p className="font-bold text-lg">New Quiz Available!</p>
-              <p className="text-white/60 mt-1">Try today's challenge before midnight to earn bonus points</p>
-            </div>
-          </motion.div>
-
-          {/* Quick Actions Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
-            {/* Vote */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              whileHover={{ y: -5 }}
-              className="group border border-white/20 hover:border-primary-500/50 rounded-2xl p-8 transition-all cursor-pointer relative overflow-hidden"
-            >
-              <div className="absolute inset-0 bg-gradient-to-br from-primary-600/10 to-transparent opacity-0 group-hover:opacity-100 transition" />
-              <Link href="/vote" className="relative z-10 block">
-                <Vote size={32} className="text-primary-500 mb-4 group-hover:scale-110 transition-transform" />
-                <h3 className="text-xl font-bold mb-2">Vote Now</h3>
-                <p className="text-white/60 mb-6">{stats.remainingVotes} votes remaining</p>
-                <div className="flex items-center gap-2 text-primary-500 font-semibold group-hover:gap-4 transition-all">
-                  Cast Vote <ArrowRight size={20} />
-                </div>
-              </Link>
-            </motion.div>
-
-            {/* Quiz */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              whileHover={{ y: -5 }}
-              className="group border border-white/20 hover:border-secondary-500/50 rounded-2xl p-8 transition-all cursor-pointer relative overflow-hidden"
-            >
-              <div className="absolute inset-0 bg-gradient-to-br from-secondary-600/10 to-transparent opacity-0 group-hover:opacity-100 transition" />
-              <Link href="/quiz" className="relative z-10 block">
-                <BookOpen size={32} className="text-secondary-500 mb-4 group-hover:scale-110 transition-transform" />
-                <h3 className="text-xl font-bold mb-2">Daily Quiz</h3>
-                <p className="text-white/60 mb-6">Test your knowledge</p>
-                <div className="flex items-center gap-2 text-secondary-500 font-semibold group-hover:gap-4 transition-all">
-                  Take Quiz <ArrowRight size={20} />
-                </div>
-              </Link>
-            </motion.div>
-
-            {/* Live */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              whileHover={{ y: -5 }}
-              className="group border border-red-500/50 bg-red-600/5 rounded-2xl p-8 transition-all cursor-pointer relative overflow-hidden"
-            >
-              <div className="absolute inset-0 bg-gradient-to-br from-red-600/20 to-transparent opacity-0 group-hover:opacity-100 transition" />
-              <Link href="/stream" className="relative z-10 block">
-                <div className="flex items-center gap-3 mb-4">
-                  <Tv size={32} className="text-red-500 group-hover:scale-110 transition-transform" />
-                  <motion.span
-                    animate={{ scale: [1, 1.2, 1] }}
-                    transition={{ duration: 1.5, repeat: Infinity }}
-                    className="inline-block px-3 py-1 bg-red-500 text-white text-xs font-bold rounded-full"
-                  >
-                    LIVE
-                  </motion.span>
-                </div>
-                <h3 className="text-xl font-bold mb-2">Watch Live</h3>
-                <p className="text-white/60 mb-6">
-                  <AnimatedCounter value={stats.liveViewers} /> watching
+            <div className="flex flex-col lg:flex-row lg:items-center gap-6">
+              <div className="flex-1">
+                <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight">
+                  Welcome back, <span className="text-amber-300">Champion</span>
+                </h1>
+                <p className="mt-3 text-white/80 max-w-2xl">
+                  Dashboard overview. Quick actions. Live metrics. Stay in control of your journey.
                 </p>
-                <div className="flex items-center gap-2 text-red-500 font-semibold group-hover:gap-4 transition-all">
-                  Join Stream <ArrowRight size={20} />
+
+                <div className="mt-6 flex flex-wrap gap-3">
+                  <Link href="/stream" className="inline-flex items-center gap-2 px-5 py-3 bg-amber-400 text-black font-bold rounded-lg shadow-md">
+                    <Tv size={16} />
+                    Watch Live
+                  </Link>
+                  <Link href="/vote" className="inline-flex items-center gap-2 px-5 py-3 bg-white/10 text-white font-semibold rounded-lg border border-white/10">
+                    <Vote size={16} />
+                    Vote Now
+                  </Link>
                 </div>
-              </Link>
-            </motion.div>
+              </div>
 
-            {/* Leaderboard */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-              whileHover={{ y: -5 }}
-              className="group border border-white/20 hover:border-accent-500/50 rounded-2xl p-8 transition-all cursor-pointer relative overflow-hidden"
-            >
-              <div className="absolute inset-0 bg-gradient-to-br from-accent-600/10 to-transparent opacity-0 group-hover:opacity-100 transition" />
-              <Link href="/leaderboard" className="relative z-10 block">
-                <Trophy size={32} className="text-accent-500 mb-4 group-hover:scale-110 transition-transform" />
-                <h3 className="text-xl font-bold mb-2">Leaderboard</h3>
-                <p className="text-white/60 mb-6">See where you rank</p>
-                <div className="flex items-center gap-2 text-accent-500 font-semibold group-hover:gap-4 transition-all">
-                  View Ranks <ArrowRight size={20} />
+              <div className="w-full lg:w-80 flex-shrink-0">
+                <div className="bg-white/5 rounded-xl p-4 border border-white/8">
+                  <div className="relative w-full h-40 rounded-lg overflow-hidden">
+                    <Image src="/images/hero-profile.jpg" alt="hero" fill className="object-cover" />
+                  </div>
+                  <div className="mt-3 text-white/90 font-semibold">Your live snapshot</div>
+                  <div className="text-sm text-white/70">Quick overview of activity and rewards</div>
                 </div>
-              </Link>
-            </motion.div>
-          </div>
-
-          {/* Leaderboard & Profile Section */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
-            {/* Top Voters */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
-              className="lg:col-span-2 border border-white/20 rounded-2xl p-8"
-            >
-              <div className="flex items-center gap-3 mb-8">
-                <Trophy size={28} className="text-accent-500" />
-                <h2 className="text-3xl font-black">Top Voters</h2>
               </div>
-
-              <div className="space-y-4">
-                {leaderboard.map((user, idx) => (
-                  <motion.div
-                    key={idx}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.5 + idx * 0.1 }}
-                    className="flex items-center justify-between border border-white/10 rounded-lg p-4 hover:border-white/30 transition group"
-                  >
-                    <div className="flex items-center gap-4">
-                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center font-bold text-lg group-hover:scale-110 transition-transform">
-                        {idx + 1}
-                      </div>
-                      <span className="font-semibold">{user.name}</span>
-                    </div>
-                    <span className="text-accent-500 font-black text-lg">{user.votes.toLocaleString()}</span>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
-
-            {/* Profile Card */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6 }}
-              className="border border-white/20 rounded-2xl p-8"
-            >
-              <div className="mb-8">
-                <p className="text-white/60 text-sm font-semibold mb-2">YOUR PROFILE</p>
-                <p className="text-2xl font-black">{session.user?.name}</p>
-                <p className="text-white/60 text-sm mt-2">{session.user?.email}</p>
-              </div>
-
-              <div className="space-y-3">
-                <Link
-                  href="/dashboard/profile"
-                  className="flex items-center gap-3 p-3 rounded-lg border border-white/10 hover:border-white/40 transition text-white font-semibold group"
-                >
-                  <User size={20} className="group-hover:scale-110 transition-transform" />
-                  My Profile
-                </Link>
-                <Link
-                  href="/dashboard/settings"
-                  className="flex items-center gap-3 p-3 rounded-lg border border-white/10 hover:border-white/40 transition text-white font-semibold group"
-                >
-                  <Settings size={20} className="group-hover:scale-110 transition-transform" />
-                  Settings
-                </Link>
-                <button
-                  onClick={handleLogout}
-                  className="w-full flex items-center gap-3 p-3 rounded-lg border border-red-500/30 hover:border-red-500/60 hover:bg-red-500/10 transition text-red-500 font-semibold group"
-                >
-                  <LogOut size={20} className="group-hover:scale-110 transition-transform" />
-                  Logout
-                </button>
-              </div>
-            </motion.div>
-          </div>
+            </div>
+          </motion.div>
         </div>
-      </div>
+      </header>
+
+      {/* STATS STRIP */}
+      <section className="max-w-7xl mx-auto px-6 lg:px-12 -mt-10 relative z-20">
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4"
+        >
+          <div className="bg-white rounded-2xl p-6 border border-neutral-100 shadow-sm">
+            <p className="text-sm text-slate-500 font-semibold">VOTES CAST</p>
+            <div className="mt-3 text-3xl font-extrabold text-slate-900">
+              <AnimatedNumber value={stats.votesCast} duration={900} />
+            </div>
+            <p className="text-xs text-slate-400 mt-2">Total votes recorded</p>
+          </div>
+
+          <div className="bg-white rounded-2xl p-6 border border-neutral-100 shadow-sm">
+            <p className="text-sm text-slate-500 font-semibold">QUIZZES COMPLETED</p>
+            <div className="mt-3 text-3xl font-extrabold text-slate-900">
+              <AnimatedNumber value={stats.quizzesCompleted} duration={900} />
+            </div>
+            <p className="text-xs text-slate-400 mt-2">Daily engagement</p>
+          </div>
+
+          <div className="bg-white rounded-2xl p-6 border border-neutral-100 shadow-sm">
+            <p className="text-sm text-slate-500 font-semibold">LIVE VIEWERS</p>
+            <div className="mt-3 text-3xl font-extrabold text-slate-900">
+              <AnimatedNumber value={stats.liveViewers} duration={700} />
+            </div>
+            <p className="text-xs text-slate-400 mt-2">Watching right now</p>
+          </div>
+
+          <div className="bg-white rounded-2xl p-6 border border-neutral-100 shadow-sm">
+            <p className="text-sm text-slate-500 font-semibold">VOTES LEFT</p>
+            <div className="mt-3 text-3xl font-extrabold text-amber-600">
+              <AnimatedNumber value={stats.remainingVotes} duration={600} />
+            </div>
+            <p className="text-xs text-slate-400 mt-2">Your remaining daily votes</p>
+          </div>
+        </motion.div>
+      </section>
+
+      {/* FEATURED CARD */}
+      <section className="max-w-7xl mx-auto px-6 lg:px-12 mt-10">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="bg-gradient-to-r from-amber-50 to-white rounded-2xl p-6 md:p-8 border border-neutral-100 shadow-md flex flex-col md:flex-row items-center gap-6"
+        >
+          <div className="flex-1">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-lg bg-amber-100 flex items-center justify-center text-amber-700 font-black">
+                <span>Q</span>
+              </div>
+              <div>
+                <div className="text-sm font-bold text-slate-700">Daily Quiz</div>
+                <div className="text-lg font-extrabold text-slate-900">Win bonus votes and prizes today</div>
+              </div>
+            </div>
+            <p className="text-sm text-slate-500 mt-3 max-w-xl">
+              New challenge live now. Complete before midnight to get extra points and badge.
+            </p>
+          </div>
+
+          <div className="w-full md:w-56">
+            <Link href="/quiz" className="inline-flex items-center justify-center w-full px-4 py-3 bg-amber-600 text-white font-bold rounded-lg shadow">
+              Take Quiz
+              <ArrowRight size={16} className="ml-2" />
+            </Link>
+          </div>
+        </motion.div>
+      </section>
+
+      {/* ACTIONS GRID */}
+      <section className="max-w-7xl mx-auto px-6 lg:px-12 mt-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <motion.div whileHover={{ y: -6 }} className="bg-white rounded-2xl p-6 border border-neutral-100 shadow-sm">
+            <Link href="/vote" className="block">
+              <div className="flex items-start gap-4">
+                <div className="p-3 rounded-lg bg-amber-50">
+                  <Vote size={22} className="text-amber-600" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-slate-900">Vote</h4>
+                  <p className="text-sm text-slate-500 mt-1">Support your favourite contestant.</p>
+                </div>
+              </div>
+              <div className="mt-4 text-sm text-amber-600 font-semibold">Cast Votes →</div>
+            </Link>
+          </motion.div>
+
+          <motion.div whileHover={{ y: -6 }} className="bg-white rounded-2xl p-6 border border-neutral-100 shadow-sm">
+            <Link href="/quiz" className="block">
+              <div className="flex items-start gap-4">
+                <div className="p-3 rounded-lg bg-indigo-50">
+                  <BookOpen size={22} className="text-indigo-600" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-slate-900">Daily Quiz</h4>
+                  <p className="text-sm text-slate-500 mt-1">Earn points and badges.</p>
+                </div>
+              </div>
+              <div className="mt-4 text-sm text-indigo-600 font-semibold">Take Quiz →</div>
+            </Link>
+          </motion.div>
+
+          <motion.div whileHover={{ y: -6 }} className="bg-white rounded-2xl p-6 border border-neutral-100 shadow-sm">
+            <Link href="/stream" className="block">
+              <div className="flex items-start gap-4">
+                <div className="p-3 rounded-lg bg-red-50">
+                  <Tv size={22} className="text-red-600" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-slate-900">Live Stream</h4>
+                  <p className="text-sm text-slate-500 mt-1">Watch shows and vote live.</p>
+                </div>
+              </div>
+              <div className="mt-4 text-sm text-red-600 font-semibold">Join Stream →</div>
+            </Link>
+          </motion.div>
+
+          <motion.div whileHover={{ y: -6 }} className="bg-white rounded-2xl p-6 border border-neutral-100 shadow-sm">
+            <Link href="/leaderboard" className="block">
+              <div className="flex items-start gap-4">
+                <div className="p-3 rounded-lg bg-emerald-50">
+                  <Trophy size={22} className="text-emerald-600" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-slate-900">Leaderboard</h4>
+                  <p className="text-sm text-slate-500 mt-1">See top voters and rankings.</p>
+                </div>
+              </div>
+              <div className="mt-4 text-sm text-emerald-600 font-semibold">View Ranks →</div>
+            </Link>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* LEADERBOARD + PROFILE */}
+      <section className="max-w-7xl mx-auto px-6 lg:px-12 mt-10 pb-20">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2 bg-white rounded-2xl p-6 border border-neutral-100 shadow-sm">
+            <div className="flex items-center gap-3 mb-6">
+              <Trophy className="text-amber-600" />
+              <h3 className="text-xl font-bold">Top Voters</h3>
+            </div>
+
+            <div className="space-y-3">
+              {leaderboard.map((u, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, x: -12 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.1 + i * 0.06 }}
+                  className="flex items-center justify-between p-3 rounded-lg border border-neutral-100"
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-amber-500 to-rose-500 flex items-center justify-center font-bold text-white">
+                      {i + 1}
+                    </div>
+                    <div>
+                      <div className="font-semibold">{u.name}</div>
+                      <div className="text-xs text-slate-500">Top fan</div>
+                    </div>
+                  </div>
+                  <div className="font-extrabold text-slate-900">{u.votes.toLocaleString()}</div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+
+          <aside className="bg-white rounded-2xl p-6 border border-neutral-100 shadow-sm">
+            <div className="mb-4">
+              <p className="text-xs text-slate-500 uppercase">Your Profile</p>
+              <div className="mt-3 flex items-center gap-3">
+                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-500 to-amber-500 flex items-center justify-center text-white font-bold">KZ</div>
+                <div>
+                  <div className="font-bold">Khayalami Z.</div>
+                  <div className="text-xs text-slate-500">khayalami@example.com</div>
+                </div>
+              </div>
+            </div>
+
+            <nav className="space-y-2">
+              <Link href="/dashboard/profile" className="flex items-center justify-between p-3 rounded-lg border border-neutral-100 hover:bg-slate-50">
+                <div className="flex items-center gap-3">
+                  <User />
+                  <span className="font-medium">My Profile</span>
+                </div>
+                <ArrowRight />
+              </Link>
+
+              <Link href="/dashboard/settings" className="flex items-center justify-between p-3 rounded-lg border border-neutral-100 hover:bg-slate-50">
+                <div className="flex items-center gap-3">
+                  <Settings />
+                  <span className="font-medium">Settings</span>
+                </div>
+                <ArrowRight />
+              </Link>
+
+              <button className="w-full mt-3 inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-red-300 text-red-600">
+                <LogOut />
+                Logout
+              </button>
+            </nav>
+          </aside>
+        </div>
+      </section>
+
+      {/* FOOTER CTA */}
+      <footer className="bg-white border-t border-neutral-100">
+        <div className="max-w-7xl mx-auto px-6 lg:px-12 py-12">
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="text-center">
+            <h3 className="text-2xl font-bold">Ready to level up?</h3>
+            <p className="text-slate-500 mt-2 max-w-2xl mx-auto">Join the live stream. Cast votes. Help shape the future of student talent.</p>
+
+            <div className="mt-6 flex items-center justify-center gap-4">
+              <Link href="/stream" className="inline-flex items-center gap-2 px-6 py-3 bg-amber-600 text-white rounded-lg font-bold">Watch Live</Link>
+              <Link href="/auth/register" className="inline-flex items-center gap-2 px-6 py-3 border border-neutral-200 rounded-lg">Register</Link>
+            </div>
+          </motion.div>
+        </div>
+      </footer>
     </div>
   );
 }

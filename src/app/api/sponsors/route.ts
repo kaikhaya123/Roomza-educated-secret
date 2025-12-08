@@ -1,12 +1,13 @@
-import prisma from "@/lib/db";
+import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
 
 export async function GET() {
-  const list = await prisma.sponsor.findMany({ orderBy: { createdAt: "desc" }});
-  return new Response(JSON.stringify(list), { status: 200 });
+  const list = await prisma.sponsor.findMany({ orderBy: { createdAt: "desc" } });
+  return NextResponse.json(list, { status: 200 });
 }
 
-export async function POST(req) {
+export async function POST(req: NextRequest) {
   const data = await req.json();
   const created = await prisma.sponsor.create({ data });
-  return new Response(JSON.stringify(created), { status: 201 });
+  return NextResponse.json(created, { status: 201 });
 }

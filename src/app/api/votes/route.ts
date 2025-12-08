@@ -1,13 +1,18 @@
-import prisma from "@/lib/db";
+import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
 
-export async function POST(req) {
-  const { contestantId, ip } = await req.json();
+export async function POST(req: NextRequest) {
+  const { contestantId, voteCount = 1, isPaid = false } = await req.json();
   const updated = await prisma.$transaction([
-    prisma.vote.create({ data: { contestantId, ip } }),
-    prisma.contestant.update({
-      where: { id: contestantId },
-      data: { votes: { increment: 1 } }
-    })
+    prisma.vote.create({ 
+      data: { 
+        contestantId, 
+        voteCount, 
+        isPaid,
+        votingRound: 1,
+        userId: "" // Placeholder - should use actual userId from session
+      } 
+    }),
   ]);
-  return new Response(JSON.stringify({ success: true }), { status: 200 });
+  return NextResponse.json({ success: true }, { status: 200 });
 }

@@ -1,12 +1,16 @@
-import prisma from "@/lib/db";
+import { NextRequest, NextResponse } from "next/server";
 
+// Students endpoint - currently disabled as student model not in schema
 export async function GET() {
-  const list = await prisma.student.findMany({ orderBy: { createdAt: "desc" }});
-  return new Response(JSON.stringify(list), { status: 200 });
+  return NextResponse.json(
+    { error: "Students API not implemented" },
+    { status: 501 }
+  );
 }
 
-export async function POST(req) {
-  const data = await req.json();
-  const created = await prisma.student.create({ data });
-  return new Response(JSON.stringify(created), { status: 201 });
+export async function POST(req: NextRequest) {
+  return NextResponse.json(
+    { error: "Students API not implemented" },
+    { status: 501 }
+  );
 }

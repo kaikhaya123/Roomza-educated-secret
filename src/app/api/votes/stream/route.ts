@@ -12,20 +12,30 @@ export async function GET() {
 
       // send initial snapshot
       const contestants = await prisma.contestant.findMany({
-        select: { id: true, name: true, votes: true }
+        select: { id: true, firstName: true, lastName: true, votes: true }
       });
-      send({ type: 'initial', contestants });
+      const formatted = contestants.map(c => ({ 
+        id: c.id, 
+        name: `${c.firstName} ${c.lastName}`, 
+        votes: c.votes.length 
+      }));
+      send({ type: 'initial', contestants: formatted });
 
       // poll every 2 seconds
       const interval = setInterval(async () => {
         const update = await prisma.contestant.findMany({
-          select: { id: true, name: true, votes: true }
+          select: { id: true, firstName: true, lastName: true, votes: true }
         });
-        send({ type: 'update', contestants: update });
+        const formatted = update.map(c => ({ 
+          id: c.id, 
+          name: `${c.firstName} ${c.lastName}`, 
+          votes: c.votes.length 
+        }));
+        send({ type: 'update', contestants: formatted });
       }, 2000);
 
-      // clean up if client disconnects
-      controller.closed.then(() => clearInterval(interval));
+      // clean up on stream close
+      return () => clearInterval(interval);
     }
   });
 

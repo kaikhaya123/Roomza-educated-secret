@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create vote and update contestant votes in a transaction
+    // Create vote in a transaction
     const result = await prisma.$transaction([
       prisma.vote.create({
         data: {
@@ -69,13 +69,6 @@ export async function POST(request: NextRequest) {
           voteCount: validatedData.voteCount,
           isPaid: validatedData.isPaid,
           votingRound: currentRound,
-        },
-      }),
-      prisma.contestant.update({
-        where: { id: validatedData.contestantId },
-        data: {
-          totalVotes: { increment: validatedData.voteCount },
-          weeklyVotes: { increment: validatedData.voteCount },
         },
       }),
     ]);
@@ -87,7 +80,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       message: 'Vote cast successfully!',
       vote: result[0],
-      contestant: result[1],
     });
   } catch (error: any) {
     console.error('Vote error:', error);
