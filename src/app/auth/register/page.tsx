@@ -303,7 +303,12 @@ export default function RegisterPage() {
             </div>
 
             {/* PASSWORDS */}
-            <PasswordField label="Password" name="password" value={formData.password} show={showPassword} toggle={() => setShowPassword(!showPassword)} onChange={handleChange} />
+            <div>
+              <PasswordField label="Password" name="password" value={formData.password} show={showPassword} toggle={() => setShowPassword(!showPassword)} onChange={handleChange} />
+              <p className="text-xs text-gray-500 mt-1">
+                Must contain: 8+ characters, 1 uppercase letter, 1 lowercase letter, 1 number
+              </p>
+            </div>
             <PasswordField label="Confirm Password" name="confirmPassword" value={formData.confirmPassword} show={showConfirmPassword} toggle={() => setShowConfirmPassword(!showConfirmPassword)} onChange={handleChange} />
 
             {/* TERMS */}
