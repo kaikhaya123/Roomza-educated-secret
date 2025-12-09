@@ -106,6 +106,7 @@ export default function RegisterPage() {
           lastName: formData.lastName,
           phone: formData.phone,
           password: formData.password,
+          confirmPassword: formData.confirmPassword,
           dateOfBirth: formData.dateOfBirth,
           homeAddress: formData.homeAddress,
           province: formData.province,
@@ -113,6 +114,7 @@ export default function RegisterPage() {
           campus: formData.campus,
           residence: formData.residence,
           verificationCode: formData.verificationCode,
+          acceptTerms: formData.acceptTerms,
         }),
       });
 
