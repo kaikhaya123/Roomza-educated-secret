@@ -10,19 +10,42 @@ export default function IntroSection() {
     const video = videoRef.current;
     if (!video) return;
 
-    // Ensure muted and attempt to play programmatically for autoplay reliability
-    const start = async () => {
+    // Ensure muted + inline attributes for mobile autoplay reliability
+    video.muted = true;
+    video.defaultMuted = true;
+    video.setAttribute('muted', '');
+    video.setAttribute('playsinline', '');
+    video.setAttribute('webkit-playsinline', '');
+
+    let mounted = true;
+
+    const tryPlay = async () => {
+      if (!mounted || !video) return;
       try {
-        video.muted = true;
         await video.play();
       } catch (err) {
-        // Fallback: try again after ensuring muted
-        video.muted = true;
-        try { await video.play(); } catch {}
+        // Autoplay blocked — we'll attempt again on the next user interaction.
       }
     };
 
-    start();
+    // Try to start autoplay immediately.
+    tryPlay();
+
+    const onUserInteraction = async () => {
+      await tryPlay();
+      document.removeEventListener('touchstart', onUserInteraction);
+      document.removeEventListener('click', onUserInteraction);
+    };
+
+    // Some mobile browsers require a user gesture; listen for interaction as a fallback.
+    document.addEventListener('touchstart', onUserInteraction, { passive: true });
+    document.addEventListener('click', onUserInteraction);
+
+    return () => {
+      mounted = false;
+      document.removeEventListener('touchstart', onUserInteraction);
+      document.removeEventListener('click', onUserInteraction);
+    };
   }, []);
   
   return (
