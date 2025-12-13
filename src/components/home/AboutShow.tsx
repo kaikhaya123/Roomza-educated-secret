@@ -357,18 +357,18 @@ export default function AboutShow() {
             <div className="absolute inset-0 bg-black/30 group-hover:bg-black/25 transition-colors" />
             
             {/* Text Overlay */}
-            <div className="absolute inset-0 flex items-center justify-center">
+            <div className="absolute inset-0 flex items-center justify-center px-4 sm:px-6">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.8, delay: 0.3 }}
-                className="text-center"
+                className="text-center max-w-3xl"
               >
-                <p className="text-4xl lg:text-5xl font-black text-white mb-4">
+                <p className="text-3xl sm:text-4xl lg:text-7xl font-black text-white mb-3 sm:mb-6 tracking-tight drop-shadow-2xl leading-tight">
                   The Movement Across South Africa
                 </p>
-                <p className="text-xl text-white/90">
+                <p className="text-lg sm:text-xl lg:text-3xl text-white/95 drop-shadow-xl font-semibold">
                   From campuses to communities, millions are rising
                 </p>
               </motion.div>
