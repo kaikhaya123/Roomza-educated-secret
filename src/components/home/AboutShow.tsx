@@ -200,7 +200,7 @@ export default function AboutShow() {
                 <div className="relative w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden">
                   {/* Uncomment and use this when you add your image */}
                   <Image
-                    src="/Images/college-students-different-ethnicities-cramming (3).jpg"
+                    src="/Images/college-students-different-ethnicities-cramming (3)-min.jpg"
                     alt="R.E.S. Students"
                     fill
                     className="object-cover"
@@ -347,7 +347,7 @@ export default function AboutShow() {
         >
           <div className="relative aspect-video lg:aspect-[3/1.5] overflow-hidden group">
             <Image
-              src="/Images/college-students-different-ethnicities-cramming (4).jpg"
+              src="/Images/college-students-different-ethnicities-cramming (4)-min.jpg"
               alt="R.E.S. Students from across South Africa"
               fill
               className="object-cover group-hover:scale-105 transition-transform duration-700"
@@ -401,8 +401,8 @@ export default function AboutShow() {
                 1: '/Images/remote-employee-home-office-desk-editing-documents-tablet.jpg',
                 2: '/Images/4183677.jpg',
                 3: '/Images/person-pressing-buzzer.jpg',
-                4: '/Images/still-life-betrayal-concept.jpg',
-                5: '/Images/cheerful-women-holding-trophy-icon.jpg'
+                4: '/Images/bernd-dittrich-E0iLOeY8hV4-unsplash.jpg',
+                5: '/Images/high-angle-smiley-women-with-smartphones.jpg'
               };
 
               const isEven = index % 2 === 0;
@@ -549,8 +549,14 @@ export default function AboutShow() {
             transition={{ duration: 0.8 }}
           >
             <div className="flex items-center gap-4 mb-12">
-              <div className="p-3 bg-white/10 rounded-lg">
-                <Zap className="w-8 h-8 text-white" strokeWidth={2.5} />
+              <div className="relative w-10 h-10 flex items-center justify-center">
+                <Image
+                  src="/Images/classmates.png"
+                  alt="Student icon"
+                  width={32}
+                  height={32}
+                  className="object-contain filter brightness-0 invert"
+                />
               </div>
               <h3 className="text-5xl lg:text-6xl font-black tracking-tight text-white">
                 For
@@ -600,8 +606,14 @@ export default function AboutShow() {
             transition={{ duration: 0.8, delay: 0.1 }}
           >
             <div className="flex items-center gap-4 mb-12">
-              <div className="p-3 bg-white/10 rounded-lg">
-                <Flame className="w-8 h-8 text-white" strokeWidth={2.5} />
+              <div className="relative w-10 h-10 flex items-center justify-center">
+                <Image
+                  src="/Images/queue.png"
+                  alt="Public community icon"
+                  width={32}
+                  height={32}
+                  className="object-contain filter brightness-0 invert"
+                />
               </div>
               <h3 className="text-5xl lg:text-6xl font-black tracking-tight text-white">
                 For

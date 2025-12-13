@@ -30,7 +30,7 @@ export default function VotingSection() {
       id: 2,
       name: 'Contestant Name',
       campus: 'University Name',
-      image: '/Images/medium-shot-smiley-man-work.jpg',
+      image: '/Images/medium-shot-smiley-man-work-min.jpg',
       votes: 0,
       rank: 2
     },
@@ -46,7 +46,7 @@ export default function VotingSection() {
       id: 4,
       name: 'Contestant Name',
       campus: 'University Name',
-      image: '/Images/college-students-different-ethnicities-cramming.jpg',
+      image: '/Images/college-students-different-ethnicities-cramming-min (1).jpg',
       votes: 0,
       rank: 4
     }
