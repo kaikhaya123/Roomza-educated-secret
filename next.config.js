@@ -27,6 +27,10 @@ const nextConfig = {
   env: {
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
   },
+  // Optimize CSS chunk splitting
+  experimental: {
+    optimizeCss: true,
+  },
 }
 
 module.exports = nextConfig

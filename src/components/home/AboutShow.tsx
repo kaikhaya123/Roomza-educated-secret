@@ -205,6 +205,7 @@ export default function AboutShow() {
                     fill
                     className="object-cover"
                     sizes="(max-width: 1024px) 100vw, 50vw"
+                    priority={true}
                   />
                   
                   {/* Energy effect overlay */}
@@ -352,6 +353,7 @@ export default function AboutShow() {
               fill
               className="object-cover group-hover:scale-105 transition-transform duration-700"
               sizes="100vw"
+              priority={true}
             />
             {/* Overlay for text readability */}
             <div className="absolute inset-0 bg-black/30 group-hover:bg-black/25 transition-colors" />

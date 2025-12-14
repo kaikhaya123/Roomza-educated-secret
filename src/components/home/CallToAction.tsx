@@ -4,6 +4,7 @@ import { useCallback } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
+import Image from 'next/image';
 
 export default function CallToAction() {
   const scrollTo = useCallback((id: string) => {
@@ -28,10 +29,18 @@ export default function CallToAction() {
   ];
 
   return (
-    <section
-      className="py-20 pb-28 mb-12 lg:pb-36 lg:mb-20 bg-cover bg-center relative"
-      style={{ backgroundImage: `url('/Images/porter-raab-Ucr4Yp-t364-unsplash.jpg')` }}
-    >
+    <section className="py-20 pb-28 mb-12 lg:pb-36 lg:mb-20 relative overflow-hidden">
+      {/* Background image with lazy loading and quality optimization */}
+      <Image
+        src="/Images/porter-raab-Ucr4Yp-t364-unsplash.jpg"
+        alt="Call to action background"
+        fill
+        className="absolute inset-0 object-cover"
+        quality={75}
+        sizes="100vw"
+        loading="lazy"
+        priority={false}
+      />
       {/* Overlay for readability */}
       <div className="absolute inset-0 bg-black/70" />
       <div className="container mx-auto px-6 lg:px-12 relative z-10">

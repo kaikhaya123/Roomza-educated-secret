@@ -19,30 +19,45 @@ export default function IntroSection() {
 
     let mounted = true;
 
-    const tryPlay = async () => {
+    // Use Intersection Observer for lazy loading - only play when visible
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!mounted || !video) return;
+        
+        if (entry.isIntersecting) {
+          // Video is visible, attempt to play
+          video.play().catch((err) => {
+            // Autoplay blocked — user interaction required
+            console.log('Autoplay blocked, waiting for user interaction');
+          });
+        } else {
+          // Video is not visible, pause to save resources
+          video.pause();
+        }
+      },
+      { threshold: 0.25 } // Trigger when 25% of video is visible
+    );
+
+    observer.observe(video);
+
+    // Fallback for user interaction (if autoplay is blocked)
+    const onUserInteraction = async () => {
       if (!mounted || !video) return;
       try {
         await video.play();
+        document.removeEventListener('touchstart', onUserInteraction);
+        document.removeEventListener('click', onUserInteraction);
       } catch (err) {
-        // Autoplay blocked — we'll attempt again on the next user interaction.
+        // Play still failed
       }
     };
 
-    // Try to start autoplay immediately.
-    tryPlay();
-
-    const onUserInteraction = async () => {
-      await tryPlay();
-      document.removeEventListener('touchstart', onUserInteraction);
-      document.removeEventListener('click', onUserInteraction);
-    };
-
-    // Some mobile browsers require a user gesture; listen for interaction as a fallback.
     document.addEventListener('touchstart', onUserInteraction, { passive: true });
     document.addEventListener('click', onUserInteraction);
 
     return () => {
       mounted = false;
+      observer.disconnect();
       document.removeEventListener('touchstart', onUserInteraction);
       document.removeEventListener('click', onUserInteraction);
     };
@@ -54,17 +69,17 @@ export default function IntroSection() {
       {/* LEFT SIDE VISUAL */}
       <div className="relative h-[50vh] lg:h-screen overflow-hidden">
         
-        {/* Background video */}
+        {/* Background video - lazy loaded for performance */}
         <video
           ref={videoRef}
-          autoPlay
           loop
           muted
           playsInline
-          preload="auto"
+          preload="none"
           className="w-full h-full object-cover scale-110 animate-slowZoom"
         >
           <source src="/Videos/14595546-hd_1920_1080_60fps.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
         </video>
 
         {/* Dark overlay */}

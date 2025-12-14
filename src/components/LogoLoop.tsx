@@ -18,7 +18,8 @@ const LogoItem = memo<{
   isVertical: boolean;
   scaleOnHover: boolean;
   renderItem?: (item: any, key: string) => React.ReactNode;
-}>(({ item, itemKey, isVertical, scaleOnHover, renderItem }) => {
+  isFirstCopy: boolean;
+}>(({ item, itemKey, isVertical, scaleOnHover, renderItem, isFirstCopy }) => {
   if (renderItem) {
     return (
       <li
@@ -56,7 +57,7 @@ const LogoItem = memo<{
       height={item.height}
       alt={item.alt ?? ''}
       title={item.title}
-      loading="eager"
+      loading={isFirstCopy && item.priority ? "eager" : "lazy"}
       decoding="async"
       draggable={false}
     />
@@ -586,6 +587,7 @@ export const LogoLoop = memo<LogoLoopProps>(
                 isVertical={isVertical}
                 scaleOnHover={scaleOnHover}
                 renderItem={renderItem}
+                isFirstCopy={copyIndex === 0}
               />
             ))}
           </ul>

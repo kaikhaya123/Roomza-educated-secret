@@ -4,15 +4,20 @@ import "./globals.css";
 import { Toaster } from "react-hot-toast";
 import { Providers } from "@/components/Providers";
 
+// Optimize font loading with display: swap to prevent FOUT
 const inter = Inter({ 
   subsets: ["latin"],
   variable: '--font-inter',
+  display: 'swap',
+  preload: true,
 });
 
 const poppins = Poppins({ 
   weight: ['400', '500', '600', '700', '800'],
   subsets: ["latin"],
   variable: '--font-poppins',
+  display: 'swap',
+  preload: true,
 });
 
 export const metadata: Metadata = {
@@ -35,6 +40,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${inter.variable} ${poppins.variable}`}>
+      <head>
+        {/* Preconnect to critical third-party domains */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+        {/* DNS Prefetch for external resources */}
+        <link rel="dns-prefetch" href="https://res.cloudinary.com" />
+      </head>
       <body suppressHydrationWarning className="antialiased font-futura">
         <Providers>
           {children}
