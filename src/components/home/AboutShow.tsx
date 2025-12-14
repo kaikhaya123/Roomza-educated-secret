@@ -36,12 +36,12 @@ export default function AboutShow() {
   ];
 
   const highlights = [
-    'South Africa\'s first large-scale, interactive student leadership reality platform',
-    'Built on verified voting, daily challenges, quizzes, and live-streamed experiences',
-    'Open to students from public universities, TVET colleges, and private institutions',
-    'Designed to develop leadership, innovation, and social responsibility',
-    'Inspired by the legacy of Robben Island and the journey toward freedom and growth',
-    'Engaging millions of viewers across South Africa through web and social platforms'
+    { title: 'South Africa\'s first large-scale, interactive student leadership reality platform', description: 'Bringing 20 exceptional students to a national stage where every voice counts.' },
+    { title: 'Built on verified voting, daily challenges, quizzes, and live-streamed experiences', description: 'Engagement that rewards participation, knowledge, and community involvement.' },
+    { title: 'Open to students from public universities, TVET colleges, and private institutions', description: 'Inclusive by design. Opportunity is not reserved for the few.' },
+    { title: 'Designed to develop leadership, innovation, and social responsibility', description: 'Competition that builds character, not just entertainment value.' },
+    { title: 'Inspired by the legacy of Robben Island and the journey toward freedom and growth', description: 'Rooted in South African values. Purpose-driven from the start.' },
+    { title: 'Engaging millions of viewers across South Africa through web and social platforms', description: 'A digital movement that reaches every corner of the nation.' }
   ];
 
   return (
@@ -387,6 +387,15 @@ export default function AboutShow() {
           className="mb-40"
         >
           <div className="mb-24">
+            <motion.span
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="inline-block text-xs font-bold uppercase tracking-widest text-white/60 mb-6"
+            >
+              The Platform Edge
+            </motion.span>
             <h2 className="text-6xl lg:text-7xl font-black mb-6 tracking-tighter">
               What Makes
               <br />
@@ -397,7 +406,7 @@ export default function AboutShow() {
           </div>
           
           <div className="space-y-24">
-            {highlights.map((highlight, index) => {
+            {highlights.map((item, index) => {
               const imageMap: { [key: number]: string } = {
                 0: '/Images/young-adults-meeting-up-study.jpg',
                 1: '/Images/remote-employee-home-office-desk-editing-documents-tablet.jpg',
@@ -409,6 +418,18 @@ export default function AboutShow() {
               };
 
               const isEven = index % 2 === 0;
+              
+              // Vary image aspect ratios: 0,2,4 = portrait (taller), 1,3,5 = square
+              const getImageAspect = (idx: number) => {
+                if ([0, 2, 4].includes(idx)) return 'lg:aspect-[3/4]'; // Portrait
+                return 'lg:aspect-square'; // Square
+              };
+
+              // Vary height subtly
+              const getImageHeight = (idx: number) => {
+                if ([0, 2, 4].includes(idx)) return 'lg:h-[480px]'; // Taller
+                return 'lg:h-[400px]'; // Standard
+              };
               
               return (
                 <motion.div
@@ -425,17 +446,28 @@ export default function AboutShow() {
                       <div className="text-5xl lg:text-6xl font-black text-white/20">
                         {String(index + 1).padStart(2, '0')}
                       </div>
-                      <p className="text-2xl lg:text-3xl text-white font-black leading-tight pt-2">
-                        {highlight}
-                      </p>
+                      <div>
+                        <p className="text-2xl lg:text-3xl text-white font-black leading-tight pt-2 mb-4">
+                          {item.title}
+                        </p>
+                        <motion.p
+                          initial={{ opacity: 0 }}
+                          whileInView={{ opacity: 1 }}
+                          viewport={{ once: true }}
+                          transition={{ duration: 0.6, delay: index * 0.1 + 0.2 }}
+                          className="text-base lg:text-lg text-white/50 leading-relaxed max-w-sm"
+                        >
+                          {item.description}
+                        </motion.p>
+                      </div>
                     </div>
                   </div>
 
-                  {/* Image */}
-                  <div className={`relative aspect-square lg:aspect-auto lg:h-96 overflow-hidden rounded-xl group ${!isEven ? 'lg:col-start-1' : ''}`}>
+                  {/* Image with Varied Aspect */}
+                  <div className={`relative aspect-square ${getImageAspect(index)} ${getImageHeight(index)} overflow-hidden rounded-xl group ${!isEven ? 'lg:col-start-1' : ''}`}>
                     <Image
                       src={imageMap[index] || '/Images/college-students-different-ethnicities-cramming (3).jpg'}
-                      alt={highlight}
+                      alt={item.title}
                       fill
                       className="object-cover group-hover:scale-110 transition-transform duration-700"
                       sizes="(max-width: 1024px) 100vw, 50vw"

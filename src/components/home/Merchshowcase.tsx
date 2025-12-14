@@ -10,11 +10,12 @@ type Product = {
   title: string;
   price: string;
   img: string;
+  purpose: string;
 };
 
 const products: Product[] = [
-  { id: "p1", title: "R.E.S. Hoodie", price: "R450", img: "/Images/modern-loose-fit-hoodie-mockup-for-fashion-brands-and-online-stores-promo-use-01452.png" },
-  { id: "p2", title: "R.E.S. Cap", price: "R150", img: "/Images/high-res-image.png" }
+  { id: "p1", title: "R.E.S. Hoodie", price: "R450", img: "/Images/modern-loose-fit-hoodie-mockup-for-fashion-brands-and-online-stores-promo-use-01452.png", purpose: "Wear the movement. Show where you stand." },
+  { id: "p2", title: "R.E.S. Cap", price: "R150", img: "/Images/high-res-image.png", purpose: "Be part of the story. Visible. Unmissable. Yours." }
 ];
 
 export default function Merch() {
@@ -29,7 +30,7 @@ export default function Merch() {
   }
 
   function handleAdd(p: Product) {
-    addToast(`${p.title} added to cart`);
+    addToast(`You're in. ${p.title} is yours.`);
   }
 
   return (
@@ -46,8 +47,17 @@ export default function Merch() {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-white drop-shadow-lg">R.E.S. Premium Merch</h2>
-          <p className="text-gray-300 max-w-2xl mx-auto mt-3">Limited styles, bold designs, premium quality. Shop limited drops curated for the R.E.S. movement.</p>
+          <motion.span
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="inline-block text-xs font-bold uppercase tracking-widest text-white/60 mb-6"
+          >
+            Wear Your Story
+          </motion.span>
+          <h2 className="text-5xl md:text-6xl font-black tracking-tight text-white drop-shadow-lg mb-4">Identity Over Items</h2>
+          <p className="text-gray-300 max-w-2xl mx-auto">Limited drops. Bold designs. Each piece carries meaning. This isn't merchandise—it's a statement that you're part of the movement.</p>
         </motion.div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
@@ -88,23 +98,55 @@ export default function Merch() {
               <div className="p-6 flex items-center justify-between gap-4">
                 <div className="flex-1">
                   <h3 className="text-lg md:text-xl font-black text-white">{p.title}</h3>
-                  <p className="text-sm text-gray-300 mt-1">Premium materials, sustainable production. Perfect fit and feel.</p>
+                  <p className="text-sm text-gray-400 mt-1 italic">{p.purpose}</p>
+                  <p className="text-xs text-gray-500 mt-2">Premium materials, sustainable production.</p>
                 </div>
 
                 <motion.button
                   onClick={() => handleAdd(p)}
-                  aria-label={`Add ${p.title} to cart`}
+                  aria-label={`Claim ${p.title}`}
                   whileTap={{ scale: 0.96 }}
                   whileHover={{ scale: 1.03 }}
-                  className="inline-flex items-center gap-2 bg-gradient-to-r from-brand-yellow to-yellow-400 text-black px-4 py-2 rounded-xl font-bold shadow-lg"
+                  className="inline-flex items-center gap-2 bg-gradient-to-r from-brand-yellow to-yellow-400 text-black px-4 py-2 rounded-xl font-bold shadow-lg whitespace-nowrap"
                 >
                   <ShoppingCart size={16} />
-                  Add
+                  Claim It
                 </motion.button>
               </div>
             </motion.article>
           ))}
         </div>
+
+        {/* Closing Direction CTA */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, delay: 0.3 }}
+          className="mt-24 pt-16 border-t border-white/10 text-center"
+        >
+          <p className="text-gray-400 text-lg mb-8 max-w-2xl mx-auto">
+            Owning R.E.S. merch means you're not just a spectator—you're part of the movement reshaping student opportunity in South Africa.
+          </p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+            <motion.a
+              href="#participate"
+              whileHover={{ x: 4 }}
+              className="group inline-flex items-center gap-2 text-brand-yellow font-bold hover:text-yellow-300 transition-colors"
+            >
+              <span>Ready to Participate?</span>
+              <span className="group-hover:translate-x-1 transition-transform">→</span>
+            </motion.a>
+            <span className="text-white/20">or</span>
+            <motion.a
+              href="#shop"
+              whileHover={{ scale: 1.05 }}
+              className="px-6 py-3 bg-white/10 border border-white/20 text-white rounded-xl font-semibold hover:bg-white/15 transition-colors"
+            >
+              View More Drops
+            </motion.a>
+          </div>
+        </motion.div>
 
         <div className="fixed right-6 bottom-6 z-50 flex flex-col gap-3">
           <AnimatePresence>
