@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, useMotionValue, useTransform, animate } from 'framer-motion';
+import { motion, useMotionValue, useTransform, animate, useScroll, useMotionTemplate } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight, Zap, Flame, Play } from 'lucide-react';
@@ -396,7 +396,7 @@ export default function AboutShow() {
             >
               The Platform Edge
             </motion.span>
-            <h2 className="text-6xl lg:text-7xl font-black mb-6 tracking-tighter">
+            <h2 className="text-6xl lg:text-7xl font-black mb-6 tracking-tighter text-white">
               What Makes
               <br />
               <span className="text-white">R.E.S.</span>
@@ -409,9 +409,9 @@ export default function AboutShow() {
             {highlights.map((item, index) => {
               const imageMap: { [key: number]: string } = {
                 0: '/Images/young-adults-meeting-up-study.jpg',
-                1: '/Images/remote-employee-home-office-desk-editing-documents-tablet.jpg',
-                2: '/Images/5298421.jpg',
-                3: '/Images/person-pressing-buzzer.jpg',
+                1: '/Images/medium-shot-women-holding-smartphones.jpg',
+                2: '/Images/joy-armani-KAK0jPmDLt8-unsplash.jpg',
+                3: '/Images/concentrated-young-multiethnic-friends-students-outdoors-studying.jpg',
                 4: '/Images/bernd-dittrich-E0iLOeY8hV4-unsplash.jpg',
                 5: '/Images/high-angle-smiley-women-with-smartphones-min.jpg',
                 6: '/Images/college-students-different-ethnicities-cramming (4).jpg'
@@ -489,7 +489,7 @@ export default function AboutShow() {
           className="mb-40 relative"
         >
           <div className="max-w-4xl">
-            <h2 className="text-6xl lg:text-7xl font-black mb-12 tracking-tighter">
+            <h2 className="text-6xl lg:text-7xl font-black mb-12 tracking-tighter text-white">
               Why It
               <br />
               <span className="text-white/30">Matters</span>
@@ -691,56 +691,96 @@ export default function AboutShow() {
           </motion.div>
         </div>
 
-        {/* Final CTA */}
+        {/* Final CTA with Smooth Scroll Hero Animation */}
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="text-center bg-black text-white p-12 lg:p-16 relative overflow-hidden"
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="text-center bg-black text-white p-12 lg:p-24 relative overflow-hidden min-h-96 flex flex-col justify-center"
         >
-          {/* Background image */}
-          <Image
-            src="/Images/hipster-freedom-youth-teenager-graphic-word.jpg"
-            alt="Join the Movement Background"
-            fill
-            className="object-cover object-center absolute inset-0 z-0 opacity-30 pointer-events-none"
-            sizes="100vw"
-            priority
-          />
+          {/* Smooth Scroll Hero Background Effect */}
+          <CTAScrollBackground />
+          
           <div className="relative z-10">
-            <h3 className="text-4xl lg:text-5xl font-black mb-6 tracking-tight">
-              Join the <span className="font-light">Movement</span>
-            </h3>
-            <div className="space-y-2 mb-8 max-w-2xl mx-auto">
-              <p className="text-xl text-white/90">
+            <motion.div
+              initial={{ y: 48, opacity: 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
+              transition={{ ease: "easeInOut", duration: 0.75 }}
+              className="mb-6"
+            >
+              <h3 className="text-5xl lg:text-7xl font-black mb-6 tracking-tight">
+                Join the <span className="font-light">Movement</span>
+              </h3>
+            </motion.div>
+            
+            <motion.div
+              initial={{ y: 48, opacity: 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
+              transition={{ ease: "easeInOut", duration: 0.75, delay: 0.1 }}
+              className="space-y-3 mb-12 max-w-3xl mx-auto"
+            >
+              <p className="text-2xl lg:text-3xl text-white/95 font-semibold">
                 This is more than a show.
               </p>
-              <p className="text-xl text-white/90">
+              <p className="text-2xl lg:text-3xl text-white/95 font-semibold">
                 It is a national platform for growth, leadership, and opportunity.
               </p>
-              <p className="text-xl text-white/80 mt-4">
+              <p className="text-xl lg:text-2xl text-white/80 mt-6">
                 Register, participate, and shape the future of South Africa's next leaders.
               </p>
-            </div>
+            </motion.div>
           </div>
-          <div className="flex flex-wrap gap-4 justify-center">
+
+          <motion.div
+            initial={{ y: 48, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            transition={{ ease: "easeInOut", duration: 0.75, delay: 0.2 }}
+            className="flex flex-wrap gap-4 justify-center relative z-20"
+          >
             <Link
               href="/auth/register"
-              className="group inline-flex items-center gap-3 px-8 py-4 bg-brand-yellow text-black font-black text-sm uppercase tracking-[0.15em] hover:bg-yellow-400 transition-all duration-300"
+              className="group inline-flex items-center gap-3 px-10 py-5 bg-brand-yellow text-black font-black text-sm uppercase tracking-[0.15em] hover:bg-yellow-400 transition-all duration-300 hover:scale-105 hover:shadow-2xl"
             >
               <span>Register Now</span>
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-2 transition-transform" />
             </Link>
             <Link
               href="#contestants"
-              className="group inline-flex items-center gap-3 px-8 py-4 border-2 border-brand-yellow text-white font-black text-sm uppercase tracking-[0.15em] hover:bg-brand-yellow hover:text-black transition-all duration-300"
+              className="group inline-flex items-center gap-3 px-10 py-5 border-2 border-brand-yellow text-white font-black text-sm uppercase tracking-[0.15em] hover:bg-brand-yellow hover:text-black transition-all duration-300 hover:scale-105"
             >
               <span>Meet the Contestants</span>
             </Link>
-          </div>
+          </motion.div>
         </motion.div>
       </div>
     </section>
   );
 }
+
+// Smooth Scroll Background Component with Parallax
+const CTAScrollBackground = () => {
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end start"]
+  });
+
+  const y = useTransform(scrollYProgress, [0, 1], [100, -100]);
+  const opacity = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0, 0.3, 0.3, 0]);
+
+  return (
+    <motion.div
+      ref={ref}
+      style={{
+        y,
+        opacity,
+        backgroundImage: "url('https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=2670&auto=format&fit=crop')",
+        backgroundPosition: "center",
+        backgroundSize: "cover",
+        backgroundRepeat: "no-repeat",
+      }}
+      className="absolute inset-0 z-0 blur-sm"
+    />
+  );
+};
