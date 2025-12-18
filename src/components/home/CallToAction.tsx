@@ -43,7 +43,7 @@ export default function CallToAction() {
       />
       {/* Overlay for readability */}
       <div className="absolute inset-0 bg-black/70" />
-      <div className="container mx-auto px-6 lg:px-16 relative z-10">
+      <div className="container mx-auto px-4 md:px-6 lg:px-16 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 18 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -51,8 +51,8 @@ export default function CallToAction() {
           transition={{ duration: 0.6 }}
           className="max-w-3xl mx-auto text-center"
         >
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 section-title">Be Part of the R.E.S. Experience</h2>
-          <p className="text-xl md:text-2xl text-gray-200 mb-10 max-w-3xl mx-auto leading-relaxed">
+          <h2 className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-4 md:mb-6 section-title">Be Part of the R.E.S. Experience</h2>
+          <p className="text-sm sm:text-base md:text-xl lg:text-2xl text-gray-200 mb-6 md:mb-10 max-w-3xl mx-auto leading-relaxed">
             You can join, vote, watch, and support the biggest student reality show in South Africa. Take your step today.
           </p>
 
@@ -61,7 +61,7 @@ export default function CallToAction() {
             whileInView="show"
             viewport={{ once: true }}
             variants={{ show: { transition: { staggerChildren: 0.08 } } }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-4"
+            className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 md:gap-4 mb-2 md:mb-4"
           >
             {btns.map((b, i) => (
               <motion.button
@@ -70,7 +70,7 @@ export default function CallToAction() {
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.98 }}
                 transition={{ type: 'spring', stiffness: 300 }}
-                className={`w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-3 rounded-full text-base font-semibold shadow-lg transition transform bg-brand-yellow text-black hover:bg-yellow-400 hover:shadow-xl`}
+                className={`w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 sm:px-8 py-2 sm:py-3 rounded-full text-xs sm:text-sm md:text-base font-semibold shadow-lg transition transform bg-brand-yellow text-black hover:bg-yellow-400 hover:shadow-xl`}
                 aria-label={b.label}
               >
                 <span>{b.label}</span>

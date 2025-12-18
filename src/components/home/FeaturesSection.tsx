@@ -127,19 +127,19 @@ export default function FeaturesSection() {
   );
 
   return (
-    <section className="w-full py-16 md:py-24 px-6 md:px-8 lg:px-16 bg-white">
+    <section className="w-full py-12 md:py-16 lg:py-24 px-4 md:px-6 lg:px-16 bg-white">
       <div className="max-w-7xl mx-auto">
-      <div className="mb-12 md:mb-16">
-        <h2 className="text-5xl md:text-6xl font-black mb-4 md:mb-5">
+      <div className="mb-8 md:mb-12 lg:mb-16">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black mb-3 md:mb-4 lg:mb-5">
           Your Impact Starts Here
         </h2>
-        <p className="text-gray-700 text-lg md:text-xl max-w-3xl leading-relaxed">
+        <p className="text-gray-700 text-sm sm:text-base md:text-lg lg:text-xl max-w-3xl leading-relaxed">
           From first vote to lasting impact. Three phases. One movement.
         </p>
       </div>
 
       {/* Desktop: Flex layout | Mobile: Stacked */}
-      <div className="flex flex-col lg:flex-row gap-8 md:gap-16 lg:gap-20 items-stretch">
+      <div className="flex flex-col lg:flex-row gap-6 md:gap-8 lg:gap-16 items-stretch">
         
         {/* LEFT SIDE - FEATURE LIST WITH PHASES */}
         <div className="flex-1 order-2 lg:order-1">

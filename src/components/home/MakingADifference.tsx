@@ -32,15 +32,15 @@ export default function MakingADifference() {
   ];
 
   return (
-    <section className="py-28 bg-dark-bg-soft relative">
-      <div className="max-w-7xl mx-auto px-6 lg:px-16">
-        <div className="text-center mb-16">
-          <p className="section-eyebrow text-white text-lg mb-4">Impact & Community</p>
-          <h2 className="text-4xl lg:text-5xl section-title text-white mb-4">Making a Difference</h2>
-          <p className="section-subtitle text-gray-300 text-lg max-w-3xl mx-auto">Measurable impact across campuses and communities — scholarships, engagement and real opportunities.</p>
+    <section className="py-16 md:py-24 lg:py-28 bg-dark-bg-soft relative">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-16">
+        <div className="text-center mb-10 md:mb-16">
+          <p className="section-eyebrow text-white text-sm md:text-lg mb-2 md:mb-4">Impact & Community</p>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl section-title text-white mb-2 md:mb-4">Making a Difference</h2>
+          <p className="section-subtitle text-gray-300 text-sm md:text-lg max-w-3xl mx-auto">Measurable impact across campuses and communities — scholarships, engagement and real opportunities.</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16 max-w-2xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 mb-10 md:mb-16 max-w-2xl mx-auto">
           {stats.map((s, i) => (
             <StatCard key={s.label} value={s.value} label={s.label} delay={i * 0.12} />
           ))}

@@ -14,7 +14,7 @@ export default function LiveStream() {
   ];
 
   return (
-    <section className="relative py-28 lg:py-36 bg-dark-bg-soft text-white overflow-hidden">
+    <section className="relative py-16 md:py-24 lg:py-36 bg-dark-bg-soft text-white overflow-hidden">
       {/* Subtle grid */}
       <div
         className="absolute inset-0 opacity-[0.035]"
@@ -27,15 +27,15 @@ export default function LiveStream() {
         }}
       />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-12">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 lg:px-12">
         {/* Header */}
-        <div className="text-center mb-20">
+        <div className="text-center mb-12 md:mb-20">
           <motion.div
             initial={{ scale: 0 }}
             whileInView={{ scale: 1 }}
             viewport={{ once: true }}
             transition={{ type: 'spring', duration: 0.6 }}
-            className="inline-flex items-center gap-3 px-6 py-3 border border-white/70 rounded-full mb-8"
+            className="inline-flex items-center gap-2 md:gap-3 px-3 md:px-6 py-2 md:py-3 border border-white/70 rounded-full mb-4 md:mb-8"
           >
             <motion.div
               animate={{ scale: [1, 1.4, 1] }}

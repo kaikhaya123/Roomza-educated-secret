@@ -34,10 +34,10 @@ export default function IntroSection() {
   }, []);
 
   return (
-    <section className="relative min-h-screen grid grid-cols-1 lg:grid-cols-2 bg-black overflow-hidden">
+    <section className="relative min-h-[100vh] md:min-h-screen grid grid-cols-1 lg:grid-cols-2 bg-black overflow-hidden">
 
       {/* LEFT VISUAL */}
-      <div className="relative h-[55vh] lg:h-screen overflow-hidden">
+      <div className="relative h-[45vh] md:h-[55vh] lg:h-screen overflow-hidden">
         <video
           ref={videoRef}
           loop

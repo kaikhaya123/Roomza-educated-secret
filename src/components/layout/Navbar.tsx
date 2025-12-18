@@ -36,11 +36,11 @@ export default function Navbar() {
           : 'bg-transparent'
       }`}
     >
-      <div className="container mx-auto px-6 lg:px-12">
-        <div className="flex items-center justify-between h-24">
+      <div className="container mx-auto px-4 md:px-6 lg:px-12">
+        <div className="flex items-center justify-between h-16 md:h-20 lg:h-24">
           {/* Logo */}
           <Link href="/" className="flex items-center relative z-10">
-            <div className="relative w-20 h-20">
+            <div className="relative w-12 md:w-16 lg:w-20 h-12 md:h-16 lg:h-20">
               <Image
                 src="/Images/RES Logo with Futuristic Emblem.png"
                 alt="R.E.S."
@@ -52,20 +52,20 @@ export default function Navbar() {
           </Link>
 
           {/* Center Navigation */}
-          <div className="hidden lg:flex items-center space-x-12">
-            <Link href="/about" className={`font-light text-base transition ${isScrolled ? 'text-gray-700 hover:text-gray-900' : 'text-white hover:text-white/80 drop-shadow-md'}`}>
+          <div className="hidden lg:flex items-center space-x-8 lg:space-x-12">
+            <Link href="/about" className={`font-light text-sm lg:text-base transition ${isScrolled ? 'text-gray-700 hover:text-gray-900' : 'text-white hover:text-white/80 drop-shadow-md'}`}>
               About
             </Link>
-            <Link href="/journey" className={`font-light text-base transition ${isScrolled ? 'text-gray-700 hover:text-gray-900' : 'text-white hover:text-white/80 drop-shadow-md'}`}>
+            <Link href="/journey" className={`font-light text-sm lg:text-base transition ${isScrolled ? 'text-gray-700 hover:text-gray-900' : 'text-white hover:text-white/80 drop-shadow-md'}`}>
               Journey
             </Link>
-            <Link href="/impact" className={`font-light text-base transition ${isScrolled ? 'text-gray-700 hover:text-gray-900' : 'text-white hover:text-white/80 drop-shadow-md'}`}>
+            <Link href="/impact" className={`font-light text-sm lg:text-base transition ${isScrolled ? 'text-gray-700 hover:text-gray-900' : 'text-white hover:text-white/80 drop-shadow-md'}`}>
               Impact
             </Link>
           </div>
 
           {/* Right Section - User Avatar & Menu */}
-          <div className="flex items-center gap-4 lg:gap-6">
+          <div className="flex items-center gap-2 md:gap-4 lg:gap-6">
             {/* User Avatar with Dropdown */}
             <UserAvatar session={session} isScrolled={isScrolled} />
 

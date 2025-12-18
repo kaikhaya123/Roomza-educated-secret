@@ -55,20 +55,20 @@ export default function VotingSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative bg-charcoal-blue-dark text-white py-36 lg:py-48 overflow-hidden"
+      className="relative bg-charcoal-blue-dark text-white py-20 md:py-32 lg:py-48 overflow-hidden"
     >
-      <div className="container mx-auto px-6 lg:px-16 max-w-7xl relative">
+      <div className="container mx-auto px-4 md:px-6 lg:px-16 max-w-7xl relative">
         {/* HERO SECTION */}
         <motion.div
           style={{ y: yHero }}
-          className="text-center mb-24 lg:mb-40"
+          className="text-center mb-12 md:mb-24 lg:mb-40"
         >
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7 }}
-            className="inline-block px-6 py-3 border-2 border-brand-yellow text-sm font-bold tracking-[0.2em] text-brand-yellow mb-10"
+            className="inline-block px-3 md:px-6 py-2 md:py-3 border-2 border-brand-yellow text-xs md:text-sm font-bold tracking-[0.2em] text-brand-yellow mb-4 md:mb-10"
           >
             Daily Free Votes
           </motion.div>

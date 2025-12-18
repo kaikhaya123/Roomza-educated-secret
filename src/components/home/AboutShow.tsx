@@ -45,7 +45,7 @@ export default function AboutShow() {
   ];
 
   return (
-    <section className="py-36 lg:py-48 bg-dark-bg-soft relative overflow-hidden">
+    <section className="py-16 md:py-28 lg:py-48 bg-dark-bg-soft relative overflow-hidden">
       {/* Background pattern */}
       <div className="absolute inset-0 opacity-[0.02]">
         <div className="absolute inset-0" style={{ 
@@ -54,9 +54,9 @@ export default function AboutShow() {
         }} />
       </div>
 
-      <div className="container mx-auto px-6 lg:px-16 max-w-7xl relative">
+      <div className="container mx-auto px-4 md:px-6 lg:px-16 max-w-7xl relative">
         {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 lg:gap-28 items-center mb-28">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-16 lg:gap-28 items-center mb-16 md:mb-24 lg:mb-28">
           {/* Left: Text Content */}
           <motion.div
             initial={{ opacity: 0, x: -60 }}
@@ -70,9 +70,9 @@ export default function AboutShow() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="inline-block mb-10"
+              className="inline-block mb-4 md:mb-6 lg:mb-10"
             >
-              <span className="px-6 py-3 border-2 border-white text-sm uppercase tracking-[0.3em] font-black text-white">
+              <span className="px-4 md:px-6 py-2 md:py-3 border-2 border-white text-xs md:text-sm uppercase tracking-[0.3em] font-black text-white">
                 About the Show
               </span>
             </motion.div>
