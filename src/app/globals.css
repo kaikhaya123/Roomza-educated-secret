@@ -9,7 +9,7 @@
 
 @layer components {
 	.section-title {
-		@apply font-black tracking-tighter mb-6;
+		@apply font-black tracking-tighter mb-6 text-4xl md:text-5xl lg:text-6xl;
 	}
 
 	.section-eyebrow {
@@ -17,6 +17,6 @@
 	}
 
 	.section-subtitle {
-		@apply text-lg leading-relaxed max-w-3xl mx-auto;
+		@apply text-base md:text-lg lg:text-xl leading-relaxed max-w-3xl mx-auto;
 	}
 }

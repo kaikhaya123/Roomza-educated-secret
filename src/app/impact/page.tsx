@@ -71,13 +71,13 @@ export default function ImpactPage() {
           </div>
 
           {/* Content */}
-          <div className="relative z-10 px-6 py-32 lg:px-12 w-full">
+          <div className="absolute bottom-0 left-0 z-10 px-6 py-8 lg:px-12 lg:py-12 w-full">
             <motion.h1
               initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
-              className="max-w-5xl text-6xl font-black leading-tight tracking-tighter lg:text-7xl text-white"
+              className="max-w-2xl text-4xl font-black leading-tight tracking-tighter lg:text-5xl text-white"
             >
               Real Impact.
               <br />
@@ -89,7 +89,7 @@ export default function ImpactPage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="mt-8 max-w-3xl text-xl text-white/90"
+              className="mt-4 max-w-xl text-base lg:text-lg text-white/90"
             >
               R.E.S. is designed to move beyond entertainment. Every action on the platform contributes to measurable student and community outcomes.
             </motion.p>
@@ -172,8 +172,8 @@ export default function ImpactPage() {
               className="object-cover"
             />
             <div className="absolute inset-0 bg-black/40" />
-            <div className="absolute inset-0 flex items-center justify-center px-6">
-              <p className="max-w-4xl text-center text-4xl font-black leading-tight text-white lg:text-5xl">
+            <div className="absolute bottom-6 left-6 lg:bottom-10 lg:left-10">
+              <p className="max-w-xl text-2xl font-black leading-tight text-white lg:text-3xl drop-shadow-lg">
                 Impact is measured by lives changed, not views gained.
               </p>
             </div>

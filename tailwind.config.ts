@@ -118,6 +118,22 @@ const config: Config = {
   				'monospace'
   			]
   		},
+  		fontSize: {
+  			// Modern typography scale for web
+  			'xs': ['12px', { lineHeight: '16px', letterSpacing: '0.5px' }],
+  			'sm': ['14px', { lineHeight: '20px', letterSpacing: '0.25px' }],
+  			'base': ['16px', { lineHeight: '24px', letterSpacing: '0px' }],
+  			'lg': ['18px', { lineHeight: '28px', letterSpacing: '-0.25px' }],
+  			'xl': ['20px', { lineHeight: '30px', letterSpacing: '-0.5px' }],
+  			'2xl': ['24px', { lineHeight: '32px', letterSpacing: '-0.5px' }],
+  			'3xl': ['30px', { lineHeight: '36px', letterSpacing: '-0.75px' }],
+  			'4xl': ['36px', { lineHeight: '44px', letterSpacing: '-1px' }],
+  			'5xl': ['42px', { lineHeight: '48px', letterSpacing: '-1.5px' }],
+  			'6xl': ['48px', { lineHeight: '56px', letterSpacing: '-2px' }],
+  			'7xl': ['56px', { lineHeight: '64px', letterSpacing: '-2.5px' }],
+  			'8xl': ['64px', { lineHeight: '72px', letterSpacing: '-3px' }],
+  			'9xl': ['72px', { lineHeight: '80px', letterSpacing: '-3px' }],
+  		},
   		backgroundImage: {
   			'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
   			'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',

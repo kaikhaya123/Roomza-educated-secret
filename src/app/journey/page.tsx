@@ -70,12 +70,12 @@ export default function JourneyPage() {
           <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/50 to-black/60" />
           
           {/* Content */}
-          <div className="relative z-10 max-w-5xl mx-auto">
+          <div className="absolute bottom-0 left-0 z-10 px-6 py-8 lg:px-12 lg:py-12">
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="text-5xl md:text-6xl lg:text-7xl font-black text-white drop-shadow-xl"
+              className="text-4xl md:text-5xl lg:text-6xl font-black text-white drop-shadow-xl"
             >
               The Journey
             </motion.h1>
@@ -84,7 +84,7 @@ export default function JourneyPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="mt-8 text-white text-lg md:text-xl lg:text-2xl leading-relaxed max-w-3xl mx-auto drop-shadow-lg"
+              className="mt-4 text-white text-base md:text-lg lg:text-xl leading-relaxed max-w-2xl drop-shadow-lg"
             >
               From application to national recognition.  
               Every step is designed to unlock real opportunity.
