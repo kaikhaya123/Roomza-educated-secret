@@ -45,7 +45,7 @@ export default function AboutShow() {
   ];
 
   return (
-    <section className="py-32 lg:py-40 bg-dark-bg-soft relative overflow-hidden">
+    <section className="py-36 lg:py-48 bg-dark-bg-soft relative overflow-hidden">
       {/* Background pattern */}
       <div className="absolute inset-0 opacity-[0.02]">
         <div className="absolute inset-0" style={{ 
@@ -54,9 +54,9 @@ export default function AboutShow() {
         }} />
       </div>
 
-      <div className="container mx-auto px-6 lg:px-12 max-w-7xl relative">
+      <div className="container mx-auto px-6 lg:px-16 max-w-7xl relative">
         {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center mb-24">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 lg:gap-28 items-center mb-28">
           {/* Left: Text Content */}
           <motion.div
             initial={{ opacity: 0, x: -60 }}
@@ -70,9 +70,9 @@ export default function AboutShow() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="inline-block mb-8"
+              className="inline-block mb-10"
             >
-              <span className="px-4 py-2 border-2 border-white text-xs uppercase tracking-[0.3em] font-black text-white">
+              <span className="px-6 py-3 border-2 border-white text-sm uppercase tracking-[0.3em] font-black text-white">
                 About the Show
               </span>
             </motion.div>
@@ -81,7 +81,7 @@ export default function AboutShow() {
             <AnimatedTextReveal 
               text="The Movement That's Changing Student Life"
               tag="h2"
-              className="text-5xl lg:text-6xl font-black mb-6 tracking-tighter leading-[1.1]"
+              className="text-6xl lg:text-7xl font-black mb-8 tracking-tighter leading-[1.1]"
               fontSize={60}
               lineHeight={1.1}
               color="#FFFFFF"
@@ -96,7 +96,7 @@ export default function AboutShow() {
             <AnimatedTextReveal 
               text="South Africa's first digital student reality show celebrating talent, education, resilience, and youth empowerment."
               tag="p"
-              className="text-xl text-gray-300 mb-8 leading-relaxed font-light"
+              className="text-2xl text-gray-300 mb-10 leading-relaxed font-light"
               fontSize={20}
               lineHeight={1.6}
               color="#D1D5DB"

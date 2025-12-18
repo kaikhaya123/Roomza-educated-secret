@@ -28,14 +28,14 @@ export default function Hero() {
       {/* Overlay for better text readability */}
       <div className="absolute inset-0 bg-black/30 z-10"></div>
 
-      <div className="container mx-auto px-6 lg:px-12 py-32 relative z-20">
-        <div className="max-w-4xl">
+      <div className="container mx-auto px-6 lg:px-16 py-40 lg:py-48 relative z-20">
+        <div className="max-w-5xl">
           {/* Main Heading */}
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight tracking-tight drop-shadow-lg"
+            className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-8 leading-tight tracking-tight drop-shadow-lg"
           >
             ROOMZA'S EDUCATED SECRET
           </motion.h1>
@@ -45,7 +45,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-lg md:text-xl lg:text-2xl text-white/90 font-medium max-w-2xl leading-snug tracking-tight drop-shadow-md"
+            className="text-xl md:text-2xl lg:text-3xl text-white/90 font-medium max-w-3xl leading-snug tracking-tight drop-shadow-md"
           >
            This is R.E.S. A student reality show that inspires, educates, and rewards. You watch students face real challenges.You see them rise. You see them fall. You see them grow.
           </motion.p>

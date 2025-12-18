@@ -11,7 +11,7 @@ function StatCard({ value, label, delay = 0 }: { value: string; label: string; d
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.6, delay }}
-      className="bg-warm-stone-secondary rounded-2xl p-6 shadow-sm border border-warm-stone-border text-center"
+      className="bg-warm-stone-secondary rounded-3xl p-8 shadow-md border border-warm-stone-border text-center"
     >
       <div className="text-3xl lg:text-4xl font-black mb-2">{value}</div>
       <div className="text-sm text-gray-600 uppercase tracking-wider font-bold">{label}</div>
@@ -32,22 +32,22 @@ export default function MakingADifference() {
   ];
 
   return (
-    <section className="py-20 bg-dark-bg-soft relative">
-      <div className="max-w-7xl mx-auto px-6 lg:px-12">
-        <div className="text-center mb-12">
-          <p className="section-eyebrow text-white">Impact & Community</p>
-          <h2 className="text-3xl lg:text-4xl section-title text-white">Making a Difference</h2>
-          <p className="section-subtitle text-gray-300">Measurable impact across campuses and communities — scholarships, engagement and real opportunities.</p>
+    <section className="py-28 bg-dark-bg-soft relative">
+      <div className="max-w-7xl mx-auto px-6 lg:px-16">
+        <div className="text-center mb-16">
+          <p className="section-eyebrow text-white text-lg mb-4">Impact & Community</p>
+          <h2 className="text-4xl lg:text-5xl section-title text-white mb-4">Making a Difference</h2>
+          <p className="section-subtitle text-gray-300 text-lg max-w-3xl mx-auto">Measurable impact across campuses and communities — scholarships, engagement and real opportunities.</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12 max-w-2xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16 max-w-2xl mx-auto">
           {stats.map((s, i) => (
             <StatCard key={s.label} value={s.value} label={s.label} delay={i * 0.12} />
           ))}
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-          <div className="lg:col-span-2 space-y-4">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+          <div className="lg:col-span-2 space-y-6">
             {testimonials.map((t, i) => (
               <motion.blockquote
                 key={i}
@@ -55,7 +55,7 @@ export default function MakingADifference() {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: i * 0.12 }}
-                className="p-6 bg-warm-stone-secondary border border-warm-stone-border rounded-2xl shadow-sm"
+                className="p-8 bg-warm-stone-secondary border border-warm-stone-border rounded-3xl shadow-md"
               >
                 <p className="text-gray-900 leading-relaxed">"{t.quote}"</p>
                 <div className="text-sm font-black mt-4 text-gray-900\">{t.by}</div>

@@ -127,25 +127,26 @@ export default function FeaturesSection() {
   );
 
   return (
-    <section className="w-full py-12 md:py-20 px-4 md:px-6 lg:px-16 bg-white">
-      <div className="mb-10 md:mb-14">
-        <h2 className="text-4xl md:text-5xl font-black mb-3 md:mb-4">
+    <section className="w-full py-16 md:py-24 px-6 md:px-8 lg:px-16 bg-white">
+      <div className="max-w-7xl mx-auto">
+      <div className="mb-12 md:mb-16">
+        <h2 className="text-5xl md:text-6xl font-black mb-4 md:mb-5">
           Your Impact Starts Here
         </h2>
-        <p className="text-gray-700 text-base md:text-lg max-w-2xl leading-relaxed">
+        <p className="text-gray-700 text-lg md:text-xl max-w-3xl leading-relaxed">
           From first vote to lasting impact. Three phases. One movement.
         </p>
       </div>
 
       {/* Desktop: Flex layout | Mobile: Stacked */}
-      <div className="flex flex-col lg:flex-row gap-6 md:gap-12 lg:gap-16 items-stretch">
+      <div className="flex flex-col lg:flex-row gap-8 md:gap-16 lg:gap-20 items-stretch">
         
         {/* LEFT SIDE - FEATURE LIST WITH PHASES */}
         <div className="flex-1 order-2 lg:order-1">
           
           {/* PARTICIPATION PHASE */}
-          <div className="mb-10 md:mb-14">
-            <div className="flex items-center gap-3 mb-4 md:mb-6">
+          <div className="mb-12 md:mb-16">
+            <div className="flex items-center gap-3 mb-6 md:mb-8">
               <div className="w-1 h-6 bg-black rounded-full" />
               <h3 className="text-sm font-black uppercase tracking-widest text-gray-900">
                 Phase 1: Participate
@@ -162,7 +163,7 @@ export default function FeaturesSection() {
 
           {/* PROGRESSION PHASE */}
           <div>
-            <div className="flex items-center gap-3 mb-4 md:mb-6">
+            <div className="flex items-center gap-3 mb-6 md:mb-8">
               <div className="w-1 h-6 bg-black/40 rounded-full" />
               <h3 className="text-sm font-black uppercase tracking-widest text-gray-600">
                 Phase 2: Progress
@@ -179,7 +180,7 @@ export default function FeaturesSection() {
         </div>
 
         {/* RIGHT SIDE IMAGE - ENHANCED MOTION */}
-        <div className="flex-1 h-64 md:h-96 lg:h-auto lg:min-h-[600px] rounded-2xl overflow-hidden order-1 lg:order-2 relative shadow-xl">
+        <div className="flex-1 h-72 md:h-[500px] lg:h-auto lg:min-h-[700px] rounded-3xl overflow-hidden order-1 lg:order-2 relative shadow-xl">
           <motion.div 
             key={active.id}
             initial={{ opacity: 0, scale: 1.05 }}
@@ -223,6 +224,7 @@ export default function FeaturesSection() {
           {/* Corner accent */}
           <div className="absolute top-4 right-4 w-12 h-12 border-t-2 border-r-2 border-white/30 rounded-tr-lg pointer-events-none" />
         </div>
+      </div>
       </div>
     </section>
   );

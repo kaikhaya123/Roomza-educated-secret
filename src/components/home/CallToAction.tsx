@@ -29,7 +29,7 @@ export default function CallToAction() {
   ];
 
   return (
-    <section className="py-20 pb-28 mb-12 lg:pb-36 lg:mb-20 relative overflow-hidden">
+    <section className="py-24 pb-32 mb-16 lg:pb-40 lg:mb-24 relative overflow-hidden">
       {/* Background image with lazy loading and quality optimization */}
       <Image
         src="/Images/porter-raab-Ucr4Yp-t364-unsplash.jpg"
@@ -43,7 +43,7 @@ export default function CallToAction() {
       />
       {/* Overlay for readability */}
       <div className="absolute inset-0 bg-black/70" />
-      <div className="container mx-auto px-6 lg:px-12 relative z-10">
+      <div className="container mx-auto px-6 lg:px-16 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 18 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -51,8 +51,8 @@ export default function CallToAction() {
           transition={{ duration: 0.6 }}
           className="max-w-3xl mx-auto text-center"
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4 section-title">Be Part of the R.E.S. Experience</h2>
-          <p className="text-lg text-gray-300 mb-8">
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 section-title">Be Part of the R.E.S. Experience</h2>
+          <p className="text-xl md:text-2xl text-gray-200 mb-10 max-w-3xl mx-auto leading-relaxed">
             You can join, vote, watch, and support the biggest student reality show in South Africa. Take your step today.
           </p>
 
@@ -70,7 +70,7 @@ export default function CallToAction() {
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.98 }}
                 transition={{ type: 'spring', stiffness: 300 }}
-                className={`w-full sm:w-auto inline-flex items-center justify-center gap-3 px-6 py-3 rounded-full text-sm font-semibold shadow-sm transition transform bg-brand-yellow text-black hover:bg-yellow-400 hover:shadow-lg`}
+                className={`w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-3 rounded-full text-base font-semibold shadow-lg transition transform bg-brand-yellow text-black hover:bg-yellow-400 hover:shadow-xl`}
                 aria-label={b.label}
               >
                 <span>{b.label}</span>
@@ -79,7 +79,7 @@ export default function CallToAction() {
             ))}
           </motion.div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 text-sm text-gray-300">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-8 text-base text-gray-300">
             {secondary.map((s) => (
               <button key={s.key} onClick={s.action} className="underline hover:text-white transition">
                 {s.label}

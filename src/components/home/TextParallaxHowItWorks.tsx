@@ -49,14 +49,14 @@ const getAnimationTiming = (stepNumber: number, totalSteps: number) => {
 // Get height based on weight
 const getSectionHeight = (stepNumber: number, totalSteps: number) => {
   const weight = getStepWeight(stepNumber, totalSteps);
-  return weight === 'heavy' ? 'h-[150vh]' : 'h-[100vh]';
+  return weight === 'heavy' ? 'h-[120vh]' : 'h-[90vh]';
 };
 
 export const TextParallaxHowItWorks = () => {
   const totalSteps = 6;
   
   return (
-    <div className="bg-black">
+    <div className="bg-brand-yellow">
       <TextParallaxContent
         imgUrl="/Images/vertical-shot-curly-haired-millennial-girl-sits-crossed-legs-uses-mobile-phone-laptop-computer-connected-wireless.jpg"
         subheading="Step 1"
@@ -124,7 +124,7 @@ export const TextParallaxHowItWorks = () => {
       <TrustAndIntegrity />
 
       <TextParallaxContent
-        imgUrl="/Images/still-life-betrayal-concept.jpg"
+        imgUrl="/Images/still-life-betrayal-concept-min.jpg"
         subheading="Step 5"
         heading="Growth Beyond Competition"
         stepNumber={5}
@@ -251,7 +251,7 @@ const OverlayCopy = ({ subheading, heading, stepNumber, totalSteps }: OverlayCop
       className="absolute left-0 top-0 flex h-screen w-full flex-col items-center justify-center text-white"
     >
       <motion.p 
-        className="mb-2 text-center text-xl md:mb-4 md:text-3xl font-semibold tracking-wider"
+        className="mb-4 text-center text-base md:mb-6 md:text-2xl font-semibold tracking-wider"
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
@@ -262,8 +262,8 @@ const OverlayCopy = ({ subheading, heading, stepNumber, totalSteps }: OverlayCop
       <motion.p 
         className={`text-center font-black tracking-tight ${
           isHeavy 
-            ? 'text-5xl md:text-8xl leading-tight' 
-            : 'text-4xl md:text-6xl'
+            ? 'text-4xl md:text-7xl leading-tight' 
+            : 'text-3xl md:text-5xl'
         }`}
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -287,13 +287,13 @@ const ExampleContent = ({
   const isHeavy = weight === 'heavy';
   
   return (
-    <div className={`mx-auto grid max-w-5xl grid-cols-1 gap-8 px-4 ${
-      isHeavy ? 'pb-32 pt-20' : 'pb-16 pt-8'
-    } md:grid-cols-12 bg-black`}>
+    <div className={`mx-auto grid max-w-7xl grid-cols-1 gap-8 px-6 ${
+      isHeavy ? 'pb-24 pt-16' : 'pb-12 pt-8'
+    } md:grid-cols-12 bg-brand-yellow`}>
       <motion.h2 
-        className={`col-span-1 font-black text-white ${
+        className={`col-span-1 font-black text-black ${
           isHeavy 
-            ? 'text-5xl md:text-6xl' 
+            ? 'text-4xl md:text-5xl' 
             : 'text-3xl md:text-4xl'
         } md:col-span-4`}
         initial={{ opacity: 0, y: 10 }}
@@ -310,17 +310,17 @@ const ExampleContent = ({
         transition={{ duration: 0.6, delay: 0.1 }}
         viewport={{ once: true }}
       >
-        <p className={`mb-8 text-gray-300 ${
+        <p className={`mb-8 text-black ${
           isHeavy 
-            ? 'text-2xl md:text-3xl leading-relaxed' 
-            : 'text-lg md:text-xl leading-relaxed'
+            ? 'text-xl md:text-2xl leading-relaxed' 
+            : 'text-base md:text-lg leading-relaxed'
         }`}>
           {description}
         </p>
         {showCTA && (
           <motion.a 
             href="/challenges" 
-            className="inline-flex items-center gap-2 rounded bg-brand-yellow px-9 py-4 text-lg font-semibold text-black transition-all hover:bg-brand-yellow/80 active:scale-95"
+            className="inline-flex items-center gap-3 rounded-lg bg-black px-8 py-3 text-base font-semibold text-brand-yellow transition-all hover:bg-black/90 active:scale-95"
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
@@ -338,15 +338,15 @@ const ExampleContent = ({
 
 const TrustAndIntegrity = () => (
   <motion.div 
-    className="mx-auto max-w-5xl px-4 py-24 bg-black"
+    className="mx-auto max-w-7xl px-6 py-16 bg-brand-yellow"
     initial={{ opacity: 0 }}
     whileInView={{ opacity: 1 }}
     transition={{ duration: 0.8 }}
     viewport={{ once: true }}
   >
-    <div className="rounded-3xl border border-gray-800 p-12 bg-gradient-to-br from-gray-900 to-black">
+    <div className="rounded-3xl border border-black/10 p-12 bg-gradient-to-br from-brand-yellow to-brand-yellow">
       <motion.h2 
-        className="text-4xl md:text-5xl font-black text-white mb-8"
+        className="text-3xl md:text-4xl font-black text-black mb-8"
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
@@ -355,15 +355,15 @@ const TrustAndIntegrity = () => (
         Built on Trust
       </motion.h2>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           whileInView={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
         >
-          <h3 className="text-xl font-bold text-white mb-3">Verified. Secure. Fair.</h3>
-          <p className="text-gray-300 text-lg leading-relaxed">
+          <h3 className="text-lg font-bold text-black mb-3">Verified. Secure. Fair.</h3>
+          <p className="text-black text-base leading-relaxed">
             Every vote counted. Every participant verified. Anti-fraud systems active 24/7.
           </p>
         </motion.div>
@@ -373,24 +373,24 @@ const TrustAndIntegrity = () => (
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
         >
-          <h3 className="text-xl font-bold text-white mb-3">Transparent. Always.</h3>
-          <p className="text-gray-300 text-lg leading-relaxed">
+          <h3 className="text-lg font-bold text-black mb-3">Transparent. Always.</h3>
+          <p className="text-black text-base leading-relaxed">
             Rules are clear. Outcomes are public. No hidden agendas. Just leadership.
           </p>
         </motion.div>
       </div>
 
       <motion.div 
-        className="border-t border-gray-800 pt-12"
+        className="border-t border-black/20 pt-8"
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         transition={{ duration: 0.6, delay: 0.2 }}
         viewport={{ once: true }}
       >
-        <p className="text-2xl font-bold text-white mb-3">
+        <p className="text-2xl font-bold text-black mb-3">
           Your voice. Your choice. Your future.
         </p>
-        <p className="text-xl font-semibold text-brand-yellow">
+        <p className="text-lg font-semibold text-black">
           Together, we're building the next generation of leaders.
         </p>
       </motion.div>

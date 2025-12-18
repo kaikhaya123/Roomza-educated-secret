@@ -55,20 +55,20 @@ export default function VotingSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative bg-charcoal-blue-dark text-white py-32 lg:py-40 overflow-hidden"
+      className="relative bg-charcoal-blue-dark text-white py-36 lg:py-48 overflow-hidden"
     >
-      <div className="container mx-auto px-6 lg:px-12 max-w-7xl relative">
+      <div className="container mx-auto px-6 lg:px-16 max-w-7xl relative">
         {/* HERO SECTION */}
         <motion.div
           style={{ y: yHero }}
-          className="text-center mb-20 lg:mb-32"
+          className="text-center mb-24 lg:mb-40"
         >
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7 }}
-            className="inline-block px-5 py-2 border-2 border-brand-yellow text-xs font-bold tracking-[0.2em] text-brand-yellow mb-8"
+            className="inline-block px-6 py-3 border-2 border-brand-yellow text-sm font-bold tracking-[0.2em] text-brand-yellow mb-10"
           >
             Daily Free Votes
           </motion.div>
@@ -78,7 +78,7 @@ export default function VotingSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7, delay: 0.1 }}
-            className="text-5xl lg:text-7xl font-black tracking-tight mb-6"
+            className="text-6xl lg:text-8xl font-black tracking-tight mb-8"
           >
             Vote For Your Favorite
           </motion.h2>
@@ -88,14 +88,14 @@ export default function VotingSection() {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-lg text-white/60 max-w-2xl mx-auto"
+            className="text-xl text-white/70 max-w-3xl mx-auto leading-relaxed"
           >
             Support the contestants you believe deserve the spotlight.
           </motion.p>
         </motion.div>
 
         {/* MAIN CONTENT GRID */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16">
           
           {/* LEFT SECTION - FEATURED CONTESTANTS */}
           <motion.div

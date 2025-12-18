@@ -70,13 +70,13 @@ export default function IntroSection() {
       </div>
 
       {/* RIGHT CONTENT */}
-      <div className="relative z-10 flex items-center px-8 py-20 lg:px-20">
+      <div className="relative z-10 flex items-center px-8 py-24 lg:px-24">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, ease: 'easeOut' }}
           viewport={{ once: true }}
-          className="max-w-xl space-y-10"
+          className="max-w-2xl space-y-12"
         >
 
           {/* Eyebrow */}

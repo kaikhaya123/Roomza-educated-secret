@@ -21,8 +21,8 @@ export default function Statistics() {
   ];
 
   return (
-    <section className="py-20 bg-gradient-to-br from-gray-50 to-white">
-      <div className="container mx-auto px-4">
+    <section className="py-28 bg-gradient-to-br from-gray-50 to-white">
+      <div className="container mx-auto px-6 lg:px-16">
         {/* University Logos Loop */}
         <motion.div
           initial={{ opacity: 0 }}
@@ -31,13 +31,13 @@ export default function Statistics() {
           transition={{ duration: 0.8 }}
           className="text-center"
         >
-          <h2 className="text-3xl md:text-4xl font-black mb-8 text-black">Participating South African Universities</h2>
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-black mb-12 text-black">Participating South African Universities</h2>
           <LogoLoop 
             logos={universityLogos}
             speed={40}
             direction="left"
-            logoHeight={80}
-            gap={80}
+            logoHeight={100}
+            gap={100}
             pauseOnHover={false}
             scaleOnHover={false}
             fadeOut

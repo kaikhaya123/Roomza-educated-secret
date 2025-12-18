@@ -29,7 +29,7 @@ export default function Contestants() {
   ];
 
   return (
-    <section ref={sectionRef} className="py-24 lg:py-32 bg-black text-white relative overflow-hidden">
+    <section ref={sectionRef} className="py-28 lg:py-40 bg-black text-white relative overflow-hidden">
       {/* Background Elements */}
       <div className="absolute inset-0 opacity-[0.02]">
         <div className="absolute inset-0" style={{ 
@@ -38,9 +38,9 @@ export default function Contestants() {
         }} />
       </div>
 
-      <div className="container mx-auto px-6 lg:px-12 max-w-7xl relative">
+      <div className="container mx-auto px-6 lg:px-16 max-w-7xl relative">
         {/* Two-Column Hero */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center mb-20">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-20 items-center mb-24">
           
           {/* Left: Hero Image */}
           <motion.div
@@ -131,7 +131,7 @@ export default function Contestants() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 1, delay: 0.2 }}
-            className="space-y-8"
+            className="space-y-10"
           >
             {/* Headline */}
             <h2 
