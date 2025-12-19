@@ -346,20 +346,20 @@ export default function AboutShow() {
           transition={{ duration: 1 }}
           className="mb-40 relative overflow-hidden rounded-2xl"
         >
-          <div className="relative aspect-video lg:aspect-[3/1.5] overflow-hidden group">
+          <div className="relative aspect-[4/3] sm:aspect-video lg:aspect-[3/1.5] overflow-hidden group">
             <Image
               src="/Images/college-students-different-ethnicities-cramming (4)-min.jpg"
               alt="R.E.S. Students from across South Africa"
               fill
-              className="object-cover group-hover:scale-105 transition-transform duration-700"
+              className="object-cover object-center sm:object-top group-hover:scale-105 transition-transform duration-700"
               sizes="100vw"
               priority={true}
             />
-            {/* Overlay for text readability */}
-            <div className="absolute inset-0 bg-black/30 group-hover:bg-black/25 transition-colors" />
+            {/* Overlay for text readability - lighter on mobile */}
+            <div className="absolute inset-0 bg-black/40 sm:bg-black/35 lg:bg-black/30 group-hover:bg-black/25 transition-colors" />
             
-            {/* Text Overlay */}
-            <div className="absolute inset-0 flex items-center justify-center px-4 sm:px-6">
+            {/* Text Overlay - positioned at bottom on mobile */}
+            <div className="absolute inset-0 flex items-end sm:items-center justify-center px-3 sm:px-6 pb-8 sm:pb-0">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -367,10 +367,10 @@ export default function AboutShow() {
                 transition={{ duration: 0.8, delay: 0.3 }}
                 className="text-center max-w-3xl"
               >
-                <p className="text-3xl sm:text-4xl lg:text-7xl font-black text-white mb-3 sm:mb-6 tracking-tight drop-shadow-2xl leading-tight">
+                <p className="text-2xl sm:text-4xl lg:text-7xl font-black text-white mb-2 sm:mb-6 tracking-tight drop-shadow-2xl leading-tight">
                   The Movement Across South Africa
                 </p>
-                <p className="text-lg sm:text-xl lg:text-3xl text-white/95 drop-shadow-xl font-semibold">
+                <p className="text-sm sm:text-xl lg:text-3xl text-white/95 drop-shadow-xl font-semibold">
                   From campuses to communities, millions are rising
                 </p>
               </motion.div>

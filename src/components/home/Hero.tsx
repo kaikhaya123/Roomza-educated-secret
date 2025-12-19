@@ -26,7 +26,7 @@ export default function Hero() {
       />
       
       {/* Overlay for better text readability */}
-      <div className="absolute inset-0 bg-black/30 z-10"></div>
+      <div className="absolute inset-0 bg-black/20 z-10"></div>
 
       <div className="container mx-auto px-4 md:px-6 lg:px-16 py-24 md:py-32 lg:py-48 relative z-20">
         <div className="max-w-5xl">

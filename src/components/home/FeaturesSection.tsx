@@ -19,7 +19,7 @@ export default function FeaturesSection() {
       id: 2,
       title: 'Watch Live',
       description: 'Catch the action as it unfolds. Every moment, live.',
-      image: '/Images/Live Neon Sign, Live LED Light, Live Logo Neon Wall Art, Broadcast Wall Art, Live Show LED Sign, Custom Neon Sign, News Channel Wall Art,.png',
+      image: '/Images/medium-shot-woman-holding-remote.jpg',
       lottie: 'Live Streaming.lottie',
       isPrimary: false
     },
@@ -27,7 +27,7 @@ export default function FeaturesSection() {
       id: 3,
       title: 'Compete Daily',
       description: 'Quizzes, challenges, leaderboards. Engagement rewarded.',
-      image: '/Images/download (18).png',
+      image: '/Images/teenager-spending-time-together-outdoors.jpg',
       lottie: 'Rewards Programme.lottie',
       isPrimary: false
     }
@@ -46,7 +46,7 @@ export default function FeaturesSection() {
       id: 5,
       title: 'Test Your Knowledge',
       description: 'Brain power wins prizes. Prove your edge.',
-      image: '/Images/download (17) (1).jpg',
+      image: '/Images/college-students-different-ethnicities-cramming (2).jpg',
       lottie: 'Funny brain.lottie',
       isPrimary: false
     },
@@ -54,7 +54,7 @@ export default function FeaturesSection() {
       id: 6,
       title: 'Win the Prize',
       description: 'Bursaries. Recognition. Opportunity. The reward for impact.',
-      image: '/Images/Download UEFA Champion Celebration Design for free.png',
+      image: '/Images/portrait-young-woman-with-curly-hair.jpg',
       lottie: 'Champion.lottie',
       isPrimary: false
     }
