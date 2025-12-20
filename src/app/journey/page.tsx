@@ -77,7 +77,7 @@ export default function JourneyPage() {
               transition={{ duration: 0.6 }}
               className="text-4xl md:text-5xl lg:text-6xl font-black text-white drop-shadow-xl m-0"
             >
-              The Journey
+              THE JOURNEY
             </motion.h1>
 
             <motion.p

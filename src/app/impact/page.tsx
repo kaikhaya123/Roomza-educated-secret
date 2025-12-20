@@ -79,9 +79,9 @@ export default function ImpactPage() {
               transition={{ duration: 0.8 }}
               className="max-w-2xl text-4xl font-black leading-tight tracking-tighter lg:text-5xl text-white m-0"
             >
-              Real Impact.
+              REAL IMPACT.
               <br />
-              Real Change.
+              REAL CHANGE.
             </motion.h1>
 
             <motion.p
