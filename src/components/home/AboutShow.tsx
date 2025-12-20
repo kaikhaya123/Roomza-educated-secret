@@ -5,7 +5,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight, Zap, Flame, Play } from 'lucide-react';
 import { useEffect, useRef } from 'react';
-import AnimatedTextReveal from '@/components/ui/animated-text-reveal';
 
 function NumberTicker({ value, duration = 2 }: { value: number; duration?: number }) {
   const nodeRef = useRef<HTMLSpanElement>(null);
@@ -78,82 +77,62 @@ export default function AboutShow() {
               </span>
             </motion.div>
 
-            {/* Title with Animated Reveal */}
-            <AnimatedTextReveal 
-              text="The Movement That's Changing Student Life"
-              tag="h2"
-              className="text-6xl lg:text-7xl font-black mb-8 tracking-tighter leading-[1.1]"
-              fontSize={60}
-              lineHeight={1.1}
-              color="#FFFFFF"
-              initialBlur={0}
-              initialOpacity={0.2}
-              fadeDelay={0.05}
-              fadeDuration={0.6}
-              fullRevealDistance={0.6}
-            />
+            {/* Title - Simple animation for LCP optimization */}
+            <motion.h2
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4 }}
+              className="text-6xl lg:text-7xl font-black mb-8 tracking-tighter leading-[1.1] text-white"
+            >
+              The Movement That's Changing Student Life
+            </motion.h2>
 
-            {/* Subtitle with Animated Reveal */}
-            <AnimatedTextReveal 
-              text="South Africa's first digital student reality show celebrating talent, education, resilience, and youth empowerment."
-              tag="p"
+            {/* Subtitle - Simple animation for better performance */}
+            <motion.p
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4, delay: 0.1 }}
               className="text-2xl text-gray-300 mb-10 leading-relaxed font-light"
-              fontSize={20}
-              lineHeight={1.6}
-              color="#D1D5DB"
-              initialBlur={0}
-              initialOpacity={0.3}
-              fadeDelay={0.04}
-              fadeDuration={0.5}
-              fullRevealDistance={0.5}
-            />
+            >
+              South Africa's first digital student reality show celebrating talent, education, resilience, and youth empowerment.
+            </motion.p>
 
-            {/* Mission Statement with Animated Reveal */}
+            {/* Mission Statement - Optimized animations */}
             <div className="space-y-6 mb-8">
-              <AnimatedTextReveal 
-                text="Roomza's Educated Secret (R.E.S.) is a national student-focused reality competition designed to uplift, empower, and celebrate young people through entertainment, education, and digital participation."
-                tag="p"
+              <motion.p
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: 0.15 }}
                 className="text-gray-300 text-lg leading-relaxed"
-                fontSize={18}
-                lineHeight={1.6}
-                color="#D1D5DB"
-                initialBlur={0}
-                initialOpacity={0.3}
-                fadeDelay={0.03}
-                fadeDuration={0.5}
-                fullRevealDistance={0.5}
-              />
-              <AnimatedTextReveal 
-                text="Students across the country compete in challenges, the public votes, and millions join the journey through quizzes, livestreams, and social media."
-                tag="p"
+              >
+                Roomza's Educated Secret (R.E.S.) is a national student-focused reality competition designed to uplift, empower, and celebrate young people through entertainment, education, and digital participation.
+              </motion.p>
+              <motion.p
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: 0.2 }}
                 className="text-gray-300 text-lg leading-relaxed"
-                fontSize={18}
-                lineHeight={1.6}
-                color="#D1D5DB"
-                initialBlur={0}
-                initialOpacity={0.3}
-                fadeDelay={0.03}
-                fadeDuration={0.5}
-                fullRevealDistance={0.5}
-              />
+              >
+                Students across the country compete in challenges, the public votes, and millions join the journey through quizzes, livestreams, and social media.
+              </motion.p>
             </div>
 
-            {/* Inspiration with Animated Reveal */}
-            <div className="border-l-4 border-white pl-6 mb-8">
-              <AnimatedTextReveal 
-                text="Inspired by the legacy of Robben Island and the values of Nelson Mandela's Long Walk to Freedom, R.E.S. stands as a modern movement that promotes unity, leadership, and transformation through digital storytelling."
-                tag="p"
-                className="text-gray-200 text-lg leading-relaxed"
-                fontSize={18}
-                lineHeight={1.6}
-                color="#D1D5DB"
-                initialBlur={0}
-                initialOpacity={0.3}
-                fadeDelay={0.03}
-                fadeDuration={0.5}
-                fullRevealDistance={0.5}
-              />
-            </div>
+            {/* Inspiration - Optimized animation */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4, delay: 0.25 }}
+              className="border-l-4 border-white pl-6 mb-8"
+            >
+              <p className="text-gray-200 text-lg leading-relaxed">
+                Inspired by the legacy of Robben Island and the values of Nelson Mandela's Long Walk to Freedom, R.E.S. stands as a modern movement that promotes unity, leadership, and transformation through digital storytelling.
+              </p>
+            </motion.div>
 
             {/* CTA */}
             <motion.div
