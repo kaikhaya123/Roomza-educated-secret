@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useRef, ReactNode } from "react";
+import React, { useRef, ReactNode, useState, useEffect } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { FiArrowUpRight } from "react-icons/fi";
+import Image from "next/image";
 
 interface StepProps {
   imgUrl: string;
@@ -75,6 +76,10 @@ function StepSection({ imgUrl, step, title, description, cta, index }: StepProps
   const { scrollYProgress } = useScroll({ target: ref });
   const opacity = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0.5, 1, 1, 0.5]);
   const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.95, 1, 0.95]);
+  
+  // Lazy load images that are not in the first 2 steps (below fold)
+  const shouldLazyLoad = index > 1;
+  const [imageLoaded, setImageLoaded] = useState(!shouldLazyLoad);
 
   return (
     <section ref={ref} className="relative min-h-screen px-4 py-20 bg-black">
@@ -83,12 +88,22 @@ function StepSection({ imgUrl, step, title, description, cta, index }: StepProps
           {/* Image Column */}
           <motion.div
             style={{ opacity, scale }}
-            className="order-2 md:order-1 h-[400px] md:h-[500px] rounded-3xl overflow-hidden"
+            className="order-2 md:order-1 h-[400px] md:h-[500px] rounded-3xl overflow-hidden bg-gray-900"
           >
-            <div
-              className="w-full h-full bg-cover bg-center"
-              style={{ backgroundImage: `url(${imgUrl})` }}
-            />
+            {imageLoaded ? (
+              <Image
+                src={imgUrl}
+                alt={title}
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px"
+                quality={70}
+                loading={shouldLazyLoad ? "lazy" : "eager"}
+                priority={index < 2}
+              />
+            ) : (
+              <div className="w-full h-full bg-gradient-to-br from-gray-800 to-gray-900 animate-pulse" />
+            )}
           </motion.div>
 
           {/* Content Column */}

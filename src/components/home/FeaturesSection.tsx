@@ -2,8 +2,17 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { DotLottieReact } from '@lottiefiles/dotlottie-react';
+import dynamic from 'next/dynamic';
 import Image from 'next/image';
+
+// Lazy load DotLottieReact to reduce initial bundle size (589 KiB savings)
+const DotLottieReact = dynamic(
+  () => import('@lottiefiles/dotlottie-react').then(mod => mod.DotLottieReact),
+  {
+    loading: () => <div className="w-full h-full bg-gray-100 rounded animate-pulse" />,
+    ssr: false
+  }
+);
 
 export default function FeaturesSection() {
   const participationPhase = [
@@ -131,7 +140,7 @@ export default function FeaturesSection() {
       <div className="max-w-7xl mx-auto">
       <div className="mb-8 md:mb-12 lg:mb-16">
         <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black mb-3 md:mb-4 lg:mb-5">
-          Your Impact Starts Here
+          YOUR IMPACT STARTS HERE
         </h2>
         <p className="text-gray-700 text-sm sm:text-base md:text-lg lg:text-xl max-w-3xl leading-relaxed">
           From first vote to lasting impact. Three phases. One movement.
