@@ -3,7 +3,7 @@ import Intro from "@/components/home/Intro";
 
 import AboutShow from "@/components/home/AboutShow";
 import FeaturesSection from "@/components/home/FeaturesSection";
-import { TextParallaxHowItWorks } from "@/components/home/TextParallaxHowItWorks";
+import HowItWorksSection from "@/components/home/TextParallaxHowItWorks";
 import LiveStream from "@/components/home/LiveStream";
 import VotingSection from "@/components/home/VotingSection";
 import Statistics from "@/components/home/Statistics";
@@ -23,7 +23,7 @@ export default function Home() {
       <Statistics />
       <AboutShow />
       <FeaturesSection />
-      <TextParallaxHowItWorks />
+      <HowItWorksSection />
       <LiveStream />
       <VotingSection />
       <Sponsors />
