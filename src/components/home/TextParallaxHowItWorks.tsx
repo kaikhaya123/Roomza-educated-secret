@@ -115,39 +115,45 @@ function StepSection({ imgUrl, step, title, description, cta, index }: StepProps
 
 function TrustSection() {
   return (
-    <section className="bg-brand-yellow px-6 py-24">
+    <section className="bg-brand-yellow px-6 py-16">
       <div className="max-w-6xl mx-auto">
-        <h2 className="text-4xl md:text-5xl font-black text-black mb-10">
-          Built on Trust
-        </h2>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mb-14">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-12 items-start">
+          {/* Left Column */}
           <div>
-            <h3 className="text-xl font-bold text-black mb-3">
-              Verified and Secure
-            </h3>
-            <p className="text-black/80">
-              Identity verification, fraud prevention, and transparent systems protect every vote and every participant.
-            </p>
+            <h2 className="text-4xl md:text-5xl font-black text-black mb-8">
+              Built on Trust
+            </h2>
+
+            <div className="space-y-6">
+              <div>
+                <h3 className="text-xl font-bold text-black mb-2">
+                  Verified and Secure
+                </h3>
+                <p className="text-black text-base leading-relaxed">
+                  Identity verification, fraud prevention, and transparent systems protect every vote and every participant.
+                </p>
+              </div>
+
+              <div className="border-t border-black/20 pt-6">
+                <p className="text-2xl font-black text-black mb-2">
+                  Your voice shapes the future.
+                </p>
+                <p className="text-base text-black font-semibold">
+                  This is more than a show. It is a national movement.
+                </p>
+              </div>
+            </div>
           </div>
 
+          {/* Right Column */}
           <div>
-            <h3 className="text-xl font-bold text-black mb-3">
+            <h3 className="text-2xl font-bold text-black mb-4">
               Transparent by Design
             </h3>
-            <p className="text-black/80">
+            <p className="text-black text-base leading-relaxed">
               Public rules. Public outcomes. No manipulation. Leadership earned in the open.
             </p>
           </div>
-        </div>
-
-        <div className="border-t border-black/20 pt-8">
-          <p className="text-2xl font-black text-black">
-            Your voice shapes the future.
-          </p>
-          <p className="text-lg text-black font-semibold">
-            This is more than a show. It is a national movement.
-          </p>
         </div>
       </div>
     </section>
