@@ -14,7 +14,7 @@ export default function MovementPage() {
 
       <main className="flex-1">
         {/* HERO - ROBBEN ISLAND */}
-        <section className="relative px-6 lg:px-12 pt-32 md:pt-40 pb-24 md:pb-32 overflow-hidden">
+        <section className="relative px-6 lg:px-12 overflow-hidden min-h-[500px] md:min-h-[600px] lg:min-h-[700px] flex items-end">
           <Image
             src="/Images/front-view-young-people-hostel.jpg"
             alt="The Movement"
@@ -25,14 +25,16 @@ export default function MovementPage() {
             sizes="100vw"
           />
           
-          <div className="absolute inset-0 bg-black/50 z-0" />
+          {/* Gradient overlay - dark at bottom, transparent at top */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent z-0" />
 
-          <div className="relative z-10">
+          {/* Text positioned at bottom - not blocking faces */}
+          <div className="relative z-10 w-full pb-12 md:pb-16 lg:pb-20 pt-40 md:pt-48 lg:pt-56">
             <motion.h1
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
-              className="max-w-5xl text-5xl md:text-6xl lg:text-7xl font-black tracking-tight leading-tight mb-8"
+              className="max-w-5xl text-5xl md:text-6xl lg:text-7xl font-black tracking-tight leading-tight mb-6"
             >
               The Movement
               <br />
@@ -43,7 +45,7 @@ export default function MovementPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="text-lg lg:text-xl text-white/80 max-w-3xl leading-relaxed"
+              className="text-lg lg:text-xl text-white/90 max-w-3xl leading-relaxed"
             >
               From the dark years to freedom. R.E.S. follows the journey of Nelson Mandela's Long Walk to Freedom, transforming student challenges into leadership opportunities.
             </motion.p>
