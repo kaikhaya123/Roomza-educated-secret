@@ -19,7 +19,7 @@ export default function HowItWorksPage() {
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
-              className="text-6xl md:text-6xl lg:text-7xl font-black tracking-tight leading-tight mb-8"
+              className="text-6xl md:text-6xl lg:text-7xl font-black tracking-tight leading-tight mb-8 uppercase"
             >
               How R.E.S.
               <br />

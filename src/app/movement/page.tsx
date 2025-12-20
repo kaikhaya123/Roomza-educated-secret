@@ -34,7 +34,7 @@ export default function MovementPage() {
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
-              className="max-w-5xl text-5xl md:text-6xl lg:text-7xl font-black tracking-tight leading-tight mb-6"
+              className="max-w-5xl text-5xl md:text-6xl lg:text-7xl font-black tracking-tight leading-tight mb-6 uppercase"
             >
               The Movement
               <br />

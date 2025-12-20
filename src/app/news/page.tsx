@@ -132,7 +132,7 @@ export default function NewsPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <h1 className="text-5xl lg:text-7xl font-black mb-8 tracking-tight leading-tight">
+            <h1 className="text-5xl lg:text-7xl font-black mb-8 tracking-tight leading-tight uppercase">
               News & Updates
             </h1>
             <p className="text-lg lg:text-xl text-white/70 max-w-2xl leading-relaxed">

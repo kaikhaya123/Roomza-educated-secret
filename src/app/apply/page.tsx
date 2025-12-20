@@ -14,7 +14,7 @@ export default function ApplyPage() {
 
           {/* Hero */}
           <section className="space-y-4">
-            <h1 className="text-4xl lg:text-5xl font-black">
+            <h1 className="text-4xl lg:text-5xl font-black uppercase">
               Apply to Compete
             </h1>
             <p className="text-white/70 max-w-2xl">
