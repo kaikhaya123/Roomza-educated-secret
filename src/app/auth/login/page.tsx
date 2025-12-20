@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { Mail, Lock, Eye, EyeOff, AlertCircle } from "lucide-react";
+import { Mail, Lock, Eye, EyeOff, AlertCircle, X } from "lucide-react";
 import ReCAPTCHA from "react-google-recaptcha";
 
 export default function LoginPage() {
@@ -67,6 +67,17 @@ export default function LoginPage() {
         transition={{ duration: 0.6 }}
         className="w-full lg:w-1/2 px-8 lg:px-16 py-12 flex flex-col justify-center relative z-10"
       >
+        {/* Close/Back Button */}
+        <div className="absolute top-6 left-6">
+          <Link 
+            href="/"
+            className="p-2 rounded-full hover:bg-white/10 transition"
+            title="Back to home"
+          >
+            <X size={24} className="text-white" />
+          </Link>
+        </div>
+
         {/* Logo */}
         <div className="flex justify-center mb-8">
           <div className="relative w-28 h-28">

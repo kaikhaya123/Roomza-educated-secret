@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, X } from "lucide-react";
 import ToastMobile from "@/components/ToastMobile";
 
 export default function RegisterPage() {
@@ -141,10 +141,21 @@ export default function RegisterPage() {
 
   return (
     <motion.div
-      className="min-h-screen w-full bg-black flex items-center justify-center p-4"
+      className="min-h-screen w-full bg-black flex items-center justify-center p-4 relative"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
     >
+      {/* Close/Back Button */}
+      <div className="absolute top-6 left-6 z-50">
+        <Link 
+          href="/"
+          className="p-2 rounded-full hover:bg-white/10 transition"
+          title="Back to home"
+        >
+          <X size={24} className="text-white" />
+        </Link>
+      </div>
+
       <ToastMobile
         show={toast.show}
         message={toast.message}
