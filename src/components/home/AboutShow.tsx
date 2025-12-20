@@ -56,13 +56,14 @@ export default function AboutShow() {
 
       <div className="container mx-auto px-4 md:px-6 lg:px-16 max-w-7xl relative">
         {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-16 lg:gap-28 items-center mb-16 md:mb-24 lg:mb-28">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-16 lg:gap-28 items-stretch mb-16 md:mb-24 lg:mb-28">
           {/* Left: Text Content */}
           <motion.div
             initial={{ opacity: 0, x: -60 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, ease: "easeOut" }}
+            className="relative z-10 flex flex-col justify-start"
           >
             {/* Badge */}
             <motion.div
@@ -185,7 +186,7 @@ export default function AboutShow() {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 1, ease: "easeOut", delay: 0.2 }}
-            className="relative"
+            className="relative z-0 flex items-center justify-center w-full h-full"
           >
             <div className="relative aspect-[4/5] lg:aspect-[3/4]">
               {/* Main Image Container */}
@@ -368,7 +369,7 @@ export default function AboutShow() {
                 className="text-center max-w-3xl"
               >
                 <p className="text-2xl sm:text-4xl lg:text-7xl font-black text-white mb-2 sm:mb-6 tracking-tight drop-shadow-2xl leading-tight">
-                  The Movement Across South Africa
+                  THE MOVEMENT ACROSS SOUTH AFRICA
                 </p>
                 <p className="text-sm sm:text-xl lg:text-3xl text-white/95 drop-shadow-xl font-semibold">
                   From campuses to communities, millions are rising
