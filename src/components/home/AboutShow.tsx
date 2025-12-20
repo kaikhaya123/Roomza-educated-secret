@@ -413,7 +413,7 @@ export default function AboutShow() {
                 1: '/Images/medium-shot-women-holding-smartphones-min.jpg',
                 2: '/Images/joy-armani-KAK0jPmDLt8-unsplash-min.jpg',
                 3: '/Images/concentrated-young-multiethnic-friends-students-outdoors-studying.jpg',
-                4: '/Images/bernd-dittrich-E0iLOeY8hV4-unsplash.jpg',
+                4: '/Images/glad-multiethnic-dark-skinned-woman-youngster-give-high-five-each-other-sit-workplace-achieve-good-results-while-study-together-write-records-notepad-demonstrate-their-agreement-min.jpg',
                 5: '/Images/high-angle-smiley-women-with-smartphones-min.jpg',
                 6: '/Images/college-students-different-ethnicities-cramming (4).jpg'
               };
