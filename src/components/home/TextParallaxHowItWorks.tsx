@@ -176,8 +176,9 @@ const TextParallaxContent = ({
         paddingLeft: IMG_PADDING,
         paddingRight: IMG_PADDING,
       }}
+      className="mb-12"
 >
-                          <div className={`relative ${heightClass}`}>
+                          <div className={`relative ${heightClass} overflow-visible`}>
         <StickyImage 
           imgUrl={imgUrl} 
           stepNumber={stepNumber}
@@ -190,6 +191,8 @@ const TextParallaxContent = ({
           totalSteps={totalSteps}
         />
       </div>
+      {/* Spacer to ensure sticky doesn't overlap the following content */}
+      <div className="h-8 md:h-12" />
     {children}
     </div>
   );
@@ -211,17 +214,18 @@ const StickyImage = ({ imgUrl, stepNumber, totalSteps }: StickyImageProps) => {
         backgroundImage: `url(${imgUrl})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
-        // make the image a bit smaller and responsive
-        height: `min(64vh, 640px)`,
+        // slightly smaller and more centered to avoid touching neighbors
+        height: `min(56vh, 560px)`,
         width: '100%',
-        maxWidth: '880px',
+        maxWidth: '760px',
         marginLeft: 'auto',
         marginRight: 'auto',
         top: IMG_PADDING,
         scale,
       }}
       ref={targetRef}
-      className="sticky z-0 overflow-hidden rounded-3xl mx-auto"
+      aria-hidden
+      className="sticky z-10 overflow-hidden rounded-3xl mx-auto"
 >
           <motion.div
         className="absolute inset-0 bg-black/60"
@@ -243,7 +247,7 @@ const OverlayCopy = ({ subheading, heading, stepNumber, totalSteps }: OverlayCop
   const weight = getStepWeight(stepNumber, totalSteps);
   const isHeavy = weight === 'heavy';
 
-  const y = useTransform(scrollYProgress, [0, 1], [250, -250]);
+  const y = useTransform(scrollYProgress, [0, 1], [150, -150]);
   const opacity = useTransform(scrollYProgress, [0.25, 0.5, 0.75], [0, 1, 0]);
 
   return (
