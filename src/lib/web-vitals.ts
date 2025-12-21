@@ -1,4 +1,5 @@
-import { getCLS, getFID, getFCP, getLCP, getTTFB } from 'web-vitals'
+// Using dynamic import in initWebVitals to support multiple web-vitals versions
+// (avoid static named imports to keep builds compatible across versions)
 
 // Function to report Web Vitals to console and external service
 export function reportWebVitals(metric: any) {

@@ -125,3 +125,17 @@ export type PublicRegistrationInput = z.infer<typeof publicRegistrationSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;
 export type NominationInput = z.infer<typeof nominationSchema>;
 export type VoteInput = z.infer<typeof voteSchema>;
+
+// Small helper validators used in tests and simple checks
+export function validateEmail(email: string) {
+  return /[^\s@]+@[^\s@]+\.[^\s@]+/.test(email);
+}
+
+export function validatePassword(password: string) {
+  // Simplified: Ensure length and at least one number and one letter
+  return typeof password === 'string' && password.length >= 8 && /[0-9]/.test(password) && /[A-Za-z]/.test(password);
+}
+
+export function sanitizeInput(input: string) {
+  return String(input).trim();
+}
