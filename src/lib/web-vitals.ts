@@ -26,11 +26,27 @@ export function reportWebVitals(metric: any) {
   }
 }
 
-// Initialize all Web Vitals tracking
-export function initWebVitals() {
-  getCLS(reportWebVitals)
-  getFID(reportWebVitals)
-  getFCP(reportWebVitals)
-  getLCP(reportWebVitals)
-  getTTFB(reportWebVitals)
+// Initialize all Web Vitals tracking (uses dynamic import and fallbacks to be compatible with web-vitals versions)
+export async function initWebVitals() {
+  try {
+    const webVitals = await import('web-vitals')
+    const w = webVitals as any
+
+    const cls = w.getCLS ?? w.onCLS
+    const fid = w.getFID ?? w.onFID
+    const fcp = w.getFCP ?? w.onFCP
+    const lcp = w.getLCP ?? w.onLCP
+    const ttfb = w.getTTFB ?? w.onTTFB
+
+    if (typeof cls === 'function') cls(reportWebVitals)
+    if (typeof fid === 'function') fid(reportWebVitals)
+    if (typeof fcp === 'function') fcp(reportWebVitals)
+    if (typeof lcp === 'function') lcp(reportWebVitals)
+    if (typeof ttfb === 'function') ttfb(reportWebVitals)
+  } catch (err) {
+    // If the package isn't available or its API differs, fail silently in non-critical contexts
+    // and log for visibility
+    // eslint-disable-next-line no-console
+    console.warn('Could not initialize web-vitals:', err)
+  }
 }
