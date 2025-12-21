@@ -211,12 +211,17 @@ const StickyImage = ({ imgUrl, stepNumber, totalSteps }: StickyImageProps) => {
         backgroundImage: `url(${imgUrl})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
-        height: `calc(100vh - ${IMG_PADDING * 2}px)`,
+        // make the image a bit smaller and responsive
+        height: `min(64vh, 640px)`,
+        width: '100%',
+        maxWidth: '880px',
+        marginLeft: 'auto',
+        marginRight: 'auto',
         top: IMG_PADDING,
         scale,
       }}
       ref={targetRef}
-      className="sticky z-0 overflow-hidden rounded-3xl"
+      className="sticky z-0 overflow-hidden rounded-3xl mx-auto"
 >
           <motion.div
         className="absolute inset-0 bg-black/60"
