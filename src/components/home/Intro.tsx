@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { FiArrowDown } from 'react-icons/fi';
 
@@ -36,6 +36,7 @@ const slides: Slide[] = [
 export default function IntroStorySections() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const [assetIssues, setAssetIssues] = useState<string[]>([]);
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -59,10 +60,43 @@ export default function IntroStorySections() {
         video.pause();
       } catch (e) {}
     }
+
+    // Quick runtime checks to help diagnose production asset issues
+    const checks: Promise<void>[] = [];
+    const checkAsset = async (url: string, label: string) => {
+      try {
+        const res = await fetch(url, { method: 'HEAD' });
+        if (!res.ok) {
+          setAssetIssues((s) => [...s, `${label} returned ${res.status}`]);
+          console.error(`${label} load failed:`, url, res.status);
+        } else {
+          console.log(`${label} available:`, url);
+        }
+      } catch (err) {
+        setAssetIssues((s) => [...s, `${label} fetch error`]);
+        console.error(`${label} fetch error:`, url, err);
+      }
+    };
+
+    checks.push(checkAsset('/Videos/14595546-hd_1920_1080_60fps.mp4', 'Hero video'));
+    checks.push(checkAsset('/Images/vertical-shot-curly-haired-millennial-girl-sits-crossed-legs-uses-mobile-phone-laptop-computer-connected-wireless-min-opt.jpg', 'Hero poster'));
+    Promise.all(checks).catch(() => {});
   }, []);
 
   return (
     <section ref={containerRef} className="relative bg-black text-white">
+
+      {/* Diagnostic banner when asset fetch checks fail (visible in production for debugging) */}
+      {assetIssues.length > 0 && (
+        <div className="fixed top-4 right-4 z-50 bg-red-600 text-white px-4 py-2 rounded shadow-lg text-sm max-w-sm">
+          <strong className="block font-semibold">Media load issues:</strong>
+          <ul className="list-disc list-inside mt-1">
+            {assetIssues.map((m, i) => (
+              <li key={i}>{m}</li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       {/* INTRO HERO */}
       <section className="relative min-h-screen overflow-hidden flex items-center">
@@ -94,9 +128,8 @@ export default function IntroStorySections() {
           <div className="absolute inset-0 bg-black/30" />
         </div>
 
-        <div className="relative z-10 max-w-xl mx-auto px-6 lg:px-16 space-y-8 text-center lg:text-left">
+        <div className="relative z-10 max-w-xl px-6 lg:px-16 space-y-8 text-left ml-6 lg:ml-16">
           <div className="flex items-center gap-4">
-            <span className="w-10 h-px bg-brand-white" />
             <span className="text-[11px] font-bold tracking-[0.35em] uppercase text-brand-white">
               National Student Reality Platform
             </span>
