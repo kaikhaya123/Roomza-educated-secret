@@ -48,7 +48,17 @@ export default function IntroStorySections() {
 
     video.muted = true;
     video.setAttribute('playsinline', '');
-    video.play().catch(() => {});
+
+    // Autoplay only on non-touch / larger screens to avoid mobile data and autoplay blocks
+    const shouldAutoplay = typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(min-width: 640px)').matches;
+    if (shouldAutoplay) {
+      video.play().catch(() => {});
+    } else {
+      // ensure video is paused on mobile — we'll show a static fallback image instead
+      try {
+        video.pause();
+      } catch (e) {}
+    }
   }, []);
 
   return (
@@ -57,13 +67,25 @@ export default function IntroStorySections() {
       {/* INTRO HERO */}
       <section className="relative min-h-screen overflow-hidden flex items-center">
         <div className="absolute inset-0">
+          {/* Mobile fallback: use a static, optimized image for small screens */}
+          <div
+            className="absolute inset-0 bg-cover bg-center sm:hidden"
+            style={{
+              backgroundImage: "url('/Images/vertical-shot-curly-haired-millennial-girl-sits-crossed-legs-uses-mobile-phone-laptop-computer-connected-wireless-min-opt.jpg')",
+            }}
+            aria-hidden="true"
+          />
+
+          {/* Video only visible on sm and up to avoid mobile autoplay/data usage */}
           <video
             ref={videoRef}
             loop
             muted
             playsInline
+            poster="/Images/vertical-shot-curly-haired-millennial-girl-sits-crossed-legs-uses-mobile-phone-laptop-computer-connected-wireless-min-opt.jpg"
             preload="none"
-            className="w-full h-full object-cover scale-[1.08]"
+            className="hidden sm:block w-full h-full object-cover scale-[1.08]"
+            aria-hidden="true"
           >
             <source src="/Videos/14595546-hd_1920_1080_60fps.mp4" type="video/mp4" />
           </video>
@@ -72,7 +94,7 @@ export default function IntroStorySections() {
           <div className="absolute inset-0 bg-black/30" />
         </div>
 
-        <div className="relative z-10 max-w-xl px-6 lg:px-16 space-y-10">
+        <div className="relative z-10 max-w-xl mx-auto px-6 lg:px-16 space-y-8 text-center lg:text-left">
           <div className="flex items-center gap-4">
             <span className="w-10 h-px bg-brand-white" />
             <span className="text-[11px] font-bold tracking-[0.35em] uppercase text-brand-white">
@@ -97,11 +119,12 @@ export default function IntroStorySections() {
 
           <motion.a
             href="#story"
-            whileHover={{ x: 8 }}
-            className="inline-flex items-center gap-4 text-sm font-bold tracking-wide group pt-4"
+            whileHover={{ x: 6 }}
+            className="inline-flex items-center justify-center gap-3 text-sm font-semibold tracking-wide group pt-4 px-5 py-3 bg-white/6 rounded-full touch-manipulation"
+            aria-label="Explore the story"
           >
             Explore the Story
-            <span className="w-10 h-px bg-brand-white transition-all group-hover:w-16" />
+            <span className="w-8 h-px bg-brand-white transition-all group-hover:w-12" />
           </motion.a>
         </div>
 
