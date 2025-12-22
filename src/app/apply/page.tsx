@@ -44,9 +44,8 @@ export default function ApplyPage() {
           <section className="space-y-4">
             <h2 className="text-2xl font-bold">Application Timeline</h2>
             <div className="border border-white/10 rounded-lg p-6 space-y-2">
-              <p>Applications open. 1 May</p>
-              <p>Applications close. 30 May</p>
-              <p>Final selection announced. 10 June</p>
+              <p>Application dates will be announced soon.</p>
+              <p>Sign up for updates or check back later for official dates.</p>
             </div>
           </section>
 

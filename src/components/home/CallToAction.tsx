@@ -10,7 +10,7 @@ export default function CallToAction() {
     <section className="relative overflow-hidden bg-black py-16 lg:py-24">
       {/* Background */}
       <Image
-        src="/Images/porter-raab-Ucr4Yp-t364-unsplash.jpg"
+        src="/Images/porter-raab-Ucr4Yp-t364-unsplash-min.jpg"
         alt="R.E.S. Experience"
         fill
         className="object-cover"

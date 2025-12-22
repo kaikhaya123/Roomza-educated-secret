@@ -85,7 +85,7 @@ export default function VotingSection() {
 
           <div className="w-full max-w-[460px] flex items-center justify-center">
             <FlipCards cards={contestants} />
-          </div>
+</div>
 
           <Link
             href="/contestants"

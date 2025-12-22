@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useMotionValue } from 'framer-motion';
 import Image from 'next/image';
+import { useState } from 'react';
 
 type Card = {
   id: number;
@@ -12,67 +12,55 @@ type Card = {
   rank: number;
 };
 
-export default function FlipCards({ cards }: { cards: Card[] }) {
-  const [stack, setStack] = useState<Card[]>(cards);
-  const swipeThreshold = 80;
+const ARC_RADIUS = 260;
+const CARD_WIDTH = 220;
+const CARD_HEIGHT = 320;
 
-  function rotateStack() {
-    setStack((prev) => {
-      const next = [...prev];
-      const [first, ...rest] = next;
-      return [...rest, first];
-    });
-  }
+export default function ArchCarousel({ cards }: { cards: Card[] }) {
+  const [active, setActive] = useState(0);
+  const dragX = useMotionValue(0);
 
-  function handleDragEnd(info: any) {
-    if (Math.abs(info.offset.y) > swipeThreshold) {
-      rotateStack();
+  function onDragEnd(_: any, info: any) {
+    if (info.offset.x < -80) {
+      setActive((p) => (p + 1) % cards.length);
+    }
+    if (info.offset.x > 80) {
+      setActive((p) => (p - 1 + cards.length) % cards.length);
     }
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.94 }}
-      whileInView={{ opacity: 1, scale: 1 }}
-      viewport={{ once: true, margin: '-120px' }}
-      transition={{ duration: 0.8, ease: 'easeOut' }}
-      className="relative w-full h-[420px] md:h-[540px] flex items-center justify-center"
-    >
-      {stack
-        .slice()
-        .reverse()
-        .map((card, i) => {
-          const idx = stack.length - 1 - i;
+    <div className="relative w-full h-[420px] flex items-center justify-center overflow-hidden">
+      <motion.div
+        drag="x"
+        dragConstraints={{ left: 0, right: 0 }}
+        style={{ x: dragX }}
+        onDragEnd={onDragEnd}
+        className="relative w-full h-full cursor-grab"
+      >
+        {cards.map((card, index) => {
+          const offset = index - active;
+          const angle = offset * 12;
+          const y = Math.abs(offset) * 22;
+          const scale = offset === 0 ? 1 : 0.9;
+          const opacity = Math.abs(offset) > 3 ? 0 : 1;
 
           return (
             <motion.div
               key={card.id}
-              drag="y"
-              dragConstraints={{ top: 0, bottom: 0 }}
-              onDragEnd={(e, info) => handleDragEnd(info)}
-              whileTap={{ scale: 0.97 }}
-              initial={{
-                y: idx * 10,
-                scale: 1 - idx * 0.04,
-                rotate: idx % 2 === 0 ? -2 : 2,
-                opacity: 0
-              }}
+              initial={{ opacity: 0, y: 40 }}
               animate={{
-                y: 0,
-                scale: 1 - idx * 0.04,
-                rotate: 0,
-                opacity: 1
+                opacity,
+                x: offset * (CARD_WIDTH * 0.6),
+                y,
+                rotate: angle,
+                scale
               }}
-              transition={{
-                type: 'spring',
-                stiffness: 420,
-                damping: 34,
-                mass: 0.6
-              }}
-              className="absolute w-[300px] md:w-[420px] h-[420px] md:h-[540px] rounded-2xl bg-black shadow-2xl overflow-hidden cursor-grab"
-              style={{ zIndex: 100 - idx }}
+              transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+              style={{ zIndex: 100 - Math.abs(offset) }}
             >
-              <div className="relative w-full h-full">
+              <div className="group relative w-[220px] h-[320px] rounded-2xl overflow-hidden bg-black shadow-2xl">
                 <Image
                   src={card.image}
                   alt={card.name}
@@ -80,23 +68,20 @@ export default function FlipCards({ cards }: { cards: Card[] }) {
                   className="object-cover"
                 />
 
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition" />
 
-                <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-bold text-sm md:text-base">{card.name}</p>
-                      <p className="text-xs text-white/70">
-                        {card.votes.toLocaleString()} votes
-                      </p>
-                    </div>
-                    <div className="text-sm font-black">#{card.rank}</div>
-                  </div>
+                <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-6 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition">
+                  <p className="font-black text-sm">{card.name}</p>
+                  <p className="text-xs text-white/70 mt-1">
+                    {card.votes.toLocaleString()} votes
+                  </p>
+                  <p className="text-xs font-black mt-1">#{card.rank}</p>
                 </div>
               </div>
             </motion.div>
           );
         })}
-    </motion.div>
+      </motion.div>
+    </div>
   );
 }
