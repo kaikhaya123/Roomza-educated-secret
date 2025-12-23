@@ -108,7 +108,7 @@ export default function MovementPage() {
               <p className="text-lg text-white/60">R.E.S. is structured around the pivotal chapters of "Long Walk to Freedom," mirroring the psychological and emotional journey of transformation.</p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
+            <div className="space-y-12 lg:space-y-16">
               {[
                 {
                   week: 'Week 1-2',
@@ -139,35 +139,44 @@ export default function MovementPage() {
                   image: '/Images/young-black-woman-min.jpg'
                 }
               ].map((item, index) => (
-                <motion.div
+                <motion.article
                   key={index}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
-                  className="overflow-hidden rounded-xl border border-white/10 hover:border-brand-yellow/50 transition-all duration-300 flex flex-col h-full group"
+                  transition={{ delay: index * 0.08 }}
+                  className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center"
                 >
-                  {/* Image Section - 50% of card height */}
-                  <div className="relative h-48 md:h-56 lg:h-64 overflow-hidden bg-black">
-                    <Image
-                      src={item.image}
-                      alt={item.title}
-                      fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-300"
-                      sizes="(max-width: 768px) 100vw, 50vw"
-                    />
-                    {/* Subtle gradient overlay - darker at bottom to blend with text */}
-                    <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/40 to-black/60" />
+                  {/* Text column */}
+                  <div className={`col-span-12 lg:col-span-6 ${index % 2 === 0 ? 'lg:order-1' : 'lg:order-2'} px-4 lg:px-0` }>
+                    <div className="max-w-xl">
+                      <span className="inline-block w-10 h-1 bg-brand-yellow mb-4" />
+                      <p className="text-brand-yellow font-black text-sm md:text-base mb-3 uppercase tracking-wider">{item.week}</p>
+                      <h3 className="text-3xl md:text-4xl font-black mb-3 leading-tight text-white">{item.title}</h3>
+                      <p className="text-xs md:text-sm text-white/70 mb-6 uppercase tracking-widest font-semibold">{item.subtitle}</p>
+                      <p className="text-white/85 text-base md:text-lg leading-relaxed">{item.description}</p>
+
+                      <div className="mt-6">
+                        <button className="inline-flex items-center gap-2 bg-brand-yellow text-black px-4 py-2 rounded font-semibold hover:bg-yellow-300 transition">Send</button>
+                      </div>
+                    </div>
                   </div>
 
-                  {/* Content Section - Sits below image, full visibility */}
-                  <div className="flex-1 p-8 md:p-10 bg-white/[0.02] border-t border-white/5">
-                    <p className="text-brand-yellow font-black text-sm md:text-base mb-3 uppercase tracking-wider">{item.week}</p>
-                    <h3 className="text-2xl md:text-3xl font-black mb-3 leading-tight text-white">{item.title}</h3>
-                    <p className="text-xs md:text-sm text-white/70 mb-6 uppercase tracking-widest font-semibold">{item.subtitle}</p>
-                    <p className="text-white/85 text-base md:text-lg leading-relaxed">{item.description}</p>
+                  {/* Image column */}
+                  <div className={`col-span-12 lg:col-span-6 ${index % 2 === 0 ? 'lg:order-2' : 'lg:order-1'} px-4 lg:px-0` }>
+                    <div className="relative h-56 md:h-72 lg:h-96 rounded-xl overflow-hidden shadow-xl">
+                      <Image
+                        src={item.image}
+                        alt={item.title}
+                        fill
+                        className="object-cover transition-transform duration-500 hover:scale-105"
+                        sizes="(max-width: 768px) 100vw, 50vw"
+                        quality={80}
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/60" />
+                    </div>
                   </div>
-                </motion.div>
+                </motion.article>
               ))}
             </div>
           </div>
