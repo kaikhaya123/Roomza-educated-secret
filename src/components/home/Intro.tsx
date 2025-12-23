@@ -152,7 +152,7 @@ export default function IntroStorySections() {
           )}
         </div>
 
-        <div className="relative z-10 max-w-xl lg:max-w-2xl px-6 lg:px-16 space-y-10 text-center lg:text-left mx-auto lg:mx-0 lg:ml-16">
+        <div className="relative z-10 max-w-xl lg:max-w-2xl px-6 lg:px-16 space-y-10 text-left mx-6 lg:mx-0 lg:ml-16">
           <div className="flex items-center gap-4">
             <span className="w-10 h-px bg-brand-white" />
             <span className="text-[11px] font-bold tracking-[0.35em] uppercase text-brand-white">
