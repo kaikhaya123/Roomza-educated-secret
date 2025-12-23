@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useSession, signOut } from 'next-auth/react';
 import { motion } from 'framer-motion';
-import { X, User, LayoutDashboard, LogOut } from 'lucide-react';
+import { X, User, LayoutDashboard, LogOut, ShoppingCart } from 'lucide-react';
 import { UserAvatar } from './UserAvatar';
 
 export default function Navbar() {
@@ -89,10 +89,31 @@ export default function Navbar() {
             >
               News
             </Link>
+            <Link 
+              href="/merch" 
+              className={`font-light text-sm lg:text-base transition-colors focus:outline-none focus:ring-2 focus:ring-amber-300 px-2 py-1 rounded ${isScrolled ? 'text-gray-700 hover:text-gray-900' : 'text-white hover:text-amber-300 drop-shadow-md'}`}
+              aria-label="Shop merch"
+            >
+              Merch
+            </Link>
           </div>
 
           {/* Right Section - User Avatar & Menu */}
           <div className="flex items-center gap-2 md:gap-4 lg:gap-6">
+            {/* Merch cart link */}
+            <Link href="/merch" aria-label="Shop merch">
+              <ShoppingCart className={`w-6 h-6 ${isScrolled ? 'text-gray-700' : 'text-white'}`} />
+            </Link>
+
+            {/* Compact Merch link for small screens (hidden on lg where center nav is visible) */}
+            <Link
+              href="/merch"
+              className={`ml-3 inline-flex items-center text-sm font-medium px-2 py-1 rounded ${isScrolled ? 'text-gray-700 bg-white/3 hover:bg-white/6' : 'text-white bg-black/20 hover:bg-black/30'} lg:hidden`}
+              aria-label="Shop merch"
+            >
+              Merch
+            </Link>
+
             {/* User Avatar with Dropdown */}
             <UserAvatar session={session} isScrolled={isScrolled} />
 
@@ -237,6 +258,14 @@ export default function Navbar() {
                       aria-label="See our impact"
                     >
                       Impact
+                    </Link>
+                    <Link 
+                      href="/merch" 
+                      className="text-4xl lg:text-7xl text-white hover:text-white/70 font-light transition leading-tight focus:outline-none focus:ring-2 focus:ring-amber-300 px-2 py-1 rounded"
+                      onClick={() => requestAnimationFrame(() => setIsMobileMenuOpen(false))}
+                      aria-label="Shop merch"
+                    >
+                      Merch
                     </Link>
                   </nav>
 
