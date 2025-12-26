@@ -27,7 +27,7 @@ export default function ProductCard({ product, onAdd, onOpen, index = 0 }: Props
     >
       {/* Image */}
       <div
-        className="relative overflow-hidden bg-white/5 rounded-none flex-shrink-0 p-6 md:p-0"
+        className="relative overflow-hidden bg-white/5 rounded-none flex-shrink-0 p-3 md:p-0"
         style={{ aspectRatio: '3 / 4' }}
         onClick={() => onOpen(product)}
       >
@@ -57,7 +57,7 @@ export default function ProductCard({ product, onAdd, onOpen, index = 0 }: Props
       {/* Info block */}
       <div className="p-4 flex-1 flex flex-col justify-between">
         <div>
-          <h3 className="text-white font-semibold text-base md:text-lg leading-tight">{product.name}</h3>
+          <h3 className="text-white font-semibold text-sm md:text-base leading-tight line-clamp-2 md:line-clamp-none">{product.name}</h3>
 
           {/* moved category label directly under title */}
           {product.category && (
@@ -66,8 +66,20 @@ export default function ProductCard({ product, onAdd, onOpen, index = 0 }: Props
             </div>
           )}
 
-          {/* SKU metadata */}
-          <div className="mt-2 text-white/60 text-xs">SKU: <span className="text-white/80">{product.id}</span></div>
+          {/* SKU metadata - hidden on small screens for compact layout */}
+          <div className="mt-2 text-white/60 text-xs hidden md:block">SKU: <span className="text-white/80">{product.id}</span></div>
+
+          {/* Description: full but compact on mobile */}
+          <p className="text-white/70 text-sm mt-2">{product.description}</p>
+
+          <div className="mt-2 flex items-center gap-3 flex-wrap text-xs">
+            {product.sizes && (
+              <div className="text-white/60">Sizes: <span className="text-white/80">{product.sizes.join(', ')}</span></div>
+            )}
+            <div className={`font-medium ${product.stock && product.stock > 0 ? 'text-white/90' : 'text-red-400'}`}>
+              {product.stock && product.stock > 0 ? `In stock ${product.stock}` : 'Availability: 0'}
+            </div>
+          </div>
 
           {/* Description: clamp on small, full on md+ */}
           <p className="text-white/70 text-sm mt-3">{product.description}</p>

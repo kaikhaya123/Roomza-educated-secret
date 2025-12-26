@@ -134,8 +134,26 @@ export default function CategoryGrid({ categories, selected = null, onSelect, va
 
   return (
     <div>
-      {/* mobile: rail */}
+      {/* mobile: featured + rail */}
       <div className="lg:hidden">
+        {/* Mobile featured card */}
+        <div className="mb-4 h-[320px] w-full overflow-hidden">
+          <button
+            onClick={() => onSelect(selected === featured?.id ? null : (featured?.id || null))}
+            className="w-full h-full"
+          >
+            <div className="relative w-full h-full">
+              {featured?.image && <Image src={featured.image} alt={featured.name} fill className="object-cover" />}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+
+              <div className="absolute left-4 bottom-4 max-w-[85%]">
+                <h3 className="text-white text-3xl font-black leading-tight">{featured?.name}</h3>
+                {featured?.description && <p className="text-white/80 mt-2">{featured.description}</p>}
+              </div>
+            </div>
+          </button>
+        </div>
+
         <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4">
           {categories.map((cat) => (
             <div key={cat.id} className="snap-start min-w-[220px]">

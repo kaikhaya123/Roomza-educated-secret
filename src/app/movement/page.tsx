@@ -156,9 +156,7 @@ export default function MovementPage() {
                       <p className="text-xs md:text-sm text-white/70 mb-6 uppercase tracking-widest font-semibold">{item.subtitle}</p>
                       <p className="text-white/85 text-base md:text-lg leading-relaxed">{item.description}</p>
 
-                      <div className="mt-6">
-                        <button className="inline-flex items-center gap-2 bg-brand-yellow text-black px-4 py-2 rounded font-semibold hover:bg-yellow-300 transition">Send</button>
-                      </div>
+
                     </div>
                   </div>
 

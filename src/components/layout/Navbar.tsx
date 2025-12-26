@@ -115,14 +115,7 @@ export default function Navbar() {
               )}
             </button>
 
-            {/* Compact Merch link for small screens (hidden on lg where center nav is visible) */}
-            <Link
-              href="/merch"
-              className={`ml-3 inline-flex items-center text-sm font-medium px-2 py-1 rounded ${isScrolled ? 'text-gray-700 bg-white/3 hover:bg-white/6' : 'text-white bg-black/20 hover:bg-black/30'} lg:hidden`}
-              aria-label="Shop merch"
-            >
-              Merch
-            </Link>
+
 
             {/* User Avatar with Dropdown */}
             <UserAvatar session={session} isScrolled={isScrolled} />
@@ -351,6 +344,20 @@ export default function Navbar() {
             </div>
           </div>
         )}
+      </div>
+
+      {/* Mobile action bar: Merch CTA + Cart (visible on small screens) */}
+      <div className="lg:hidden fixed bottom-4 left-4 right-4 z-50 flex items-center justify-end bg-black/70 backdrop-blur-sm p-2 border border-white/10">
+        <button
+          onClick={() => toggle()}
+          className="relative p-2 rounded-none focus:outline-none focus:ring-2 focus:ring-amber-300"
+          aria-label="Open cart"
+        >
+          <ShoppingCart className={`w-6 h-6 text-white`} />
+          {count > 0 && (
+            <span className="absolute -top-1 -right-1 bg-brand-yellow text-black text-xs rounded-full px-2 py-0.5 font-bold">{count}</span>
+          )}
+        </button>
       </div>
 
       {/* Cart drawer (site-wide) */}
