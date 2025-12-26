@@ -136,29 +136,43 @@ export default function CategoryGrid({ categories, selected = null, onSelect, va
     <div>
       {/* mobile: featured + rail */}
       <div className="lg:hidden">
-        {/* Mobile featured card */}
-        <div className="mb-4 h-[320px] w-full overflow-hidden">
+        {/* Mobile featured card (full-width, with overlay & detail) */}
+        <div className="mb-4 h-[360px] w-full overflow-hidden">
           <button
             onClick={() => onSelect(selected === featured?.id ? null : (featured?.id || null))}
             className="w-full h-full"
+            aria-label={featured?.name ?? 'Featured'}
           >
             <div className="relative w-full h-full">
               {featured?.image && <Image src={featured.image} alt={featured.name} fill className="object-cover" />}
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
 
-              <div className="absolute left-4 bottom-4 max-w-[85%]">
-                <h3 className="text-white text-3xl font-black leading-tight">{featured?.name}</h3>
-                {featured?.description && <p className="text-white/80 mt-2">{featured.description}</p>}
+              <div className="absolute inset-0 flex items-end">
+                <div className="p-4 md:p-6 max-w-[90%]">
+                  <h3 className="text-white text-3xl md:text-4xl font-black leading-tight">{featured?.name}</h3>
+                  {featured?.description && <p className="text-white/80 mt-2 text-sm md:text-base">{featured.description}</p>}
+                </div>
               </div>
             </div>
           </button>
         </div>
 
-        <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4">
-          {categories.map((cat) => (
-            <div key={cat.id} className="snap-start min-w-[220px]">
-              <CategoryTile category={cat} active={selected === cat.id} onClick={() => onSelect(selected === cat.id ? null : cat.id)} />
-            </div>
+        {/* Supporting categories below - two column grid to mirror desktop hierarchy */}
+        <div className="grid grid-cols-2 gap-3">
+          {small.map((cat) => (
+            <button
+              key={cat.id}
+              onClick={() => onSelect(selected === cat.id ? null : cat.id)}
+              className="h-40 overflow-hidden"
+            >
+              <div className="relative w-full h-full">
+                {cat.image && <Image src={cat.image} alt={cat.name} fill className="object-cover" />}
+                <div className="absolute inset-0 bg-black/30" />
+                <div className="absolute left-3 bottom-3">
+                  <h4 className="text-white text-sm font-black">{cat.name}</h4>
+                </div>
+              </div>
+            </button>
           ))}
         </div>
       </div>
