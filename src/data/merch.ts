@@ -5,39 +5,95 @@ export type Product = {
   image: string;
   description: string;
   slug?: string;
+  category?: string; // optional category id (e.g., 'hoodies')
+  sizes?: string[]; // available sizes
+  stock?: number; // units available
+  tag?: string; // optional tag like 'Limited' or 'New'
 };
+
+export type Category = {
+  id: string;
+  name: string;
+  image?: string;
+  description?: string;
+  featured?: boolean;
+};
+
+export const categories: Category[] = [
+  {
+    id: 'featured',
+    name: 'Featured',
+    image: '/Images/smiling-interracial-young-couple-standing-staircase-looking-camera.jpg',
+    description: 'Limited drops & signature pieces',
+    featured: true,
+  },
+  {
+    id: 'hoodies',
+    name: 'Hoodies',
+    image: '/Images/hooded-jacket-fashion-model-black-generated-by-ai.jpg',
+  },
+  {
+    id: 'tshirts',
+    name: 'T-Shirts',
+    image: '/Images/shirt-mockup-concept-with-plain-clothing.jpg',
+  },
+  {
+    id: 'jackets',
+    name: 'Jackets',
+    image: '/Images/students-rehashing-theater-class%20(1).jpg',
+  },
+  {
+    id: 'accessories',
+    name: 'Accessories',
+    image: '/Images/young-adults-meeting-up-study-min.jpg',
+  },
+];
 
 export const products: Product[] = [
   {
     id: 'res-hoodie-1',
     name: 'RES Heavyweight Hoodie',
     price: 3000,
-    image: '/Images/Essentials Hoodie (Black) - XS.jpg',
+    image: '/Images/Men Hoodie Mockup, Front View.png',
     description: 'Comfortable, heavyweight hoodie with RES branding. Available in S-XL.',
-    slug: 'res-hoodie'
+    slug: 'res-hoodie',
+    category: 'hoodies',
+    sizes: ['S', 'M', 'L', 'XL'],
+    stock: 12,
+    tag: 'Limited',
   },
   {
     id: 'res-tee-1',
     name: 'RES Logo Tee',
     price: 19900,
-    image: '/Images/college-students.jpg',
+    image: '/Images/Men T-Shirt Mockup Floating Poster Freepik.png',
     description: 'Premium cotton T-shirt with bold RES graphic.',
-    slug: 'res-tee'
+    slug: 'res-tee',
+    category: 'tshirts',
+    sizes: ['S', 'M', 'L'],
+    stock: 4,
   },
   {
-    id: 'res-jacket-1',
-    name: 'RES Coach Jacket',
+    id: 'res-beanie-1',
+    name: 'RES beanie',
     price: 69900,
-    image: '/Images/students-rehashing-theater-class%20(1).jpg',
-    description: 'Lightweight coach jacket — great for studio & stage.',
-    slug: 'res-jacket'
+    image: '/Images/Beanie Mockup Floating.jpeg',
+    description: 'Classic knit beanie; one size fits all.',
+    slug: 'res-beanie',
+    category: 'accessories',
+    sizes: ['One Size'],
+    stock: 0,
   },
+
   {
     id: 'res-cap-1',
     name: 'RES Cap',
     price: 9900,
-    image: '/Images/young-adults-meeting-up-study-min.jpg',
+    image: '/Images/Cap Mockup.png',
     description: 'Unstructured cap with embroidered logo.',
-    slug: 'res-cap'
+    slug: 'res-cap',
+    category: 'accessories',
+    sizes: ['One Size'],
+    stock: 7,
   }
 ];
