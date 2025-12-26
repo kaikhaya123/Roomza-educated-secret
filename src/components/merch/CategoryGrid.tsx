@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import FeaturedMobileCard from './FeaturedMobileCard';
 import { Category } from '@/data/merch';
 import useInView from '@/hooks/useInView';
 
@@ -136,26 +137,8 @@ export default function CategoryGrid({ categories, selected = null, onSelect, va
     <div>
       {/* mobile: featured + rail */}
       <div className="lg:hidden">
-        {/* Mobile featured card (full-width, with overlay & detail) */}
-        <div className="mb-4 h-[360px] w-full overflow-hidden">
-          <button
-            onClick={() => onSelect(selected === featured?.id ? null : (featured?.id || null))}
-            className="w-full h-full"
-            aria-label={featured?.name ?? 'Featured'}
-          >
-            <div className="relative w-full h-full">
-              {featured?.image && <Image src={featured.image} alt={featured.name} fill className="object-cover" />}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
-
-              <div className="absolute inset-0 flex items-end">
-                <div className="p-4 md:p-6 max-w-[90%]">
-                  <h3 className="text-white text-3xl md:text-4xl font-black leading-tight">{featured?.name}</h3>
-                  {featured?.description && <p className="text-white/80 mt-2 text-sm md:text-base">{featured.description}</p>}
-                </div>
-              </div>
-            </div>
-          </button>
-        </div>
+        {/* Mobile featured card (animated client-side) */}
+        <FeaturedMobileCard featured={featured} selected={selected} onSelect={(id) => onSelect(id)} />
 
         {/* Supporting categories below - two column grid to mirror desktop hierarchy */}
         <div className="grid grid-cols-2 gap-3">
