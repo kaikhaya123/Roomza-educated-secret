@@ -84,7 +84,6 @@ export const products: Product[] = [
     sizes: ['One Size'],
     stock: 0,
   },
-
   {
     id: 'res-cap-1',
     name: 'RES Cap',
