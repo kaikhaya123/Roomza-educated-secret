@@ -36,7 +36,7 @@ export default function MerchPage() {
       <section className="relative h-screen min-h-[640px] overflow-hidden">
   <HoverReveal
     frontSrc="/Images/antoine-transon-3CIN7OxIABo-unsplash.jpg"
-    backSrc="/Images/attractive-brunette-curly-woman-purple-hoodie-pink-sunglasses-smiles-sincerely-rejoices-takes-selfie-outside-min.jpg"
+    backSrc="/Images/pexels-cottonbro-7520736.jpg"
     alt="Merch hero"
     className="absolute inset-0"
     circles={[
@@ -71,7 +71,9 @@ export default function MerchPage() {
 </section>
 
       <main className="py-20 px-6 lg:px-12 max-w-6xl mx-auto" id="products">
-        <h2 className="text-3xl md:text-4xl font-black mb-6">Featured items</h2>
+        <h2 className="text-3xl md:text-4xl font-black mb-6">FEATURED ITEMS</h2>
+
+
 
         <CategoryGrid categories={categories} selected={selectedCategory} onSelect={(id) => setSelectedCategory(id)} />
 

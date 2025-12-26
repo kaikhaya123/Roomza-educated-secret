@@ -18,14 +18,14 @@ export default function FeaturedMobileCard({ featured, selected, onSelect }: Pro
   }
 
   return (
-    <div ref={ref as any} className="mb-4 h-[360px] w-full overflow-hidden">
+    <div ref={ref as any} className="mb-3 h-[240px] w-full overflow-hidden bg-neutral-900">
       <button
         onClick={() => onSelect(selected === featured?.id ? null : (featured?.id || null))}
         className="w-full h-full"
         aria-label={featured?.name ?? 'Featured'}
       >
         <div className="relative w-full h-full">
-          {featured?.image && <Image src={featured.image} alt={featured.name} fill className="object-cover" />}
+          {featured?.image && <Image src={featured.image} alt={featured.name} fill className="object-contain object-center" />}
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
 
           <div
@@ -34,7 +34,7 @@ export default function FeaturedMobileCard({ featured, selected, onSelect }: Pro
             }`}
           >
             <div className="p-4 md:p-6 max-w-[90%]">
-              <h3 className="text-white text-3xl md:text-4xl font-black leading-tight">{featured?.name}</h3>
+              <h3 className="text-white text-2xl md:text-3xl font-black leading-tight">{featured?.name}</h3>
               {featured?.description && <p className="text-white/80 mt-2 text-sm md:text-base">{featured.description}</p>}
             </div>
           </div>

@@ -23,7 +23,7 @@ export const categories: Category[] = [
   {
     id: 'featured',
     name: 'Featured',
-    image: '/Images/smiling-interracial-young-couple-standing-staircase-looking-camera.jpg',
+    image: '/Images/pexels-cottonbro-10677492.jpg',
     description: 'Limited drops & signature pieces',
     featured: true,
   },
@@ -40,7 +40,7 @@ export const categories: Category[] = [
   {
     id: 'jackets',
     name: 'Jackets',
-    image: '/Images/students-rehashing-theater-class%20(1).jpg',
+    image: '/Images/portrait-young-japanese-woman-with-jacket.jpg',
   },
   {
     id: 'accessories',
