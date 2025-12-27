@@ -1,7 +1,6 @@
 'use client';
 
 import Image from 'next/image';
-import FeaturedMobileCard from './FeaturedMobileCard';
 import { Category } from '@/data/merch';
 import useInView from '@/hooks/useInView';
 
@@ -137,30 +136,7 @@ export default function CategoryGrid({ categories, selected = null, onSelect, va
 
   return (
     <div>
-      {/* mobile: featured + rail */}
-      <div className="lg:hidden">
-        {/* Mobile featured card (animated client-side) */}
-        <FeaturedMobileCard featured={featured} selected={selected} onSelect={(id) => onSelect(id)} />
 
-        {/* Supporting categories below - two column grid to mirror desktop hierarchy */}
-        <div className="grid grid-cols-2 gap-3">
-          {small.map((cat) => (
-            <button
-              key={cat.id}
-              onClick={() => onSelect(selected === cat.id ? null : cat.id)}
-              className="h-36 overflow-hidden"
-            >
-              <div className="relative w-full h-full">
-                {cat.image && <Image src={cat.image} alt={cat.name} fill className="object-cover" />}
-                <div className="absolute inset-0 bg-black/30" />
-                <div className="absolute left-3 bottom-3">
-                  <h4 className="text-white text-sm font-black">{cat.name}</h4>
-                </div>
-              </div>
-            </button>
-          ))}
-        </div>
-      </div>
 
       {/* desktop: editorial (balanced heights & larger previews) */}
       <div className="hidden lg:grid grid-cols-1 lg:grid-cols-3 gap-4">
