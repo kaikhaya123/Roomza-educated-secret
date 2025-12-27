@@ -46,16 +46,53 @@ export function ZoomParallax({ images }: ZoomParallaxProps) {
   const mobileScales = [mScale1, mScale2, mScale3, mScale2, mScale3, mScale2, mScale1];
 
   // Mobile layout: stacked images with subtle scale on scroll
+  const [mobileProgress, setMobileProgress] = useState(0);
+
+  useEffect(() => {
+    if (!isMobile) return;
+    if (!container.current) return;
+
+    let rafId = 0;
+    const handle = () => {
+      if (!container.current) return;
+      const rect = (container.current as any).getBoundingClientRect();
+      const vh = window.innerHeight || document.documentElement.clientHeight;
+      // progress 0..1 where 0 means just below viewport, 1 means fully past
+      const progressRaw = (vh - rect.top) / (vh + rect.height);
+      const progress = Math.min(1, Math.max(0, progressRaw));
+      setMobileProgress(progress);
+    };
+
+    const onScroll = () => {
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(handle);
+    };
+
+    handle();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+
+    return () => {
+      if (rafId) cancelAnimationFrame(rafId);
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+    };
+  }, [isMobile]);
+
   if (isMobile) {
     return (
       <div ref={container} className="bg-black text-white">
         <div className="flex flex-col gap-4 py-6">
           {images.slice(0, 7).map(({ src, alt }, idx) => {
-            const scale = mobileScales[idx % mobileScales.length];
+            // manual scale calculation per image for mobile
+            const base = 1;
+            const variance = 0.02 * ((idx % 3) + 1); // small variation between items
+            const scaleValue = base + mobileProgress * (0.06 + variance);
+
             return (
               <motion.div
                 key={idx}
-                style={{ scale }}
+                style={{ scale: scaleValue }}
                 initial={{ opacity: 0.9 }}
                 whileInView={{ opacity: 1 }}
                 viewport={{ once: true, margin: '0px 0px -10% 0px' }}
