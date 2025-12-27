@@ -103,10 +103,10 @@ export default function Navbar() {
 
           {/* Right Section - User Avatar & Menu */}
           <div className="flex items-center gap-2 md:gap-4 lg:gap-6">
-            {/* Persistant cart button (site-wide) */}
+            {/* Persistant cart button (site-wide) - hidden on small screens */}
             <button
               onClick={() => toggle()}
-              className="relative p-2 rounded focus:outline-none focus:ring-2 focus:ring-amber-300"
+              className="hidden md:inline-flex relative p-2 rounded focus:outline-none focus:ring-2 focus:ring-amber-300"
               aria-label="Open cart"
             >
               <ShoppingCart className={`w-6 h-6 ${isScrolled ? 'text-gray-700' : 'text-white'}`} />
