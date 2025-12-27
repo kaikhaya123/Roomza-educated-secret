@@ -56,15 +56,7 @@ export default function Hero() {
             This is R.E.S. A student reality show that inspires, educates, and rewards. You watch students face real challenges. You see them rise.
           </motion.p>
 
-          {/* Primary CTA */}
-          <motion.a
-            href="/apply"
-            className="mt-4 md:mt-4 inline-flex items-center justify-center w-full md:w-auto h-[52px] bg-brand-yellow text-black font-bold rounded-lg shadow-md px-6"
-            whileHover={{ translateY: -2 }}
-            aria-label="Apply to compete"
-          >
-            Apply Now
-          </motion.a>
+          {/* Apply CTA removed */}
         </div>
       </div>
     </section>

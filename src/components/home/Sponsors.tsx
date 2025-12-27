@@ -92,9 +92,7 @@ export default function Sponsors() {
           <p className="text-gray-300 max-w-lg mx-auto mt-4">
             Join top South African brands advancing student experiences nationwide.
           </p>
-          <button className="mt-10 px-10 py-4 bg-black text-white text-sm tracking-wide rounded-xl font-bold">
-            Apply Now
-          </button>
+          {/* Apply CTA removed */}
         </motion.div>
       </div>
     </section>

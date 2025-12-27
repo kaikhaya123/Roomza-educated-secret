@@ -176,16 +176,7 @@ export default function IntroStorySections() {
             and measurable impact for South African students.
           </p>
 
-          <div className="mt-6 sm:mt-8">
-            <motion.a
-              href="/apply"
-              className="inline-flex items-center justify-center w-full sm:w-auto h-12 bg-brand-yellow text-black font-bold rounded-lg shadow-md px-6"
-              whileHover={{ translateY: -2 }}
-              aria-label="Apply to compete"
-            >
-              Apply Now
-            </motion.a>
-          </div>
+          {/* Apply CTA removed */}
 
           <motion.a
             href="#story"

@@ -26,7 +26,7 @@ export default function Cart({ items, onUpdateQty, onRemove }: Props) {
     >
       <button
         onClick={() => setOpen((s) => !s)}
-        className="bg-brand-yellow text-black px-4 py-3 rounded-full shadow-lg font-bold"
+        className="bg-brand-yellow text-black px-4 py-3 rounded-full font-bold"
         aria-expanded={open}
         aria-label="Toggle cart"
       >
