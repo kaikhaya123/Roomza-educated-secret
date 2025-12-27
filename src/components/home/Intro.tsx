@@ -121,7 +121,7 @@ export default function IntroStorySections() {
           </video>
 
           <div className="absolute inset-0 bg-gradient-to-r from-black via-black/75 to-black/40" />
-          <div className="absolute inset-0 bg-black/30" />
+          <div className="absolute inset-0 bg-black/40" />
 
           {/* Mobile-only play button overlay when autoplay is blocked */}
           {showPlayButton && (
@@ -171,12 +171,12 @@ export default function IntroStorySections() {
             Grow. Rise.
           </h1>
 
-          <p className="text-sm md:text-base lg:text-lg text-white/80 leading-relaxed max-w-lg">
+          <p className="text-sm md:text-base lg:text-lg text-white/80 leading-relaxed max-w-[90%] sm:max-w-[420px]">
             A national digital stage unlocking leadership, opportunity,
             and measurable impact for South African students.
           </p>
 
-          <div className="mt-4">
+          <div className="mt-6 sm:mt-8">
             <motion.a
               href="/apply"
               className="inline-flex items-center justify-center w-full sm:w-auto h-12 bg-brand-yellow text-black font-bold rounded-lg shadow-md px-6"

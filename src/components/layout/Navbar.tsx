@@ -104,6 +104,9 @@ export default function Navbar() {
 
           {/* Right Section - User Avatar & Menu */}
           <div className="flex items-center gap-2 md:gap-4 lg:gap-6">
+            {/* mobile translucent anchor for header icons */}
+            <div className="lg:!bg-transparent bg-black/20 backdrop-blur-md rounded-full px-2 py-1 flex items-center gap-2">
+
             {/* Persistant cart button (site-wide) - visible on mobile and desktop in header */}
             <button
               onClick={() => toggle()}
@@ -115,6 +118,7 @@ export default function Navbar() {
                 <span className="absolute -top-1 -right-1 bg-brand-yellow text-black text-xs rounded-full px-2 py-0.5 font-bold">{count}</span>
               )}
             </button>
+            </div>
 
 
 
@@ -124,7 +128,7 @@ export default function Navbar() {
             {/* Menu Button - Show on all sizes */}
             <motion.button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className={`p-2 transition relative w-12 h-12 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-amber-300 rounded ${isScrolled ? 'text-gray-700 hover:text-gray-900' : 'text-white hover:text-white/80 drop-shadow-md'}`}
+              className={`p-3 md:p-2 transition relative w-12 h-12 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-amber-300 rounded ${isScrolled ? 'text-gray-700 hover:text-gray-900' : 'text-white hover:text-white/80 drop-shadow-md'}`}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
               aria-label={isMobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
