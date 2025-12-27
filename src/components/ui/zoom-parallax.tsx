@@ -113,17 +113,43 @@ export function ZoomParallax({ images }: ZoomParallaxProps) {
   return (
     <div ref={container} className="relative h-[300vh] bg-black w-full">
       <div className="sticky top-0 h-screen overflow-hidden bg-black w-full">
-        {/* Grid filling the sticky viewport (up to 9 cells) */}
-        <div className="absolute inset-0 grid grid-cols-3 grid-rows-3 gap-2">
+        {/* Grid filling the sticky viewport (up to 9 cells) - optimized for GPU */}
+        <div className="absolute inset-0 grid grid-cols-3 grid-rows-3 gap-1">
           {images.slice(0, 9).map(({ src, alt }, index) => {
             const scale = desktopScales[index % desktopScales.length];
+            // subtle offsets per cell improve visual composition
+            const offsets = [
+              { x: '-5%', y: '-5%' },
+              { x: '5%', y: '-15%' },
+              { x: '-3%', y: '8%' },
+              { x: '6%', y: '0%' },
+              { x: '0%', y: '0%' },
+              { x: '-8%', y: '6%' },
+              { x: '8%', y: '-6%' },
+              { x: '-6%', y: '-2%' },
+              { x: '4%', y: '10%' },
+            ];
+            const off = offsets[index] || { x: '0%', y: '0%' };
 
             return (
-              <motion.div key={index} style={{ scale }} className="relative overflow-hidden">
-                <img
-                  src={src || '/placeholder.svg'}
-                  alt={alt || `Parallax image ${index + 1}`}
-                  className="w-full h-full object-cover"
+              <motion.div
+                key={index}
+                style={{ scale }}
+                className="relative overflow-hidden pointer-events-none"
+                initial={false}
+              >
+                {/* use background-images + GPU transforms for smoother compositing */}
+                <div
+                  className="absolute inset-0 transform-gpu"
+                  style={{
+                    backgroundImage: `url(${src || '/placeholder.svg'})`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    transform: `translate(${off.x}, ${off.y})`,
+                    willChange: 'transform',
+                  }}
+                  role="img"
+                  aria-label={alt || `Parallax image ${index + 1}`}
                 />
               </motion.div>
             );

@@ -155,7 +155,7 @@ export default function IntroStorySections() {
           )}
         </div>
 
-        <div className="relative z-10 max-w-xl lg:max-w-2xl px-4 md:px-6 lg:px-16 space-y-6 text-left mx-4 lg:mx-0">
+        <div className="relative z-10 max-w-xl lg:max-w-2xl px-4 md:px-6 lg:px-0 space-y-6 text-left mx-4 md:mx-0 md:ml-8 lg:ml-20">
           <div className="relative">
             <span className="absolute -left-3 top-1/2 -translate-y-1/2 w-10 h-px bg-brand-white" aria-hidden="true" />
             <span className="text-[11px] md:text-sm font-semibold tracking-[0.45em] uppercase text-brand-white">
