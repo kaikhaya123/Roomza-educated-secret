@@ -14,7 +14,7 @@ export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { data: session, status } = useSession();
-  const { count, toggle } = useCart();
+  const { count, toggle, open } = useCart();
 
   useEffect(() => {
     let ticking = false;
@@ -44,7 +44,7 @@ export default function Navbar() {
       <div className="container mx-auto px-4 md:px-6 lg:px-12">
         <div className="flex items-center justify-between h-16 md:h-20 lg:h-24">
           {/* Logo */}
-          <Link href="/" className="flex items-center relative z-10" aria-label="R.E.S. Home">
+          <Link href="/" className={`flex items-center relative z-10 ${open ? 'opacity-0 pointer-events-none' : ''}`} aria-label="R.E.S. Home">
             <div className="relative w-12 md:w-16 lg:w-20 h-12 md:h-16 lg:h-20">
               <Image
                 src="/Images/RES%20Logo%20with%20Futuristic%20Emblem.png"
