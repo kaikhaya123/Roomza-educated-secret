@@ -41,7 +41,7 @@ export default function Hero() {
             className="text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-6 md:mb-8 leading-tight tracking-tight drop-shadow-lg overflow-hidden"
             style={{ WebkitLineClamp: 3, display: '-webkit-box', WebkitBoxOrient: 'vertical' as any }}
           >
-            ROOMZA'S
+            ROOMZA'S{" "}
             <br className="hidden md:block" />
             EDUCATED SECRET
           </motion.h1>
