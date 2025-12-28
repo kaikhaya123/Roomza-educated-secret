@@ -122,7 +122,13 @@ const config: Config = {
   				'system-ui',
   				'sans-serif'
   			],
-  			mono: [
+  			rubik: [
+				'var(--font-rubik)',
+				'Rubik',
+				'system-ui',
+				'sans-serif'
+			],
+			mono: [
   				'JetBrains Mono',
   				'monospace'
   			]

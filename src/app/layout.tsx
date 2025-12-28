@@ -29,7 +29,7 @@ const poppins = Poppins({
 });
 
 const rubik = Rubik({
-  weight: ['400', '700', '900'],
+  weight: ['300','400','500','600','700','900'],
   subsets: ['latin'],
   variable: '--font-rubik',
   display: 'swap',
