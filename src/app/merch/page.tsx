@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Navbar from '@/components/layout/Navbar';
 import HoverReveal from '@/components/merch/HoverReveal';
+import HeroSplit from '@/components/merch/HeroSplit';
 import ProductGrid from '@/components/merch/ProductGrid';
 import ProductModal from '@/components/merch/ProductModal';
 import CategoryGrid from '@/components/merch/CategoryGrid';
@@ -25,44 +26,8 @@ export default function MerchPage() {
     <div className="min-h-screen bg-black text-white">
       <Navbar />
 
-      {/* HERO */}
-      <section className="relative h-screen min-h-[680px] overflow-hidden">
-        <HoverReveal
-          frontSrc="/Images/antoine-transon-3CIN7OxIABo-unsplash.jpg"
-          backSrc="/Images/pexels-cottonbro-7520736.jpg"
-          alt="Roomza Educated Wear"
-          className="absolute inset-0"
-          size="cover"
-          duration={0.9}
-          circles={[
-            { x: 68, y: 46, radius: 96, delay: 0 },
-            { x: 34, y: 70, radius: 86, delay: 0.15 }
-          ]}
-        />
-
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent z-10" />
-
-        <div className="relative z-20 h-full flex items-end">
-          <div className="max-w-7xl mx-auto px-6 lg:px-12 pb-24 w-full">
-            <h1 className="leading-[0.9] font-black tracking-tight text-brand-yellow">
-              <span className="block text-5xl md:text-7xl">Roomza’s</span>
-              <span className="block text-4xl md:text-6xl italic">Educated Wear</span>
-            </h1>
-
-            <p className="mt-4 max-w-xl text-white/80">
-              Purpose-built apparel inspired by growth, discipline, and ambition.
-              Designed for students who move different.
-            </p>
-
-            <a
-              href="#products"
-              className="inline-flex mt-8 px-7 py-3 bg-brand-yellow text-black font-black uppercase rounded-full hover:bg-yellow-300 transition"
-            >
-              Shop Collection
-            </a>
-          </div>
-        </div>
-      </section>
+      {/* HERO: split editorial hero inspired by reference */}
+      <HeroSplit />
 
       {/* PRODUCTS */}
       <main id="products" className="py-24">
