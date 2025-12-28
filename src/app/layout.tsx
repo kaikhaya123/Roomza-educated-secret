@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Manrope, Inter, Poppins } from "next/font/google";
+import { Manrope, Inter, Poppins, Rubik } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
 import { Providers } from "@/components/Providers";
@@ -28,6 +28,14 @@ const poppins = Poppins({
   preload: true,
 });
 
+const rubik = Rubik({
+  weight: ['400', '700', '900'],
+  subsets: ['latin'],
+  variable: '--font-rubik',
+  display: 'swap',
+  preload: true,
+});
+
 export const metadata: Metadata = {
   title: "R.E.S. - Roomza's Educated Secret | South Africa's Premier Student Reality Show",
   description: "Join South Africa's first large-scale student-focused reality show. Vote, compete, and win amazing prizes while supporting education and youth development.",
@@ -47,7 +55,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${manrope.variable} ${inter.variable} ${poppins.variable}`}>
+    <html lang="en" className={`${manrope.variable} ${inter.variable} ${poppins.variable} ${rubik.variable}`}>
       <head>
         {/* Preconnect to critical third-party domains */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />

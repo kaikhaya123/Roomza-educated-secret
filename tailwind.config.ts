@@ -116,7 +116,9 @@ const config: Config = {
   				'sans-serif'
   			],
   			display: [
-  				'Poppins',
+  				'var(--font-rubik)',
+					'Rubik',
+					'Poppins',
   				'system-ui',
   				'sans-serif'
   			],
