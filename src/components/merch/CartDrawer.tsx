@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { X } from 'lucide-react';
 import { useCart } from '@/context/cart';
 
@@ -34,10 +35,16 @@ export default function CartDrawer() {
               <ul className="space-y-4">
                 {items.map((it) => (
                   <li key={`${it.product.id}:${it.size ?? 'default'}`} className="flex items-center justify-between">
-                    <div>
-                      <div className="font-semibold">{it.product.name}</div>
-                      {it.size && <div className="text-xs text-white/60">Size: {it.size}</div>}
-                      <div className="text-xs text-white/70">R {(it.product.price / 100).toFixed(2)}</div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-14 h-14 relative rounded overflow-hidden bg-white/5 flex-shrink-0">
+                        <Image src={it.product.image} alt={it.product.name} fill className="object-cover" />
+                      </div>
+
+                      <div>
+                        <div className="font-semibold">{it.product.name}</div>
+                        {it.size && <div className="text-xs text-white/60">Size: {it.size}</div>}
+                        <div className="text-xs text-white/70">R {(it.product.price / 100).toFixed(2)}</div>
+                      </div>
                     </div>
 
                     <div className="flex items-center gap-2">
