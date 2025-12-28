@@ -4,6 +4,7 @@ import "./globals.css";
 import { Toaster } from "react-hot-toast";
 import { Providers } from "@/components/Providers";
 import ErrorBoundary from "@/components/ErrorBoundary";
+import SmoothScroll from '@/components/SmoothScroll';
 
 // Optimize font loading with display: swap to prevent FOUT
 const manrope = Manrope({
@@ -64,10 +65,14 @@ export default function RootLayout({
         {/* DNS Prefetch for external resources */}
         <link rel="dns-prefetch" href="https://res.cloudinary.com" />
       </head>
-      <body suppressHydrationWarning className="antialiased font-futura">
+      <body suppressHydrationWarning className="antialiased font-futura scroll-smooth">
         <ErrorBoundary>
           <Providers>
-            {children}
+            {/* Site-wide smooth scrolling */}
+            <SmoothScroll>
+              {children}
+            </SmoothScroll>
+
             <Toaster 
               position="top-right"
               toastOptions={{

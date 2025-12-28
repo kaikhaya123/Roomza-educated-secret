@@ -9,6 +9,9 @@
   animation: slowZoom 16s linear infinite alternate;
 }
 
+/* Global smooth scrolling for anchor links */
+html { scroll-behavior: smooth; }
+
 /* Roomza Merch Command Center styles */
 @keyframes wireframeDraw {
   0% { stroke-dashoffset: 200; opacity: 0.2; }

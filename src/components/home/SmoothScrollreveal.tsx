@@ -9,9 +9,11 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
     if (typeof window === 'undefined') return;
 
     const lenis = new Lenis({
-      duration: 1.15,
+      duration: 1.0,
       easing: (t: number) => 1 - Math.pow(1 - t, 3),
-      smoothWheel: true,
+      smooth: true,
+      smoothTouch: true,
+      wheelMultiplier: 0.8,
     });
 
     console.debug('[SmoothScroll] Lenis initialized');
