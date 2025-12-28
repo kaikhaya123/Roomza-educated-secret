@@ -10,6 +10,9 @@ export default function HeroSplit() {
   const heroRef = useRef<HTMLElement | null>(null);
   const rafRef = useRef<number | null>(null);
   const [isWide, setIsWide] = useState<boolean>(true);
+  // Parallax tuning constants (higher = more motion)
+  const PARALLAX_WIDE = 110; // used on wide desktop screens
+  const PARALLAX_NARROW = 44; // used on narrow/less-wide screens
 
   // Swap images when screen ratio changes
   useEffect(() => {
@@ -32,8 +35,8 @@ export default function HeroSplit() {
       const windowH = window.innerHeight;
       const progress = Math.min(Math.max((windowH - rect.top) / (windowH + rect.height), 0), 1);
 
-      // stronger motion on wide screens, subtle on small
-      const multiplier = isWide ? 72 : 24;
+      // stronger motion on wide screens, subtle on small (tweak PARALLAX_WIDE/PARALLAX_NARROW at top)
+      const multiplier = isWide ? PARALLAX_WIDE : PARALLAX_NARROW;
       const leftY = (progress - 0.5) * -multiplier; // left moves up
       const rightY = (progress - 0.5) * multiplier; // right moves down
 
@@ -61,7 +64,7 @@ export default function HeroSplit() {
     <section ref={heroRef} className="relative overflow-hidden bg-black">
       {/* MOBILE HERO: single image and separate safe zone for text */}
       <div className="relative h-[82vh] md:hidden">
-        <Image src={leftImage} alt="Hero mobile" fill priority className="object-cover" />
+        <Image src={leftImage} alt="Hero mobile" fill priority className="object-cover" style={{ objectPosition: 'center 40%' }} />
         <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/60 to-black/30" />
 
         <div className="relative z-10 h-full flex flex-col justify-end px-6 pb-12">
@@ -83,14 +86,14 @@ export default function HeroSplit() {
       <div className="hidden md:grid grid-cols-2 md:h-[92vh] lg:h-[110vh]">
         <div className="relative overflow-hidden">
           <div ref={leftRef} className="absolute inset-0 will-change-transform transition-transform duration-500">
-            <Image src={leftImage} alt="Left hero" fill priority className="object-cover" />
+            <Image src={leftImage} alt="Left hero" fill priority className="object-cover" style={{ objectPosition: isWide ? 'center left' : 'center' }} />
           </div>
           <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-transparent" />
         </div>
 
         <div className="relative overflow-hidden">
           <div ref={rightRef} className="absolute inset-0 will-change-transform transition-transform duration-500">
-            <Image src={rightImage} alt="Right hero" fill priority className="object-cover" />
+            <Image src={rightImage} alt="Right hero" fill priority className="object-cover" style={{ objectPosition: isWide ? 'center right' : 'center' }} />
           </div>
           <div className="absolute inset-0 bg-gradient-to-l from-black/70 to-transparent" />
         </div>
@@ -117,7 +120,7 @@ export default function HeroSplit() {
 
       {/* subtle divider */}
       <div className="hidden md:block absolute bottom-0 left-0 right-0 pointer-events-none">
-        <div className="max-w-6xl mx-auto px-6 lg:px-12 -mb-12 translate-y-12">
+        <div className="max-w-6xl mx-auto px-6 lg:px-12 -mb-20 translate-y-20">
           <div className="h-px bg-white/10" />
         </div>
       </div>
