@@ -51,15 +51,38 @@ export default function IntroStorySections() {
     const video = videoRef.current;
     if (!video) return;
 
-    // Ensure muted & playsInline for autoplay policies and attempt to play immediately
-    try {
-      video.muted = true;
-      video.setAttribute('playsinline', '');
-      // autoplay attribute is set on the element; attempt programmatic play too
-      video.play().catch(() => {});
-    } catch (e) {}
+    let observer: IntersectionObserver | null = null;
 
-    // If autoplay fails (video remains paused), show a mobile play button
+    const attemptPlay = async () => {
+      try {
+        video.muted = true; // ensure muted for autoplay policies
+        video.setAttribute('playsinline', '');
+        await video.play();
+        setShowPlayButton(false);
+        setIsPlaying(!video.paused);
+      } catch (e) {
+        // Autoplay blocked — show play affordance on mobile
+        setShowPlayButton(true);
+        setIsPlaying(false);
+      }
+    };
+
+    // Try on mount first (helps desktop and some mobile browsers)
+    attemptPlay();
+
+    // Observe visibility and try to play when the hero becomes visible
+    if (typeof window !== 'undefined' && 'IntersectionObserver' in window && containerRef.current) {
+      observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && entry.intersectionRatio > 0.4) {
+            attemptPlay();
+          }
+        });
+      }, { threshold: [0.4] });
+
+      observer.observe(containerRef.current);
+    }
+
     const checkAutoplay = () => {
       try {
         if (video.paused) {
@@ -95,6 +118,7 @@ export default function IntroStorySections() {
       video.removeEventListener('play', onPlay);
       video.removeEventListener('playing', onPlay);
       video.removeEventListener('pause', onPause);
+      if (observer && containerRef.current) observer.disconnect();
     };
   }, []);
 
@@ -112,7 +136,6 @@ export default function IntroStorySections() {
             playsInline
             autoPlay
             preload="auto"
-            poster="/Images/vertical-shot-curly-haired-millennial-girl-sits-crossed-legs-uses-mobile-phone-laptop-computer-connected-wireless-min-opt.jpg"
             className="w-full h-full object-cover scale-[1.08]"
             aria-hidden="true"
           >
