@@ -8,7 +8,6 @@ import ProductGrid from '@/components/merch/ProductGrid';
 import ProductModal from '@/components/merch/ProductModal';
 import CategoryGrid from '@/components/merch/CategoryGrid';
 import PromoBanner from '@/components/merch/PromoBanner';
-import FeaturedCollections from '@/components/merch/FeaturedCollections';
 import NewsletterCTA from '@/components/merch/NewsletterCTA';
 import { products, categories, type Product } from '@/data/merch';
 import { useCart } from '@/context/cart';
@@ -80,7 +79,6 @@ export default function MerchPage() {
       </main>
 
       <PromoBanner />
-      <FeaturedCollections />
       <NewsletterCTA />
 
       <ProductModal
