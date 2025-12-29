@@ -164,7 +164,6 @@ export default function IntroStorySections() {
             ref={videoRef}
             loop
             muted
-            defaultMuted
             playsInline
             autoPlay
             preload="metadata"
@@ -172,7 +171,6 @@ export default function IntroStorySections() {
             controls={showPlayButton}
             className="w-full h-full object-cover scale-[1.08]"
             aria-hidden="true"
-            {...{'webkit-playsinline': ''}}
           >
             <source src="/Videos/1166555_Environment_Man_3840x2160 (1).webm" type="video/webm" />
             <source src="/Videos/1166555_Environment_Man_3840x2160 (1).mp4" type="video/mp4" />
