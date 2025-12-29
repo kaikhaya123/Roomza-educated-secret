@@ -1,5 +1,32 @@
-/* ...existing code... */
+/* Focus-visible ring for accessible keyboard focus */
+:focus {
+  outline: none;
+}
 
+/* Improve visibility of focus for keyboard users */
+:focus-visible {
+  outline: 2px solid rgba(0,0,0,0.85);
+  outline-offset: 2px;
+}
+
+/* Small helper to ensure interactive cards show focus */
+.merch-grid > *:focus-within,
+.merch-grid > *:focus {
+  box-shadow: 0 8px 28px rgba(16,24,40,0.08);
+  transform: translateY(-6px);
+}
+
+/* Slight hover lift for cards which helps match the reference */
+.merch-grid > *:hover {
+  transform: translateY(-8px);
+}
+
+/* Smooth transitions */
+.merch-grid > * {
+  transition: transform 220ms ease, box-shadow 220ms ease;
+}
+
+/* ...existing code... */
 @keyframes slowZoom {
   0% { transform: scale(1.1); }
   100% { transform: scale(1.25); }

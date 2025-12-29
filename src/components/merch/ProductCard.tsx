@@ -109,4 +109,4 @@ export default function ProductCard({ product, onAdd, onOpen, index = 0 }: Props
       </div>
     </article>
   );
-}
+} 

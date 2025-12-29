@@ -8,7 +8,9 @@ import ProductGrid from '@/components/merch/ProductGrid';
 import ProductModal from '@/components/merch/ProductModal';
 import CategoryGrid from '@/components/merch/CategoryGrid';
 import PromoBanner from '@/components/merch/PromoBanner';
+import CollectionBanner from '@/components/merch/CollectionBanner';
 import NewsletterCTA from '@/components/merch/NewsletterCTA';
+import Footer from '@/components/layout/Footer';
 import { products, categories, type Product } from '@/data/merch';
 import { useCart } from '@/context/cart';
 
@@ -36,7 +38,7 @@ export default function MerchPage() {
             <p className="mt-2 text-white/60 max-w-xl">
               Hoodies, caps, and sweaters engineered for comfort and confidence.
             </p>
-          </header>
+          </header> 
 
           <CategoryGrid
             categories={categories}
@@ -78,6 +80,8 @@ export default function MerchPage() {
         </div>
       </main>
 
+      <CollectionBanner />
+
       <PromoBanner />
       <NewsletterCTA />
 
@@ -89,6 +93,8 @@ export default function MerchPage() {
           setOpenProduct(null);
         }}
       />
+
+      <Footer />
     </div>
   );
 }
