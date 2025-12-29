@@ -96,6 +96,14 @@ export default function ContactPage() {
                 className="object-cover object-center"
                 aria-hidden
               />
+              {/* Desktop fallback in case Next/Image optimization or CSS prevents rendering */}
+              <img
+                src="/Images/3d-render-abstract-particle-design-background.jpg"
+                alt=""
+                className="absolute inset-0 w-full h-full object-cover"
+                loading="eager"
+                onError={(e) => { console.warn('desktop hero image failed to load', e); (e.target as HTMLImageElement).style.display = 'none'; }}
+              />
             </div>
 
             {/* Content */}
@@ -255,6 +263,15 @@ export default function ContactPage() {
             className="absolute inset-0 w-full h-full object-cover block md:hidden"
             loading="eager"
             onError={(e) => { console.warn('mobile CTA image failed to load', e); (e.target as HTMLImageElement).style.display = 'none'; }}
+          />
+
+          {/* Desktop explicit img fallback (hidden on mobile) */}
+          <img
+            src="/Images/3d-render-concept-old-telephone-3d-art-design-illustration.jpg"
+            alt=""
+            className="hidden md:block absolute inset-0 w-full h-full object-cover"
+            loading="eager"
+            onError={(e) => { console.warn('desktop CTA image failed to load', e); (e.target as HTMLImageElement).style.display = 'none'; }}
           />
 
           <div className="absolute inset-0 bg-[url('/Images/3d-render-concept-old-telephone-3d-art-design-illustration.jpg')] bg-cover bg-center" />
