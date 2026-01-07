@@ -63,7 +63,7 @@ export default function CartDrawer() {
                   <span>Total</span>
                   <span>R {(items.reduce((sum, it) => sum + it.product.price * it.qty, 0) / 100).toFixed(2)}</span>
                 </div>
-                <Link href="/checkout" className="block text-center bg-brand-yellow text-black px-4 py-3 rounded-full font-bold hover:bg-yellow-300 transition">Checkout</Link>
+                <Link href="/checkout" onClick={() => setOpen(false)} className="block text-center bg-brand-yellow text-black px-4 py-3 rounded-full font-bold hover:bg-yellow-300 transition">Checkout</Link>
               </div>
             </div>
           )}
