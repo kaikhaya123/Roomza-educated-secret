@@ -44,7 +44,7 @@ const LogoItem = memo<{
         '[image-rendering:-webkit-optimize-contrast]',
         'motion-reduce:transition-none',
         scaleOnHover &&
-          'transition-transform duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] group-hover/item:scale-110'
+          'transition-transform duration-300 ease-&lsqb;cubic-bezier(0.4,0,0.2,1)&rsqb; group-hover/item:scale-110'
       )}
       style={{
         transform: 'translate3d(0, 0, 0)',

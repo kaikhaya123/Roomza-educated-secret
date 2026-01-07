@@ -61,16 +61,19 @@ export default function IntroStorySections() {
         video.muted = true;
         video.defaultMuted = true;
         video.setAttribute('playsinline', '');
-        video.setAttribute('webkit-playsinline', '');
-        video.setAttribute('x5-playsinline', '');
+        video.setAttribute('webkit-playsinline', 'true');
+        video.setAttribute('x5-playsinline', 'true');
         video.setAttribute('crossorigin', 'anonymous');
+        
+        // Ensure video is preloaded
+        video.preload = 'auto';
         
         // Ensure video is loaded before attempting play
         if (video.readyState < 2) {
           video.load();
         }
         
-        playPromise = video.play();
+        const playPromise = video.play();
         if (playPromise !== undefined) {
           await playPromise;
           setShowPlayButton(false);
@@ -182,10 +185,12 @@ export default function IntroStorySections() {
             muted
             playsInline
             autoPlay
-            preload="metadata"
+            preload="auto"
             className="w-full h-full object-cover scale-[1.08]"
             aria-hidden="true"
             crossOrigin="anonymous"
+            webkit-playsinline="true"
+            x5-playsinline="true"
           >
             <source src="/Videos/ezgif-6d293576e354cd85.webm" type="video/webm" />
             Your browser does not support the video tag.
@@ -208,8 +213,9 @@ export default function IntroStorySections() {
                     video.muted = true;
                     video.defaultMuted = true;
                     video.setAttribute('playsinline', '');
-                    video.setAttribute('webkit-playsinline', '');
-                    video.setAttribute('x5-playsinline', '');
+                    video.setAttribute('webkit-playsinline', 'true');
+                    video.setAttribute('x5-playsinline', 'true');
+                    video.preload = 'auto';
 
                     const playPromise = video.play();
                     if (playPromise !== undefined) {
