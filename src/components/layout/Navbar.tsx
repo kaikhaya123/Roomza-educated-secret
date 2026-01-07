@@ -107,6 +107,9 @@ export default function Navbar() {
             {/* mobile anchor for header icons (rounded background removed) */}
             <div className="lg:!bg-transparent bg-transparent flex items-center gap-2">
 
+            {/* User Avatar with Dropdown */}
+            <UserAvatar session={session} isScrolled={isScrolled} />
+
             {/* Persistant cart button (site-wide) - visible on mobile and desktop in header */}
             <button
               onClick={() => toggle()}
@@ -119,11 +122,6 @@ export default function Navbar() {
               )}
             </button>
             </div>
-
-
-
-            {/* User Avatar with Dropdown */}
-            <UserAvatar session={session} isScrolled={isScrolled} />
 
             {/* Menu Button - Show on all sizes */}
             <motion.button
