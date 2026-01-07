@@ -58,41 +58,27 @@ export default function IntroStorySections() {
 
     const attemptPlay = async () => {
       try {
-        // Ensure muted and playsinline flags (important for mobile/autoplay policies)
-        video.muted = true; // ensure muted for autoplay policies
+        // Ensure muted and playsinline flags (critical for mobile autoplay)
+        video.muted = true;
         video.defaultMuted = true;
         video.setAttribute('playsinline', '');
         video.setAttribute('webkit-playsinline', '');
+        video.setAttribute('x5-playsinline', '');
+        
         await video.play();
         setShowPlayButton(false);
         setIsPlaying(!video.paused);
       } catch (e) {
-        // Autoplay blocked — show play affordance on mobile
+        // Autoplay blocked — show play affordance
         setShowPlayButton(true);
         setIsPlaying(false);
       }
     };
 
-    // Try on mount first (helps desktop and some mobile browsers)
+    // Try on mount first
     attemptPlay();
 
-    // If on a narrow screen / touch device, prefer a smaller MP4 to improve play reliability
-    const isTouch = typeof navigator !== 'undefined' && (/(iPhone|iPod|iPad|Android)/i).test(navigator.userAgent || '') || window.innerWidth <= 768;
-    if (isTouch && video) {
-      // Swap to a mobile-optimized source if available
-      try {
-        // only swap when different
-        if (!video.src || !video.src.includes(MOBILE_VIDEO_SRC)) {
-          video.src = MOBILE_VIDEO_SRC;
-          // Ensure sources are reloaded
-          video.load();
-        }
-      } catch (e) {
-        // ignore
-      }
-    }
-
-    // Observe visibility and try to play when the hero becomes visible
+    // Observe visibility and try to play when visible
     if (typeof window !== 'undefined' && 'IntersectionObserver' in window && containerRef.current) {
       observer = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
@@ -105,14 +91,17 @@ export default function IntroStorySections() {
       observer.observe(containerRef.current);
     }
 
-    // Add a touchstart on the container to try play on first user interaction (helps older iOS devices)
-    const onTouchStart = () => {
-      attemptPlay();
-      // Remove immediately after first touch
-      if (containerRef.current) containerRef.current.removeEventListener('touchstart', onTouchStart as EventListener);
+    // Mobile: trigger play on first user interaction
+    const onTouchStart = async () => {
+      await attemptPlay();
+      if (containerRef.current) {
+        containerRef.current.removeEventListener('touchstart', onTouchStart as EventListener);
+      }
     };
 
-    if (containerRef.current) containerRef.current.addEventListener('touchstart', onTouchStart as EventListener, { passive: true });
+    if (containerRef.current) {
+      containerRef.current.addEventListener('touchstart', onTouchStart as EventListener, { passive: true });
+    }
 
     const checkAutoplay = () => {
       try {
@@ -132,24 +121,36 @@ export default function IntroStorySections() {
       setIsPlaying(true);
       setShowPlayButton(false);
     };
+
     const onPause = () => {
       setIsPlaying(false);
+    };
+
+    const onError = (e: Event) => {
+      console.warn('Video playback error:', e);
       setShowPlayButton(true);
     };
 
-    // Run a check after a small delay to allow autoplay attempt to resolve
-    const t = window.setTimeout(checkAutoplay, 250);
+    // Check autoplay after a delay
+    const timeoutId = window.setTimeout(checkAutoplay, 300);
 
     video.addEventListener('play', onPlay);
     video.addEventListener('playing', onPlay);
     video.addEventListener('pause', onPause);
+    video.addEventListener('error', onError);
 
     return () => {
-      clearTimeout(t);
+      clearTimeout(timeoutId);
       video.removeEventListener('play', onPlay);
       video.removeEventListener('playing', onPlay);
       video.removeEventListener('pause', onPause);
-      if (observer && containerRef.current) observer.disconnect();
+      video.removeEventListener('error', onError);
+      if (observer && containerRef.current) {
+        observer.disconnect();
+      }
+      if (containerRef.current) {
+        containerRef.current.removeEventListener('touchstart', onTouchStart as EventListener);
+      }
     };
   }, []);
 
@@ -166,12 +167,14 @@ export default function IntroStorySections() {
             muted
             playsInline
             autoPlay
-            preload="metadata"
+            preload="auto"
             controls={showPlayButton}
             className="w-full h-full object-cover scale-[1.08]"
             aria-hidden="true"
-            src="/Videos/1166555_Environment_Man_3840x2160 (1).mp4"
-          />
+          >
+            <source src="/Videos/1166555_Environment_Man_3840x2160 (1).mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
 
           <div className="absolute inset-0 bg-gradient-to-r from-black via-black/75 to-black/40" />
           <div className="absolute inset-0 bg-black/40" />

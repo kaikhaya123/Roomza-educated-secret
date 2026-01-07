@@ -20,13 +20,6 @@ export type Category = {
 
 export const categories: Category[] = [
   {
-    id: 'featured',
-    name: 'Featured',
-    image: '/Images/young-japanese-couple.jpg',
-    description: 'Limited drops & signature pieces',
-    featured: true,
-  },
-  {
     id: 'hoodies',
     name: 'Hoodies',
     image: '/Images/people-grandstands.jpg',
@@ -34,12 +27,7 @@ export const categories: Category[] = [
   {
     id: 'tshirts',
     name: 'T-Shirts',
-    image: '/Images/shirt-mockup-concept-with-plain-clothing.jpg',
-  },
-  {
-    id: 'jackets',
-    name: 'Jackets',
-    image: '/Images/portrait-young-japanese-woman-with-jacket.jpg',
+    image: '/Images/front-view-couple-with-afro-hairstyles.jpg',
   },
   {
     id: 'accessories',

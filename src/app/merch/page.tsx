@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import Navbar from '@/components/layout/Navbar';
-import HoverReveal from '@/components/merch/HoverReveal';
 import HeroSplit from '@/components/merch/HeroSplit';
 import ProductGrid from '@/components/merch/ProductGrid';
 import ProductModal from '@/components/merch/ProductModal';
