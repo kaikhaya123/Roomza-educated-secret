@@ -97,8 +97,8 @@ export default function IntroStorySections() {
             }`}
             aria-hidden="true"
           >
-            <source src="/Videos/hero-video.mp4" type="video/mp4" />
-            <source src="/Videos/hero-video.webm" type="video/webm" />
+            <source src="/Videos/1166555_Environment_Man_3840x2160.mp4" type="video/mp4" />
+            <source src="/Videos/ezgif-6d293576e354cd85.webm" type="video/webm" />
           </video>
 
           <div className="absolute inset-0 bg-gradient-to-r from-black via-black/70 to-black/40" />
