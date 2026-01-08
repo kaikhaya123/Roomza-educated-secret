@@ -260,7 +260,7 @@ export default function AboutShow() {
                     transition={{ duration: 0.8, delay: 0.1 }}
                     className="text-8xl lg:text-9xl font-black text-black mb-2 leading-none"
                   >
-                    500
+                    
                   </motion.div>
                   <motion.p
                     initial={{ opacity: 0, y: 10 }}
@@ -300,8 +300,8 @@ export default function AboutShow() {
                     transition={{ duration: 0.8, delay: 0.2 }}
                     className="text-8xl lg:text-9xl font-black text-black mb-2 leading-none flex items-baseline gap-3"
                   >
-                    <span>2</span>
-                    <span className="text-5xl lg:text-7xl">M</span>
+                    <span></span>
+                    <span className="text-5xl lg:text-7xl"></span>
                   </motion.div>
                   <motion.p
                     initial={{ opacity: 0, y: 10 }}

@@ -23,14 +23,14 @@ export default function VotingSection() {
     },
     {
       id: 3,
-      image: '/Images/vertical-shot-happy-young-woman-with-curly-hair-holds-notepad-pen-makes-notes.jpg',
+      image: '/Images/young-beautiful-lady-with-dark-curly-hair-khaki-shirt-holding-laptop-with-notepad-cup-coffee-go-hands-dreamily-looking-camera-isolated-min.jpg',
       name: 'Contestant 3',
       votes: 0,
       rank: 3
     },
     {
       id: 4,
-      image: '/Images/college-students-different-ethnicities-cramming-min.jpg',
+      image: '/Images/portrait-young-beautiful-woman-min.jpg',
       name: 'Contestant 4',
       votes: 0,
       rank: 4
