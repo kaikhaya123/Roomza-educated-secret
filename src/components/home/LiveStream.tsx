@@ -82,7 +82,7 @@ export default function LiveStream() {
           >
             <div className="w-[320px] sm:w-[380px] lg:w-[480px]">
               <Iphone
-                videoSrc="/Videos/PinDown.io_@zarooza_1764838825.mp4"
+                videoSrc="/Videos/8216952-hd_1080_1920_25fps.mp4"
                 islandSafe={{ base: 36, sm: 44, lg: 56 }}
               />
             </div>
