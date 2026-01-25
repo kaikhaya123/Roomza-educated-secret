@@ -1,12 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { supabase } from "@/lib/supabase";
 
 export async function DELETE(
   req: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  const vote = await prisma.vote.findUnique({ where: { id: params.id } });
-  if (!vote) return NextResponse.json({ error: "Vote not found" }, { status: 404 });
-  await prisma.vote.delete({ where: { id: params.id } });
+  const { data, error } = await supabase
+    .from("Vote")
+    .delete()
+    .eq("id", params.id)
+    .select("id")
+    .maybeSingle();
+
+  if (error) {
+    return NextResponse.json({ error: "Failed to delete vote", details: error.message }, { status: 400 });
+  }
+
+  if (!data) return NextResponse.json({ error: "Vote not found" }, { status: 404 });
+
   return NextResponse.json(null, { status: 204 });
 }

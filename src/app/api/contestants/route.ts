@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
-import { prisma } from '@/lib/prisma';
 import { cacheGet, cacheSet, CACHE_KEYS, CACHE_TTL } from '@/lib/redis';
+import { supabase } from '@/lib/supabase';
 
 export async function GET(request: NextRequest) {
   try {
@@ -25,30 +23,58 @@ export async function GET(request: NextRequest) {
       ...(province && { province: province as any }),
     };
 
-    const [contestants, total] = await Promise.all([
-      prisma.contestant.findMany({
-        where,
-        skip: (page - 1) * limit,
-        take: limit,
-        select: {
-          id: true,
-          firstName: true,
-          lastName: true,
-          bio: true,
-          institution: true,
-          campus: true,
-          province: true,
-          photoUrl: true,
-          votes: true,
-        },
-      }),
-      prisma.contestant.count({ where }),
-    ]);
+    // Fetch contestants page
+    const { data: contestants, error } = await supabase
+      .from('Contestant')
+      .select('id, firstName, lastName, bio, institution, campus, province, photoUrl')
+      .eq('isActive', true)
+      .eq('isEliminated', false)
+      .order('createdAt', { ascending: false })
+      .range((page - 1) * limit, page * limit - 1)
+      .filter('province', province ? 'eq' : 'is', province ?? null);
+
+    if (error) {
+      return NextResponse.json(
+        { error: 'Failed to fetch contestants' },
+        { status: 500 }
+      );
+    }
+
+    const { count: total, error: countError } = await supabase
+      .from('Contestant')
+      .select('id', { count: 'exact', head: true })
+      .eq('isActive', true)
+      .eq('isEliminated', false)
+      .filter('province', province ? 'eq' : 'is', province ?? null);
+
+    if (countError) {
+      return NextResponse.json(
+        { error: 'Failed to count contestants' },
+        { status: 500 }
+      );
+    }
+
+    // Fetch vote totals per contestant
+    const contestantIds = (contestants ?? []).map((c) => c.id);
+    let voteTotals: Record<string, number> = {};
+    if (contestantIds.length > 0) {
+      const { data: votes, error: votesError } = await supabase
+        .from('Vote')
+        .select('contestantId, voteCount')
+        .in('contestantId', contestantIds);
+
+      if (!votesError && votes) {
+        voteTotals = votes.reduce((acc, v) => {
+          acc[v.contestantId] = (acc[v.contestantId] ?? 0) + (v.voteCount ?? 0);
+          return acc;
+        }, {} as Record<string, number>);
+      }
+    }
 
     // Calculate vote counts
-    const contestantsWithVotes = contestants.map((contestant) => ({
+    const contestantsWithVotes = (contestants ?? []).map((contestant) => ({
       ...contestant,
-      totalVotes: contestant.votes.length,
+      totalVotes: voteTotals[contestant.id] ?? 0,
     }));
 
     const response = {
@@ -56,8 +82,8 @@ export async function GET(request: NextRequest) {
       pagination: {
         page,
         limit,
-        total,
-        pages: Math.ceil(total / limit),
+        total: total ?? 0,
+        pages: Math.ceil((total ?? 0) / limit),
       },
     };
 

@@ -1,13 +1,32 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { supabase } from "@/lib/supabase";
+import { randomUUID } from "crypto";
 
 export async function GET() {
-  const list = await prisma.sponsor.findMany({ orderBy: { createdAt: "desc" } });
-  return NextResponse.json(list, { status: 200 });
+  const { data, error } = await supabase
+    .from("Sponsor")
+    .select("*")
+    .order("createdAt", { ascending: false });
+
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
+  return NextResponse.json(data ?? [], { status: 200 });
 }
 
 export async function POST(req: NextRequest) {
   const data = await req.json();
-  const created = await prisma.sponsor.create({ data });
+  const payload = { ...data, id: randomUUID() };
+  const { data: created, error } = await supabase
+    .from("Sponsor")
+    .insert(payload)
+    .select("*")
+    .single();
+
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 400 });
+  }
+
   return NextResponse.json(created, { status: 201 });
 }

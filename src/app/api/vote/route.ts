@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import { prisma } from '@/lib/prisma';
 import { redis, cacheDeletePattern } from '@/lib/redis';
 import { voteSchema } from '@/lib/validations';
+import { supabase } from '@/lib/supabase';
+import { randomUUID } from 'crypto';
 
 export async function POST(request: NextRequest) {
   try {
@@ -26,19 +27,17 @@ export async function POST(request: NextRequest) {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    const votesToday = await prisma.vote.aggregate({
-      where: {
-        userId: session.user.id,
-        createdAt: {
-          gte: today,
-        },
-      },
-      _sum: {
-        voteCount: true,
-      },
-    });
+    const { data: voteRows, error: votesError } = await supabase
+      .from('Vote')
+      .select('voteCount, createdAt')
+      .eq('userId', session.user.id)
+      .gte('createdAt', today.toISOString());
 
-    const totalVotestoday = votesToday._sum.voteCount || 0;
+    if (votesError) {
+      return NextResponse.json({ error: 'Failed to fetch votes' }, { status: 500 });
+    }
+
+    const totalVotestoday = (voteRows ?? []).reduce((sum, row) => sum + (row.voteCount ?? 0), 0);
     const remainingVotes = validatedData.isPaid ? 10000 : 100; // Higher limit for paid users
 
     if (totalVotestoday + validatedData.voteCount > remainingVotes) {
@@ -49,9 +48,18 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if contestant exists and is active
-    const contestant = await prisma.contestant.findUnique({
-      where: { id: validatedData.contestantId },
-    });
+    const { data: contestant, error: contestantError } = await supabase
+      .from('Contestant')
+      .select('isActive, isEliminated')
+      .eq('id', validatedData.contestantId)
+      .maybeSingle();
+
+    if (contestantError) {
+      return NextResponse.json(
+        { error: 'Failed to fetch contestant' },
+        { status: 500 }
+      );
+    }
 
     if (!contestant || !contestant.isActive || contestant.isEliminated) {
       return NextResponse.json(
@@ -61,17 +69,25 @@ export async function POST(request: NextRequest) {
     }
 
     // Create vote in a transaction
-    const result = await prisma.$transaction([
-      prisma.vote.create({
-        data: {
-          userId: session.user.id,
-          contestantId: validatedData.contestantId,
-          voteCount: validatedData.voteCount,
-          isPaid: validatedData.isPaid,
-          votingRound: currentRound,
-        },
-      }),
-    ]);
+    const { data: inserted, error: insertError } = await supabase
+      .from('Vote')
+      .insert({
+        id: randomUUID(),
+        userId: session.user.id,
+        contestantId: validatedData.contestantId,
+        voteCount: validatedData.voteCount,
+        isPaid: validatedData.isPaid,
+        votingRound: currentRound,
+      })
+      .select('*')
+      .single();
+
+    if (insertError) {
+      return NextResponse.json(
+        { error: 'Failed to cast vote', details: insertError.message },
+        { status: 400 }
+      );
+    }
 
     // Invalidate caches
     await cacheDeletePattern('contestants:*');
@@ -79,7 +95,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       message: 'Vote cast successfully!',
-      vote: result[0],
+      vote: inserted,
     });
   } catch (error: any) {
     console.error('Vote error:', error);
@@ -112,19 +128,20 @@ export async function GET(request: NextRequest) {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    const votesToday = await prisma.vote.aggregate({
-      where: {
-        userId: session.user.id,
-        createdAt: {
-          gte: today,
-        },
-      },
-      _sum: {
-        voteCount: true,
-      },
-    });
+    const { data: voteRows, error: votesError } = await supabase
+      .from('Vote')
+      .select('voteCount, createdAt')
+      .eq('userId', session.user.id)
+      .gte('createdAt', today.toISOString());
 
-    const totalVotes = votesToday._sum.voteCount || 0;
+    if (votesError) {
+      return NextResponse.json(
+        { error: 'Failed to fetch vote status' },
+        { status: 500 }
+      );
+    }
+
+    const totalVotes = (voteRows ?? []).reduce((sum, row) => sum + (row.voteCount ?? 0), 0);
 
     return NextResponse.json({
       totalVotesToday: totalVotes,

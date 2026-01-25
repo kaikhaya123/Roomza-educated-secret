@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
 import { logger } from '@/lib/logger';
 import { checkRateLimit, getClientIp, RATE_LIMITS } from '@/lib/rate-limit';
 

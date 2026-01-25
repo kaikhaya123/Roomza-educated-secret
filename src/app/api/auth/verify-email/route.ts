@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyEmailToken } from '@/lib/email';
 import { sendWelcomeEmail } from '@/lib/email';
-import { prisma } from '@/lib/prisma';
+import { supabase } from '@/lib/supabase';
 
 export async function GET(request: NextRequest) {
   try {
@@ -24,10 +24,19 @@ export async function GET(request: NextRequest) {
     }
 
     // Update user verification status
-    const user = await prisma.user.update({
-      where: { email },
-      data: { emailVerified: new Date() },
-    });
+    const { data: user, error: updateError } = await supabase
+      .from('User')
+      .update({ emailVerified: new Date() })
+      .eq('email', email)
+      .select('email, firstName')
+      .single();
+
+    if (updateError) {
+      console.error('Email verification update error:', updateError);
+      return NextResponse.redirect(
+        new URL('/auth/login?error=verification-failed', process.env.NEXTAUTH_URL!)
+      );
+    }
 
     // Send welcome email
     await sendWelcomeEmail(user.email, user.firstName);
@@ -55,9 +64,18 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if user exists
-    const user = await prisma.user.findUnique({
-      where: { email },
-    });
+    const { data: user, error: fetchError } = await supabase
+      .from('User')
+      .select('email, firstName, emailVerified')
+      .eq('email', email)
+      .maybeSingle();
+
+    if (fetchError && fetchError.code !== 'PGRST116') {
+      return NextResponse.json(
+        { error: 'Failed to look up user' },
+        { status: 500 }
+      );
+    }
 
     if (!user) {
       return NextResponse.json(

@@ -14,8 +14,8 @@ export function verifyToken(token: string) {
 }
 import { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import { prisma } from './prisma';
 import bcrypt from 'bcryptjs';
+import { supabase } from './supabase';
 
 // Use JWT strategy for reliability - database adapter can cause fetch errors
 export const authOptions: NextAuthOptions = {
@@ -43,15 +43,18 @@ export const authOptions: NextAuthOptions = {
         }
 
         try {
-          // Find user by email or phone
-          const user = await prisma.user.findFirst({
-            where: {
-              OR: [
-                { email: credentials.identifier },
-                { phone: credentials.identifier },
-              ],
-            },
-          });
+          // Find user by email or phone via Supabase
+          const { data: users, error } = await supabase
+            .from('User')
+            .select('id, email, password, firstName, lastName, userType, phone')
+            .or(`email.eq.${credentials.identifier},phone.eq.${credentials.identifier}`);
+
+          if (error) {
+            console.error('Supabase auth lookup error:', error);
+            throw new Error('Authentication failed');
+          }
+
+          const user = users?.[0];
 
           if (!user || !user.password) {
             throw new Error('Invalid credentials');

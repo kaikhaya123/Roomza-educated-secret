@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
-import { prisma } from '@/lib/prisma';
 import { cacheGet, cacheSet, CACHE_KEYS, CACHE_TTL } from '@/lib/redis';
+import { supabase } from '@/lib/supabase';
 
 export async function GET(request: NextRequest) {
   try {
@@ -29,28 +27,19 @@ export async function GET(request: NextRequest) {
     const tomorrow = new Date(today);
     tomorrow.setDate(tomorrow.getDate() + 1);
 
-    const quiz = await prisma.quiz.findFirst({
-      where: {
-        isActive: true,
-        scheduledFor: {
-          gte: today,
-          lt: tomorrow,
-        },
-      },
-      include: {
-        questions: {
-          orderBy: { order: 'asc' },
-          select: {
-            id: true,
-            question: true,
-            options: true,
-            points: true,
-            order: true,
-            // Don't include correctAnswer
-          },
-        },
-      },
-    });
+    const { data: quizzes, error } = await supabase
+      .from('Quiz')
+      .select('id, title, description, difficulty, timeLimit, scheduledFor, expiresAt')
+      .eq('isActive', true)
+      .gte('scheduledFor', today.toISOString())
+      .lt('scheduledFor', tomorrow.toISOString())
+      .limit(1);
+
+    if (error) {
+      return NextResponse.json({ error: 'Failed to fetch quiz' }, { status: 500 });
+    }
+
+    const quiz = quizzes?.[0];
 
     if (!quiz) {
       return NextResponse.json(
@@ -60,14 +49,16 @@ export async function GET(request: NextRequest) {
     }
 
     // Check if user has already attempted this quiz
-    const attempt = await prisma.quizAttempt.findUnique({
-      where: {
-        userId_quizId: {
-          userId: session.user.id,
-          quizId: quiz.id,
-        },
-      },
-    });
+    const { data: attempt, error: attemptError } = await supabase
+      .from('QuizAttempt')
+      .select('id, score')
+      .eq('userId', session.user.id)
+      .eq('quizId', quiz.id)
+      .maybeSingle();
+
+    if (attemptError && attemptError.code !== 'PGRST116') {
+      return NextResponse.json({ error: 'Failed to check attempts' }, { status: 500 });
+    }
 
     if (attempt) {
       return NextResponse.json(
@@ -79,10 +70,23 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Cache the result
-    await cacheSet(cacheKey, quiz, CACHE_TTL.MEDIUM);
+    // Fetch questions
+    const { data: questions, error: questionsError } = await supabase
+      .from('QuizQuestion')
+      .select('id, question, options, points, order')
+      .eq('quizId', quiz.id)
+      .order('order', { ascending: true });
 
-    return NextResponse.json(quiz);
+    if (questionsError) {
+      return NextResponse.json({ error: 'Failed to fetch quiz questions' }, { status: 500 });
+    }
+
+    const quizPayload = { ...quiz, questions: questions ?? [] };
+
+    // Cache the result
+    await cacheSet(cacheKey, quizPayload, CACHE_TTL.MEDIUM);
+
+    return NextResponse.json(quizPayload);
   } catch (error) {
     console.error('Error fetching quiz:', error);
     return NextResponse.json(
