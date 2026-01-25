@@ -8,8 +8,10 @@ export default function ApplyPage() {
   return (
     <div className="min-h-screen flex flex-col bg-black text-white">
       <Navbar />
+      {/* Spacer to offset fixed navbar height for this page */}
+      <div className="h-16 md:h-20 lg:h-24" aria-hidden="true" />
 
-      <main className="flex-1 px-6 py-20">
+      <main className="flex-1 px-4 py-10">
         <div className="max-w-4xl mx-auto space-y-16">
 
           {/* Hero */}

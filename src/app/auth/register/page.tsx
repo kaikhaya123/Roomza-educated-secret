@@ -147,7 +147,7 @@ export default function RegisterPage() {
     >
       {/* Close/Back Button */}
       <motion.div 
-        className="absolute top-4 left-4 md:top-6 md:left-6 lg:top-8 lg:left-8 z-50"
+        className="absolute top-4 right-4 md:top-6 md:right-6 lg:top-8 lg:right-8 z-50"
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
       >

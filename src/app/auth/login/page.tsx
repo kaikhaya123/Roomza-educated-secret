@@ -69,7 +69,7 @@ export default function LoginPage() {
       >
         {/* Close/Back Button */}
         <motion.div 
-          className="absolute top-4 left-4 md:top-6 md:left-6 lg:top-8 lg:left-8 z-50"
+          className="absolute top-4 right-4 md:top-6 md:right-6 lg:top-8 lg:right-8 z-50"
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.95 }}
         >
@@ -202,6 +202,37 @@ export default function LoginPage() {
             {isLoading ? "Logging in..." : "Log In"}
           </motion.button>
         </form>
+
+        {/* Social Login */}
+        <div className="mt-6">
+          <div className="flex items-center gap-3 text-gray-400 text-xs">
+            <div className="h-px flex-1 bg-white/10" />
+            <span>or continue with</span>
+            <div className="h-px flex-1 bg-white/10" />
+          </div>
+
+          <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <button
+              type="button"
+              onClick={() => signIn('google', { callbackUrl: '/' })}
+              className="w-full flex items-center justify-center gap-3 py-3 bg-white hover:bg-white transition border border-white rounded-lg text-black text-sm"
+              aria-label="Continue with Google"
+            >
+              <Image src="/Icons/search.png" alt="Google icon" width={20} height={20} />
+              <span>Continue with Google</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => signIn('apple', { callbackUrl: '/' })}
+              className="w-full flex items-center justify-center gap-3 py-3 bg-white hover:bg-white transition border border-white/20 rounded-lg text-black text-sm"
+              aria-label="Continue with Apple"
+            >
+              <Image src="/Icons/apple-logo.png" alt="Apple icon" width={20} height={20} />
+              <span>Continue with Apple</span>
+            </button>
+          </div>
+        </div>
 
         {/* Sign Up */}
         <p className="text-center text-gray-400 text-xs mt-8">
