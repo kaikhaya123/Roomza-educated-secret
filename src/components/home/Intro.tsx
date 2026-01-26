@@ -39,7 +39,7 @@ export default function IntroStorySections() {
 
   const [isPlaying, setIsPlaying] = useState(false);
   const [showPlayButton, setShowPlayButton] = useState(false);
-  const [videoSource, setVideoSource] = useState('/Videos/1166555_Environment_Man_3840x2160.mp4');
+  const [videoSource, setVideoSource] = useState('/Videos/7683446-hd_1080_1920_30fps.mp4');
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -54,8 +54,8 @@ export default function IntroStorySections() {
     const isMobile = window.innerWidth < 768;
     setVideoSource(
       isMobile 
-        ? '/Videos/1166555_Environment_Man_1280x720.mp4'
-        : '/Videos/1166555_Environment_Man_3840x2160.mp4'
+        ? '/Videos/7683446-hd_1080_1920_30fps.mp4'
+        : '/Videos/7683446-hd_1080_1920_30fps.mp4'
     );
 
     const isMobileDevice =
