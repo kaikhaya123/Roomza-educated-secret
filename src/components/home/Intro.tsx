@@ -36,6 +36,7 @@ const slides: Slide[] = [
 export default function IntroStorySections() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
+
   const [isPlaying, setIsPlaying] = useState(false);
   const [showPlayButton, setShowPlayButton] = useState(false);
 
@@ -48,56 +49,65 @@ export default function IntroStorySections() {
     const video = videoRef.current;
     if (!video) return;
 
-    const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    const isMobileDevice =
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent
+      );
 
-    const attemptPlay = async () => {
+    const setMobileAttrs = () => {
+      video.muted = true;
+      video.playsInline = true;
+
+      // iOS Safari + some Android webviews
+      video.setAttribute('playsinline', '');
+      video.setAttribute('webkit-playsinline', 'true');
+      video.setAttribute('x5-playsinline', 'true');
+    };
+
+    const tryPlay = async () => {
       try {
-        // Ensure all mobile attributes are set
-        video.muted = true;
-        video.playsInline = true;
-        video.preload = 'auto';
-        
-        // Set mobile-specific attributes
-        video.setAttribute('playsinline', '');
-        video.setAttribute('webkit-playsinline', 'true');
-        video.setAttribute('x5-playsinline', 'true');
-        
-        // Force load if needed
+        setMobileAttrs();
+
+        // Ensure video loads before trying to play
         if (video.readyState < 2) {
-          video.load();
+          await new Promise<void>((resolve) => {
+            const onReady = () => resolve();
+            video.addEventListener('loadeddata', onReady, { once: true });
+            video.load();
+          });
         }
-        
-        const playPromise = video.play();
-        if (playPromise) {
-          await playPromise;
-          setIsPlaying(true);
-          setShowPlayButton(false);
-        }
+
+        await video.play();
+
+        setIsPlaying(true);
+        setShowPlayButton(false);
+        return true;
       } catch (error) {
-        console.warn('Autoplay failed:', error);
-        // Only show play button if on mobile, otherwise it will play after user interaction
-        if (isMobileDevice) {
-          setShowPlayButton(true);
-        }
         setIsPlaying(false);
+
+        // Only show button on mobile
+        if (isMobileDevice) setShowPlayButton(true);
+
+        return false;
       }
     };
 
-    // Wait a bit for video to be ready
-    const timer = setTimeout(() => attemptPlay(), 300);
+    // Try autoplay once
+    tryPlay();
 
+    // Mobile fallback: only remove listeners after successful play
     const onUserInteract = async () => {
-      await attemptPlay();
-      document.removeEventListener('click', onUserInteract);
-      document.removeEventListener('touchstart', onUserInteract);
+      const ok = await tryPlay();
+      if (ok) {
+        document.removeEventListener('click', onUserInteract);
+        document.removeEventListener('touchstart', onUserInteract);
+      }
     };
 
-    // Add user interaction listeners for mobile
     document.addEventListener('click', onUserInteract, { passive: true });
     document.addEventListener('touchstart', onUserInteract, { passive: true });
 
     return () => {
-      clearTimeout(timer);
       document.removeEventListener('click', onUserInteract);
       document.removeEventListener('touchstart', onUserInteract);
     };
@@ -114,15 +124,17 @@ export default function IntroStorySections() {
             playsInline
             autoPlay
             loop
-            preload="auto"
+            preload="metadata"
             className={`w-full h-full object-cover transition-transform duration-1000 ${
               isPlaying ? 'scale-[1.08]' : 'scale-100'
             }`}
             aria-hidden="true"
-            webkit-playsinline="true"
-            x5-playsinline="true"
           >
-            <source src="/Videos/1166555_Environment_Man_3840x2160.mp4" type="video/mp4" />
+            {/* IMPORTANT: Use a smaller video for mobile if possible */}
+            <source
+              src="/Videos/1166555_Environment_Man_1920x1080.mp4"
+              type="video/mp4"
+            />
             Your browser does not support the video tag.
           </video>
 
@@ -135,14 +147,16 @@ export default function IntroStorySections() {
                 onClick={async () => {
                   const video = videoRef.current;
                   if (!video) return;
+
                   try {
                     video.muted = true;
+                    video.playsInline = true;
                     video.setAttribute('playsinline', '');
                     video.setAttribute('webkit-playsinline', 'true');
                     video.setAttribute('x5-playsinline', 'true');
-                    video.preload = 'auto';
-                    const playPromise = video.play();
-                    if (playPromise) await playPromise;
+
+                    await video.play();
+
                     setIsPlaying(true);
                     setShowPlayButton(false);
                   } catch (error) {
@@ -173,7 +187,8 @@ export default function IntroStorySections() {
           </h1>
 
           <p className="text-white/80 max-w-md text-sm lg:text-base">
-            A national digital stage unlocking leadership, opportunity, and measurable impact for South African students.
+            A national digital stage unlocking leadership, opportunity, and
+            measurable impact for South African students.
           </p>
 
           <motion.a
@@ -226,9 +241,7 @@ export default function IntroStorySections() {
                 <h2 className="text-4xl lg:text-6xl font-black">
                   {slide.title}
                 </h2>
-                <p className="text-lg text-white/80">
-                  {slide.subtitle}
-                </p>
+                <p className="text-lg text-white/80">{slide.subtitle}</p>
               </div>
             </motion.section>
           );
