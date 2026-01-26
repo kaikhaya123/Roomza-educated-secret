@@ -7,6 +7,15 @@ function generateCode(): string {
   return Math.floor(100000 + Math.random() * 900000).toString();
 }
 
+// Normalize phone to canonical E.164 (+27...) for consistency between send/confirm
+function normalizePhone(phone: string): string {
+  const cleaned = phone.replace(/[^0-9+]/g, '');
+  if (cleaned.startsWith('+')) return cleaned;
+  if (cleaned.startsWith('0')) return `+27${cleaned.substring(1)}`;
+  // Fallback: assume SA if missing +
+  return `+27${cleaned}`;
+}
+
 // SMS provider integration
 async function sendSMS(phone: string, code: string): Promise<boolean> {
   try {
@@ -126,6 +135,7 @@ export async function POST(request: NextRequest) {
       );
     }
     const { phone, action, code } = body;
+    const normalizedPhone = normalizePhone(String(phone));
 
     if (!phone) {
       return NextResponse.json(
@@ -140,12 +150,12 @@ export async function POST(request: NextRequest) {
       const expiresAt = Date.now() + 10 * 60 * 1000; // 10 minutes
 
       // Store code
-      verificationCodes[phone] = { code: verificationCode, expiresAt };
+      verificationCodes[normalizedPhone] = { code: verificationCode, expiresAt };
 
       logger.info('SMS', 'Verification code generated', { phone });
 
       // Send SMS
-      const smsSent = await sendSMS(phone, verificationCode);
+      const smsSent = await sendSMS(normalizedPhone, verificationCode);
       if (!smsSent) {
         logger.error('SMS', 'Failed to send SMS', { phone });
         return NextResponse.json(
@@ -173,7 +183,7 @@ export async function POST(request: NextRequest) {
         );
       }
 
-      const stored = verificationCodes[phone];
+      const stored = verificationCodes[normalizedPhone];
 
       if (!stored) {
         return NextResponse.json(
@@ -183,7 +193,7 @@ export async function POST(request: NextRequest) {
       }
 
       if (stored.expiresAt < Date.now()) {
-        delete verificationCodes[phone];
+        delete verificationCodes[normalizedPhone];
         return NextResponse.json(
           { error: 'Verification code expired' },
           { status: 400 }
@@ -198,7 +208,7 @@ export async function POST(request: NextRequest) {
       }
 
       // Code is valid - mark phone as verified
-      delete verificationCodes[phone];
+      delete verificationCodes[normalizedPhone];
 
       return NextResponse.json(
         { message: 'Phone number verified successfully' },
