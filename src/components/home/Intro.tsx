@@ -39,7 +39,6 @@ export default function IntroStorySections() {
 
   const [isPlaying, setIsPlaying] = useState(false);
   const [showPlayButton, setShowPlayButton] = useState(false);
-  const [videoSource, setVideoSource] = useState('/Videos/7683446-hd_1080_1920_30fps.mp4');
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -49,14 +48,6 @@ export default function IntroStorySections() {
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
-
-    // Detect device and set appropriate video source
-    const isMobile = window.innerWidth < 768;
-    setVideoSource(
-      isMobile 
-        ? '/Videos/7683446-hd_1080_1920_30fps.mp4'
-        : '/Videos/7683446-hd_1080_1920_30fps.mp4'
-    );
 
     const isMobileDevice =
       /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
@@ -122,10 +113,6 @@ export default function IntroStorySections() {
     };
   }, []);
 
-  const getVideoSource = () => {
-    return videoSource;
-  };
-
   return (
     <section ref={containerRef} className="relative bg-black text-white">
       {/* HERO VIDEO */}
@@ -137,14 +124,20 @@ export default function IntroStorySections() {
             playsInline
             autoPlay
             loop
-            preload="metadata"
+            preload="auto"
             className={`w-full h-full object-cover transition-transform duration-1000 ${
               isPlaying ? 'scale-[1.08]' : 'scale-100'
             }`}
             aria-hidden="true"
+            onPlay={() => setIsPlaying(true)}
+            onPause={() => setIsPlaying(false)}
+            onError={(e) => {
+              console.error('Video error:', e.currentTarget.error);
+              setShowPlayButton(true);
+            }}
           >
             <source
-              src={getVideoSource()}
+              src="/Videos/7683446-hd_1080_1920_30fps.mp4"
               type="video/mp4"
             />
             Your browser does not support the video tag.
