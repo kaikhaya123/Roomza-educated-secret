@@ -1,41 +1,24 @@
 import type { Metadata } from "next";
-import { Manrope, Inter, Poppins, Rubik } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
 import { Providers } from "@/components/Providers";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import SmoothScroll from '@/components/SmoothScroll';
 
-// Optimize font loading with display: swap to prevent FOUT
-const manrope = Manrope({
-  subsets: ["latin"],
-  variable: '--font-manrope',
-  display: 'swap',
-  preload: true,
-});
-
+// Use only Inter for now to resolve font loading issues
 const inter = Inter({ 
   subsets: ["latin"],
   variable: '--font-inter',
   display: 'swap',
-  preload: true,
 });
 
-const poppins = Poppins({ 
-  weight: ['400', '500', '600', '700', '800'],
-  subsets: ["latin"],
-  variable: '--font-poppins',
-  display: 'swap',
-  preload: true,
-});
-
-const rubik = Rubik({
-  weight: ['300','400','500','600','700','900'],
-  subsets: ['latin'],
-  variable: '--font-rubik',
-  display: 'swap',
-  preload: true,
-});
+// Define other fonts as CSS variables for fallback
+const fontVariables = `
+  --font-manrope: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-poppins: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-rubik: ui-sans-serif, system-ui, sans-serif;
+`;
 
 export const metadata: Metadata = {
   title: "R.E.S. - Roomza's Educated Secret | South Africa's Premier Student Reality Show",
@@ -56,8 +39,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${manrope.variable} ${inter.variable} ${poppins.variable} ${rubik.variable}`}>
+    <html 
+      lang="en" 
+      className={inter.variable}
+    >
       <head>
+        <style dangerouslySetInnerHTML={{
+          __html: `:root { ${fontVariables} }`
+        }} />
         {/* Preconnect to critical third-party domains */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -65,7 +54,7 @@ export default function RootLayout({
         {/* DNS Prefetch for external resources */}
         <link rel="dns-prefetch" href="https://res.cloudinary.com" />
       </head>
-      <body suppressHydrationWarning className="antialiased font-sans scroll-smooth">
+      <body suppressHydrationWarning className={`antialiased font-sans scroll-smooth ${inter.className}`}>
         <ErrorBoundary>
           <Providers>
             {/* Site-wide smooth scrolling */}

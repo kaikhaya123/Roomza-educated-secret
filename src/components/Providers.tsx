@@ -8,8 +8,9 @@ import { CartProvider } from '@/context/cart';
 export function Providers({ children }: { children: ReactNode }) {
   return (
     <SessionProvider 
-      refetchInterval={60}
-      refetchOnWindowFocus={true}
+      refetchInterval={0}
+      refetchOnWindowFocus={false}
+      refetchOnReconnect={true}
     >
       <CartProvider>
         {children}

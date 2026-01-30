@@ -31,8 +31,67 @@ async function sendSMS(phone: string, code: string): Promise<boolean> {
     // Check if using real SMS provider
     const provider = process.env.SMS_PROVIDER || 'development';
     
-    if (provider === 'infobip' && process.env.INFOBIP_API_KEY) {
-      // Infobip SMS integration
+    if (provider === 'smsportal' && process.env.SMSPORTAL_CLIENT_ID) {
+      // SMSPortal SMS integration
+      const baseUrl = (process.env.SMSPORTAL_BASE_URL || 'https://cp.smsportal.com').replace(/\/$/, '');
+      // Try the standard REST API endpoint
+      const apiUrl = `${baseUrl}/rest/send-sms`;
+      const sender = process.env.SMSPORTAL_SENDER || 'RES';
+
+      // Create Basic Auth header from credentials
+      const credentials = `${process.env.SMSPORTAL_CLIENT_ID}:${process.env.SMSPORTAL_CLIENT_SECRET}`;
+      const encodedCredentials = Buffer.from(credentials).toString('base64');
+
+      const smsBody = {
+        msisdn: phone,
+        message: `Your R.E.S. verification code is: ${code}. Valid for 10 minutes.`,
+        senderid: sender,
+      };
+
+      logger.info('SMS', 'SMSPortal request details', {
+        url: apiUrl,
+        authHeader: `Basic ${encodedCredentials.substring(0, 20)}...`,
+        body: smsBody,
+      });
+
+      const res = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Basic ${encodedCredentials}`,
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify(smsBody),
+      });
+
+      if (!res.ok) {
+        const errText = await res.text();
+        logger.error('SMS', 'SMSPortal send failed', { 
+          phone, 
+          status: res.status, 
+          body: errText,
+          url: apiUrl,
+        });
+        return false;
+      }
+
+      // Log SMSPortal response for delivery diagnostics
+      let payload: any = null;
+      try {
+        payload = await res.json();
+      } catch (e) {
+        logger.warn('SMS', 'SMSPortal response not JSON', { phone });
+      }
+
+      logger.info('SMS', 'Sent via SMSPortal', {
+        phone,
+        messageId: payload?.messageId || payload?.id,
+        status: payload?.status,
+        response: payload,
+      });
+      return true;
+    } else if (provider === 'infobip' && process.env.INFOBIP_API_KEY) {
+      // Infobip SMS integration (legacy support)
       const baseUrl = (process.env.INFOBIP_BASE_URL || '').replace(/\/$/, '');
       const apiUrl = `${baseUrl.startsWith('http') ? baseUrl : `https://${baseUrl}`}/sms/2/text/advanced`;
       const sender = process.env.INFOBIP_SENDER || 'RES';
@@ -61,7 +120,21 @@ async function sendSMS(phone: string, code: string): Promise<boolean> {
         return false;
       }
 
-      logger.info('SMS', 'Sent via Infobip', { phone });
+      // Log Infobip response for delivery diagnostics
+      let payload: any = null;
+      try {
+        payload = await res.json();
+      } catch (e) {
+        logger.warn('SMS', 'Infobip response not JSON', { phone });
+      }
+
+      const msgStatus = payload?.messages?.[0]?.status;
+      logger.info('SMS', 'Sent via Infobip', {
+        phone,
+        messageId: payload?.messages?.[0]?.messageId,
+        status: msgStatus?.name || msgStatus?.groupName || msgStatus?.groupId,
+        description: msgStatus?.description,
+      });
       return true;
     } else if (provider === 'twilio' && process.env.TWILIO_ACCOUNT_SID) {
       // Twilio integration
@@ -126,11 +199,33 @@ export async function POST(request: NextRequest) {
 
     let body: any;
     try {
-      body = await request.json();
-    } catch (parseError) {
-      logger.error('SMS', 'Invalid JSON in request body', { error: parseError });
+      // Check if request has a body
+      const contentType = request.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        logger.warn('SMS', 'Invalid content-type', { contentType });
+        return NextResponse.json(
+          { error: 'Content-Type must be application/json' },
+          { status: 400 }
+        );
+      }
+
+      const text = await request.text();
+      if (!text) {
+        logger.error('SMS', 'Empty request body');
+        return NextResponse.json(
+          { error: 'Request body cannot be empty' },
+          { status: 400 }
+        );
+      }
+
+      body = JSON.parse(text);
+    } catch (parseError: any) {
+      logger.error('SMS', 'Invalid JSON in request body', { 
+        error: parseError.message,
+        parseError: parseError
+      });
       return NextResponse.json(
-        { error: 'Invalid request body' },
+        { error: 'Invalid JSON in request body' },
         { status: 400 }
       );
     }

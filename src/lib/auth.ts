@@ -14,6 +14,7 @@ export function verifyToken(token: string) {
 }
 import { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
+import GoogleProvider from 'next-auth/providers/google';
 import bcrypt from 'bcryptjs';
 import { supabase } from './supabase';
 
@@ -21,16 +22,21 @@ import { supabase } from './supabase';
 export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET || 'fallback-secret-change-in-production',
   // Enable debug logs in non-production to capture server-side NextAuth errors
-  debug: process.env.NODE_ENV !== 'production',
+  debug: false, // Disable debug mode to reduce noise
   session: {
     strategy: 'jwt',
     maxAge: 30 * 24 * 60 * 60, // 30 days
+    updateAge: 24 * 60 * 60, // Only update session once per day
   },
   pages: {
     signIn: '/auth/login',
     error: '/auth/error',
   },
   providers: [
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    }),
     CredentialsProvider({
       name: 'credentials',
       credentials: {
@@ -101,11 +107,90 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token, user }) {
+    async signIn({ user, account, profile }) {
+      if (account?.provider === 'google') {
+        try {
+          // Check if user already exists in our database
+          const { data: existingUsers, error } = await supabase
+            .from('User')
+            .select('id, email, firstName, lastName, userType, googleId')
+            .eq('email', user.email);
+
+          if (error) {
+            console.error('Error checking existing user:', error);
+            return false;
+          }
+
+          let dbUser = existingUsers?.[0];
+
+          // If user doesn't exist, create a new user
+          if (!dbUser) {
+            const names = user.name?.split(' ') || [];
+            const firstName = names[0] || '';
+            const lastName = names.slice(1).join(' ') || '';
+
+            const { data: newUser, error: insertError } = await supabase
+              .from('User')
+              .insert([
+                {
+                  email: user.email,
+                  firstName,
+                  lastName,
+                  userType: 'PUBLIC', // default user type from enum
+                  googleId: account.providerAccountId,
+                  image: user.image,
+                  provider: 'google',
+                  emailVerified: new Date(),
+                }
+              ])
+              .select('id, email, firstName, lastName, userType, googleId')
+              .single();
+
+            if (insertError) {
+              console.error('Error creating new user:', insertError);
+              return false;
+            }
+
+            dbUser = newUser;
+          } else if (!dbUser.googleId) {
+            // Link existing account with Google
+            const { error: updateError } = await supabase
+              .from('User')
+              .update({
+                googleId: account.providerAccountId,
+                image: user.image,
+                provider: 'google',
+                emailVerified: new Date(),
+              })
+              .eq('id', dbUser.id);
+
+            if (updateError) {
+              console.error('Error linking Google account:', updateError);
+              return false;
+            }
+          }
+
+          // Store user info for use in JWT callback
+          user.id = String(dbUser.id);
+          user.userType = dbUser.userType;
+          user.provider = 'google';
+
+          return true;
+        } catch (error) {
+          console.error('Google sign in error:', error);
+          return false;
+        }
+      }
+      
+      return true; // Allow other providers
+    },
+    async jwt({ token, user, account }) {
       if (user) {
         token.id = user.id;
         token.email = user.email;
         token.userType = user.userType;
+        token.image = user.image;
+        token.provider = user.provider || account?.provider || 'credentials';
       }
       return token;
     },
@@ -113,6 +198,9 @@ export const authOptions: NextAuthOptions = {
       if (session.user) {
         session.user.id = token.id as string;
         session.user.email = token.email as string;
+        session.user.userType = token.userType as string;
+        session.user.image = token.image as string;
+        session.user.provider = token.provider as string;
       }
       return session;
     },
