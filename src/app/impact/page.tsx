@@ -97,7 +97,7 @@ export default function ImpactPage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
-              className="max-w-2xl text-4xl font-black leading-tight tracking-tighter lg:text-5xl text-yellow-400 m-0"
+              className="max-w-2xl text-5xl font-black leading-tight tracking-tighter lg:text-6xl text-yellow-400 m-0"
             >
               REAL IMPACT.
               <br />
@@ -154,7 +154,7 @@ export default function ImpactPage() {
         {/* IMPACT AREAS */}
         <section className="px-6 py-32 lg:px-12">
           <div className="mx-auto max-w-6xl">
-            <h2 className="mb-20 text-5xl font-black tracking-tight lg:text-6xl">Where the Impact Happens</h2>
+            <h2 className="mb-20 text-4xl font-black tracking-tight lg:text-5xl">Where the Impact Happens</h2>
 
             <motion.div
               variants={revealContainer}
