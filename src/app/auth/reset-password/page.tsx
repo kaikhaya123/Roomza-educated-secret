@@ -1,13 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Lock, Eye, EyeOff, ArrowLeft } from 'lucide-react';
 
-export default function ResetPasswordPage() {
+function ResetPasswordForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get('token');
@@ -224,5 +224,58 @@ export default function ResetPasswordPage() {
         )}
       </motion.div>
     </div>
+  );
+}
+
+function ResetPasswordLoadingFallback() {
+  return (
+    <div className="min-h-screen w-full bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Background decorative elements */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute top-20 left-10 w-32 h-20 bg-white/10 rounded-full blur-3xl"></div>
+        <div className="absolute top-40 right-20 w-40 h-25 bg-white/5 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-20 left-20 w-36 h-24 bg-white/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-40 right-10 w-28 h-18 bg-white/5 rounded-full blur-3xl"></div>
+      </div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="w-full max-w-md relative z-10"
+      >
+        {/* Logo Card */}
+        <div className="bg-white rounded-t-2xl p-6 text-center border-b border-gray-100">
+          <Image 
+            src="/Images/RES Logo with Futuristic Emblem.png" 
+            alt="R.E.S. Logo"
+            width={80}
+            height={80}
+            className="object-contain mx-auto"
+            priority
+          />
+          <h2 className="text-2xl font-bold text-gray-800 mt-3">R.E.S.</h2>
+          <p className="text-sm text-gray-600">Roomza's Educated Secret</p>
+        </div>
+
+        <div className="bg-white rounded-b-2xl p-8 shadow-xl">
+          <div className="animate-pulse">
+            <div className="h-8 bg-gray-200 rounded w-3/4 mb-2"></div>
+            <div className="h-4 bg-gray-200 rounded w-1/2 mb-6"></div>
+            <div className="h-12 bg-gray-200 rounded mb-4"></div>
+            <div className="h-12 bg-gray-200 rounded mb-6"></div>
+            <div className="h-12 bg-gray-200 rounded"></div>
+          </div>
+        </div>
+      </motion.div>
+    </div>
+  );
+}
+
+export default function ResetPasswordPage() {
+  return (
+    <Suspense fallback={<ResetPasswordLoadingFallback />}>
+      <ResetPasswordForm />
+    </Suspense>
   );
 }
