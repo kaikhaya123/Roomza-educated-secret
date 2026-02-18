@@ -19,16 +19,17 @@ const updateUserSchema = z.object({
 // Get single user
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const admin = requireAdmin(req);
   if (admin instanceof NextResponse) return admin;
+  const { id } = await params;
 
   try {
     const { data: user, error } = await supabase
       .from('User')
       .select('id, email, firstName, lastName, userType, province, createdAt, updatedAt, emailVerified, phoneVerified')
-      .eq('id', params.id)
+      .eq('id', id)
       .single();
 
     if (error || !user) {
@@ -45,10 +46,11 @@ export async function GET(
 // Update user
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const admin = requireAdmin(req);
   if (admin instanceof NextResponse) return admin;
+  const { id } = await params;
 
   try {
     const body = await req.json();
@@ -65,7 +67,7 @@ export async function PUT(
         ...updateData,
         updatedAt: new Date().toISOString(),
       })
-      .eq('id', params.id)
+      .eq('id', id)
       .select('id, email, firstName, lastName, userType, province, updatedAt')
       .single();
 
@@ -87,16 +89,17 @@ export async function PUT(
 // Delete user
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const admin = requireAdmin(req);
   if (admin instanceof NextResponse) return admin;
+  const { id } = await params;
 
   try {
     const { error } = await supabase
       .from('User')
       .delete()
-      .eq('id', params.id);
+      .eq('id', id);
 
     if (error) {
       console.error('Error deleting user:', error);
